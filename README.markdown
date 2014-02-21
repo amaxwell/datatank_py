@@ -32,7 +32,7 @@ NumPy
 -----
 
 NumPy is a requirement, and I have no interest in working with Numeric or Numarray.
-You can download NumPy at http://numpy.scipy.org/ or make do with Apple's lobotomized
+You can download [NumPy](http://numpy.scipy.org/) or make do with Apple's lobotomized
 and ancient version as shipped with OS X.  If you do compile your own, I've found it
 necessary to get rid of the OS-installed version, particularly since SciPy won't
 compile with it installed.  To do this, I use the following Terminal commands on
@@ -48,15 +48,15 @@ If there's a better way to handle this, please tell me.
 GDAL
 ----
 
-Some of the examples require [http://www.gdal.org/][GDAL] with Python bindings. 
+Some of the examples require [GDAL](http://www.gdal.org/) with Python bindings. 
 I find this invaluable for getting geospatial data into DataTank, even though 
 the SWIG bindings seem like writing C++ using Python syntax.
 
 PIL
 ---
 
-Some of the examples require [http://www.pythonware.com/products/pil/][PIL], 
-the Python Imaging Library.  If you don't have PIL installed, you should.
+Some of the examples require [PIL](http://www.pythonware.com/products/pil/), 
+the Python Imaging Library. If you don't have PIL installed, you should.
 
 DOCUMENTATION
 =============
