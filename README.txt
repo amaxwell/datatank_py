@@ -1,7 +1,8 @@
 INSTALL
 
 Create a symlink to the datatank_py directory, somewhere along the Python user path.  
-On Mac OS X, this will be ~/Library/Python/2.6/site-packages for Python 2.6.  This
+On Mac OS X, this will be ~/Library/Python/2.6/site-packages for Python 2.6.  For
+Python 2.7, it will be ~/Library/Python/2.7/lib/python/site-packages. This
 allows you to use DTDataFile with 
 
 from datatank_py.DTDataFile import DTDataFile
