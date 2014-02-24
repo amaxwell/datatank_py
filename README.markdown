@@ -1,3 +1,27 @@
+WHAT IS THIS?
+=============
+
+This is a Python module that allows you to read and write DataTank data files using
+Python. [DataTank](http://visualdatatools.com/DataTank/) is a visualization and 
+analysis tool for Mac OS X. Although DataTank itself is proprietary (now free of
+charge for students and postdocs), it includes open-source C++ libraries for most
+of the internal data structures, so you can easily create data files to be loaded
+into it.
+
+When would I use it?
+--------------------
+
+* You're using DataTank for analysis, and need a quickie module (external program) to transform some data. You could use the excellent C++ libraries, but sometimes Xcode is more trouble than it's worth, especially since Apple turned it into iTunes for code.
+* You're already running numerical experiments in Python using numpy/scipy, and want to easily view the results in DataTank.
+* Sometimes data isn't wrapped up nicely in a netCDF file, or you want to create a smaller subset of it to analyze in DataTank. 
+* You have an HDF-5 file, and need to use PyTables to extract the relevant parts.
+* You have some gruesome ASCII data format that a colleague invented while drunk, and you need to parse it with Python because it has better string transformation than some popular commercial analysis packages.
+
+I use it to incorporate GIS data with 3D hydrodynamic model output for coastal flow
+and transport simulations. Being able to reproject images to/from Lat/Lon or Cartesian
+coordinates using GDAL is a great asset. See the examples for ideas on how to do
+this.
+
 INSTALL
 =======
 
