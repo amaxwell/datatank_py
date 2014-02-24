@@ -97,6 +97,8 @@
 			<string>DADrawingImages</string>
 			<key>FigureName</key>
 			<string>Untitled</string>
+			<key>Last Drawing View Size</key>
+			<string>{514, 198}</string>
 			<key>MaxHeight</key>
 			<string></string>
 			<key>MaxWidth</key>
@@ -262,6 +264,8 @@
 			<string>2DGraph</string>
 			<key>FigureName</key>
 			<string>Untitled</string>
+			<key>Last Drawing View Size</key>
+			<string>{658, 388}</string>
 			<key>MaxHeight</key>
 			<string></string>
 			<key>MaxWidth</key>
@@ -305,17 +309,12 @@
 			<string>Output Mesh from Mesh group</string>
 			<key>WindowPos</key>
 			<array>
-				<real>611</real>
+				<real>926</real>
 				<real>435</real>
 				<real>656</real>
 				<real>743</real>
 			</array>
 		</dict>
-	</array>
-	<key>InformationSize</key>
-	<array>
-		<real>400</real>
-		<real>770</real>
 	</array>
 	<key>Time</key>
 	<dict>
@@ -666,12 +665,12 @@
 			<string>Mesh2D</string>
 		</dict>
 	</array>
-	<key>WindowPos</key>
+	<key>WindowPosition</key>
 	<array>
-		<real>44</real>
-		<real>70</real>
-		<real>515</real>
-		<real>1108</real>
+		<real>1</real>
+		<real>499</real>
+		<real>941</real>
+		<real>679</real>
 	</array>
 </dict>
 </plist>
