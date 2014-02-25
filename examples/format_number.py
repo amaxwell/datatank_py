@@ -33,12 +33,12 @@ if __name__ == '__main__':
     # create or truncate the output file    
     with DTDataFile("Output.dtbin", truncate=True) as output_file:
         # record computation time
-        output_file.write_anonymous(time() - start_time, "ExecutionTime")
+        output_file["ExecutionTime"] = (time() - start_time)
         
         # DataTank seems to display stderr instead of the error list, so
         # make sure to write to both.
         if len(errors):
-            output_file.write_anonymous(errors, "ExecutionErrors")
+            output_file["ExecutionErrors"] = errors
             sys.stderr.write("%s\n" % errors)
             
         else:
