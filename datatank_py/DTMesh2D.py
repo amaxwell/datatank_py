@@ -8,6 +8,7 @@ from DTMask import DTMask
 
 class DTMesh2D(object):
     """2D Mesh object."""
+    dt_type = ("2D Mesh", "Mesh2D")
     
     def __init__(self, values, grid=None, mask=None):
         super(DTMesh2D, self).__init__()

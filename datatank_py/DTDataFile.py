@@ -83,6 +83,7 @@ def _load_modules():
                     # finally, an instance of the class itself
                     mcls = getattr(mcls, class_name)
                     # check for class attribute of dt_type and class method from_data_file
+                    # *** REMEMBER, THIS IS NOT THE __dt_type__ METHOD! ***
                     if hasattr(mcls, "dt_type") and hasattr(mcls, "from_data_file"):
                         # DataTank and DTSource use different constants. Sometimes.
                         for dt_type in mcls.dt_type:
@@ -583,7 +584,7 @@ class DTDataFile(object):
                 return string_list
             elif use_modules:
                 _load_modules()
-                # could log and continue, but this is currently only be explicit request
+                # could log and continue, but this is currently only by explicit request
                 assert dt_type in _CLASSES_BY_TYPE, "Class %s is not in %s" % (dt_type, _CLASSES_BY_TYPE)
                 
                 dt_cls = _CLASSES_BY_TYPE[dt_type]
