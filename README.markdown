@@ -37,7 +37,12 @@ The module can be installed using as usual, using
     python setup.py install
     
 in a terminal. If you get a permission error, you likely need to add `sudo` before
-that command.
+that command. If you're developing and want to just point it to the development
+copy, you can use
+
+    python setup.py develop
+    
+to set up the path appropriately.
 
 Some of the test scripts assume that various symlinks exist in datatank_py/examples.
 This is mainly so I can test on multiple systems without hardcoding absolute paths.
