@@ -1,0 +1,8 @@
+# compiled modules
+*.pyc
+
+# setuptools distribution
+/dist/
+
+# egg metadata
+/*.egg-info
