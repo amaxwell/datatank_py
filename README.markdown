@@ -13,27 +13,31 @@ When would I use it?
 
 * You're using DataTank for analysis, and need a quickie module (external program) to transform some data. You could use the excellent C++ libraries, but sometimes Xcode is more trouble than it's worth, especially since Apple turned it into iTunes for code.
 * You're already running numerical experiments in Python using numpy/scipy, and want to easily view the results in DataTank.
-* Sometimes data isn't wrapped up nicely in a netCDF file, or you want to create a smaller subset of it to analyze in DataTank. 
+* Sometimes data isn't wrapped up nicely in a netCDF file, or you want to create a smaller subset of a large dataset to analyze in DataTank.
 * You have an HDF-5 file, and need to use PyTables to extract the relevant parts.
-* You have some gruesome ASCII data format that a colleague invented while drunk, and you need to parse it with Python because it has better string transformation than some popular commercial analysis packages.
+* You have some gruesome ASCII data format that a colleague invented while drunk, and you need to parse it with Python because it has better string APIs than certain popular commercial analysis packages.
 
 I use it to incorporate GIS data with 3D hydrodynamic model output for coastal flow
 and transport simulations. Being able to reproject images to/from Lat/Lon or Cartesian
 coordinates using GDAL is a great asset. See the examples for ideas on how to do
-this.
+some of this.
+
+When should I not use it?
+-------------------------
+
+* Not all objects are fully supported in datatank_py_, unlike the C++ DTSource libraries.
+* The C++ libraries are highly optimized, and can be significantly faster than using Python.
+* You need to use other libraries (C/C++/FORTRAN/etc), and equivalent functions are not available in Python.
 
 INSTALL
 =======
 
-Create a symlink to the datatank_py directory, somewhere along the Python user path.  
-On Mac OS X, this will be ~/Library/Python/2.6/site-packages for Python 2.6.  For
-Python 2.7, it will be ~/Library/Python/2.7/lib/python/site-packages. This
-allows you to use DTDataFile with 
+The module can be installed using as usual, using
 
-    from datatank_py.DTDataFile import DTDataFile
-
-in a Python source file located anywhere.  For install locations on Linux, you might
-try `python -c 'import site; print site.USER_SITE'`, but you're on your own.
+    python setup.py install
+    
+in a terminal. If you get a permission error, you likely need to add `sudo` before
+that command.
 
 Some of the test scripts assume that various symlinks exist in datatank_py/examples.
 This is mainly so I can test on multiple systems without hardcoding absolute paths.
@@ -50,7 +54,8 @@ require Python 2.6 at minimum, or inclusion of
 
     from __future__ import with_statement
 
-before any other import statements for Python 2.5.
+before any other import statements for Python 2.5. It should still work with PowerPC,
+but that hasn't been tested in years, and you're on your own.
 
 NumPy
 -----
@@ -93,9 +98,9 @@ what they're supposed to do.
 BUGS
 ====
 
-Please e-mail me at amaxwell AT mac DOT com if you find any bugs in the Python
-code, or have ideas on improvements.  I don't want to add the kitchen sink in, but
-rather give users the building blocks to abuse DataTank in their own way.
+Please email me at amaxwell AT mac DOT com with suggestions for improvement,
+or use the tracker at GitHub. For bug fixes, feel free to send a pull request,
+and I'll try and figure out how to use git enough to merge it in.
 
 LICENSE
 =======
