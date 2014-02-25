@@ -6,3 +6,9 @@
 
 # egg metadata
 /*.egg-info
+
+# dtbin files
+*.dtbin
+
+# DTProgress can leave turds from testing
+DTProgress

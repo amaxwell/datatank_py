@@ -1,8 +1,8 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 setup(
     name = "datatank_py",
     version = "0.1",
-    packages = [ "datatank_py" ],
+    packages = find_packages(),
     
     install_requires = ['numpy>1.0'],
     # package_data = {
