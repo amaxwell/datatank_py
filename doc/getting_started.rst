@@ -40,11 +40,6 @@ A simple example
     from datatank_py.DTDataFile import DTDataFile
     from datatank_py.DTMesh2D import DTMesh2D
 
-    # Pretty much everything we do is going to use numpy, and
-    # OS X includes it anyway. In this example, it's only used
-    # for the scalar squeeze.
-    import numpy as np
-
     from time import time
     import sys
 
@@ -62,10 +57,6 @@ A simple example
     
         # return a new mesh object, reusing the same grid with our new values
         return DTMesh2D(values, grid=mesh.grid())
-    
-        # if we have a dummy computation, we'd just have a pass statement
-        # to keep the interpreter from squawking
-        pass
 
     if __name__ == '__main__':
     
