@@ -271,9 +271,10 @@ class DTDataFile(object):
         """Creates a new DTDataFile instance.
         
         Arguments:
-        file_path -- absolute or relative path
-        truncate -- whether to truncate the file if it exists (default is False)
-        readonly -- open the file for read-only access (default is False)
+        
+        * file_path -- absolute or relative path
+        * truncate -- whether to truncate the file if it exists (default is False)
+        * readonly -- open the file for read-only access (default is False)
         
         The default mode is to append to a file, creating it if
         it doesn't already exist.  Passing True for truncate will

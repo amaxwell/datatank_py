@@ -98,3 +98,4 @@ A simple example
                     # save the output variable; this will be visible to DataTank
                     #sys.stderr.write("%s: %s\n" % (type(output_string), output_string))
                     output_file["Var"] = output_mesh            
+
