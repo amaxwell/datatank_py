@@ -7,19 +7,27 @@ import numpy as np
 from DTMask import DTMask
 
 class DTMesh2D(object):
-    """2D Mesh object."""
+    """2D Mesh object.
+    
+    This class corresponds to DataTank's DTMesh2D object.
+    
+    """
+    
+    # For automatic module loading
     dt_type = ("2D Mesh", "Mesh2D")
     
     def __init__(self, values, grid=None, mask=None):
-        super(DTMesh2D, self).__init__()
         """Create a new 2D mesh.
         
         Arguments:
-        values -- 2D array of values
-        grid -- (xmin, ymin, dx, dy) or None for unit grid
+        
+        * values -- 2D array of values
+        * grid -- (xmin, ymin, dx, dy) or None for unit grid
         
         """
         
+        super(DTMesh2D, self).__init__()
+
         # 2D mesh is floating point, either single or double precision
         if values.dtype in (np.int8, np.uint8, np.int16, np.uint16):
             values = values.astype(np.float32)

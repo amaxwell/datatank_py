@@ -24,22 +24,28 @@ def _squeeze2d(array):
     return new_array
 
 class DTStructuredGrid2D(object):
-    """2D structured grid object."""
+    """2D structured grid object.
+    
+    This class corresponds to DataTank's DTStructuredGrid2D.
+    
+    """
     
     def __init__(self, x, y, mask=None):
-        super(DTStructuredGrid2D, self).__init__()
         """Create a new 2D structured grid.
         
         Arguments:
-        x -- vector or 2D array of x values
-        y -- vector or 2D array of y values
-        mask -- optional DTMask object
+        
+        * x -- vector or 2D array of x values
+        * y -- vector or 2D array of y values
+        * mask -- optional DTMask object
         
         Note: if a full 2D array is passed, it must be ordered as (y, x)
         for compatibility with DataTank.  When using vectors, this is handled
         automatically.
                 
         """            
+        
+        super(DTStructuredGrid2D, self).__init__()
         
         # DataTank saves these with a singleton dimension in y,
         # so we have a special case for reading those files in

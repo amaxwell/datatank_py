@@ -262,6 +262,7 @@ class DTDataFile(object):
     
     DTDataFile supports the with statement in Python 2.5 and 2.6,
     so you can use this idiom to ensure resources are cleaned up:
+    
     >>> with DTDataFile("foo.dtbin", truncate=True) as df:
     ...     df.write_2dmesh_one(mesh, 0, 0, dx, dy, "FooBar")
     
@@ -870,8 +871,9 @@ class DTDataFile(object):
         """Write an object that will not be visible in DataTank.
         
         Arguments:
-        array -- a string, numpy array, list, or tuple
-        name -- name of the variable
+        
+        * array -- a string, numpy array, list, or tuple
+        * name -- name of the variable
         
         This is used for writing additional arrays and strings used by compound types,
         such as a 2D Mesh, which has an additional grid array.
@@ -915,10 +917,11 @@ class DTDataFile(object):
         """Write an array with optional time dependence.
         
         Arguments:
-        array -- a numpy array, list, or tuple
-        name -- user-visible name of the array variable
-        dt_type -- string type used by DataTank
-        time -- time value if this variable is time-varying
+        
+        * array -- a numpy array, list, or tuple
+        * name -- user-visible name of the array variable
+        * dt_type -- string type used by DataTank
+        * time -- time value if this variable is time-varying
         
         This will add a string to expose it in DataTank using the dt_type parameter, 
         which is a DataTank type such as "Array" or "NumberList."  The time parameter 
@@ -966,9 +969,10 @@ class DTDataFile(object):
         """Write a string with time dependence.
         
         Arguments:
-        string -- the value to save
-        name -- the user-visible name of the string variable
-        time -- time value if this variable is time-varying
+        
+        * string -- the value to save
+        * name -- the user-visible name of the string variable
+        * time -- time value if this variable is time-varying
         
         If this is the first time this string has been written, this method will
         add a string to expose it in DataTank.  The time parameter is a 
@@ -1007,10 +1011,11 @@ class DTDataFile(object):
         """Write a single value to a file object by name.
         
         Arguments:
-        obj -- string, numpy array, list, tuple, or scalar value
-        name -- user-visible name of the variable
-        dt_type -- string type used by DataTank
-        time -- time value if this variable is time-varying
+        
+        * obj -- string, numpy array, list, tuple, or scalar value
+        * name -- user-visible name of the variable
+        * dt_type -- string type used by DataTank
+        * time -- time value if this variable is time-varying
 
         Handles various object types, and adds appropriate names so they're visible
         in DataTank.  String, scalar, ndarray, tuple, and list objects are supported,
