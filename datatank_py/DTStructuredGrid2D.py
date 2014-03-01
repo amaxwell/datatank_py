@@ -32,12 +32,9 @@ class DTStructuredGrid2D(object):
     
     def __init__(self, x, y, mask=None):
         """
-        *x*
-          vector or 2D array of x values
-        *y*
-          vector or 2D array of y values
-        *mask*
-          optional :class:`datatank_py.DTMask.DTMask` object
+        :param x: vector or 2D array of x values
+        :param y: vector or 2D array of y values
+        :param mask: optional :class:`datatank_py.DTMask.DTMask` object
         
         Note: if a full 2D array is passed, it must be ordered as (y, x)
         for compatibility with DataTank.  When using vectors, this is handled
@@ -86,19 +83,19 @@ class DTStructuredGrid2D(object):
         return "2D Structured Grid"
         
     def shape(self):
-        """Returns the logical grid size (y, x), even if stored as vectors."""
+        """:returns: the logical grid size (y, x), even if stored as vectors."""
         return self._logical_shape
         
     def bounding_box(self):
-        """returns a :class:`datatank_py.DTRegion2D.DTRegion2D` instance"""
+        """:returns: a :class:`datatank_py.DTRegion2D.DTRegion2D` instance"""
         return DTRegion2D(np.nanmin(self._x), np.nanmax(self._x), np.nanmin(self._y), np.nanmax(self._y))
         
     def mask(self):
-        """returns a :class:`datatank_py.DTMask.DTMask` instance or None"""
+        """:returns: a :class:`datatank_py.DTMask.DTMask` instance or None"""
         return self._mask
         
     def full_x(self):
-        """returns a 2D array of all x-values"""
+        """:returns: a 2D array of all x-values"""
         if self._logical_shape == np.shape(self._x):
             return self._x
 
@@ -108,7 +105,7 @@ class DTStructuredGrid2D(object):
         return full_x
  
     def full_y(self):
-        """returns a 2D array of all y-values"""
+        """:returns: a 2D array of all y-values"""
         if self._logical_shape == np.shape(self._y):
             return self._y
 
