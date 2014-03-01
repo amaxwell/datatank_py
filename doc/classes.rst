@@ -24,3 +24,15 @@ DTStructuredGrid2D
 .. autoclass:: datatank_py.DTStructuredGrid2D.DTStructuredGrid2D
    :members:
    :special-members: __init__
+
+DTMask
+======
+.. autoclass:: datatank_py.DTMask.DTMask
+   :members:
+   :special-members: __init__
+   
+DTRegion2D
+==========
+.. autoclass:: datatank_py.DTRegion2D.DTRegion2D
+   :members:
+   :special-members: __init__

@@ -13,16 +13,17 @@ class DTMesh2D(object):
     
     """
     
-    # For automatic module loading
     dt_type = ("2D Mesh", "Mesh2D")
+    """Type strings allowed by DataTank"""
     
     def __init__(self, values, grid=None, mask=None):
-        """Create a new 2D mesh.
-        
-        Arguments:
-        
-        * values -- 2D array of values
-        * grid -- (xmin, ymin, dx, dy) or None for unit grid
+        """
+        *values*
+          2D array of values
+        *grid*
+          (xmin, ymin, dx, dy) or None for unit grid
+        *mask*
+          a :class:`datatank_py.DTMask.DTMask` instance
         
         """
         
@@ -37,12 +38,15 @@ class DTMesh2D(object):
         self._mask = mask
         
     def grid(self):
+        """tuple with (xmin, ymin, dx, dy)"""
         return self._grid
         
     def values(self):
+        """values at each grid node"""
         return self._values
         
     def mask(self):
+        """a :class:`datatank_py.DTMask.DTMask` instance or None"""
         return self._mask
     
     def __dt_type__(self):

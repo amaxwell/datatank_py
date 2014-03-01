@@ -260,6 +260,12 @@ class DTDataFile(object):
     returns a variable name.  Variable names are unordered, as in
     hashing collections.
     
+    >>> f = DTDataFile("a.dtbin")
+    >>> for name in f:
+    ...     print name
+    >>> if "Var" in f:
+    ...     print f["Var"]
+    
     DTDataFile supports the with statement in Python 2.5 and 2.6,
     so you can use this idiom to ensure resources are cleaned up:
     
@@ -269,13 +275,13 @@ class DTDataFile(object):
     """
     
     def __init__(self, file_path, truncate=False, readonly=False):
-        """Creates a new DTDataFile instance.
-        
-        Arguments:
-        
-        * file_path -- absolute or relative path
-        * truncate -- whether to truncate the file if it exists (default is False)
-        * readonly -- open the file for read-only access (default is False)
+        """       
+        *file_path*
+          absolute or relative path
+        *truncate*
+          whether to truncate the file if it exists (default is False)
+        *readonly*
+          open the file for read-only access (default is False)
         
         The default mode is to append to a file, creating it if
         it doesn't already exist.  Passing True for truncate will
@@ -457,15 +463,25 @@ class DTDataFile(object):
     def resolve_name(self, name):
         """Resolve a name in case of shared variables.
         
-        Arguments:
-        name -- A potentially shared variable name
+        *name*
+          A potentially shared variable name
         
-        Returns:
-        The underlying variable name, with all references resolved
+        Returns the underlying variable name, with all references resolved.
+        DataTank objects can be written with a shared grid, for example,
+        and just save a string pointing to the underlying grid name. This
+        saves a lot of disk space.
         
-        This is pretty efficient in the common case of no redirect, as
+        This method is pretty efficient in the common case of no redirect, as
         it only reads the header.  Other cases are a bit more expensive,
         but too tricky to be worth rewriting at the moment.
+        
+        Example from :class:`datatank_py.DTStructuredGrid2D.DTStructuredGrid2D`::
+        
+          name = datafile.resolve_name(name)
+          gridx = datafile[name + "_X"]
+          gridy = datafile[name + "_Y"]
+          mask = DTMask.from_data_file(datafile, name + "_dom")
+          return DTStructuredGrid2D(gridx, gridy, mask=mask)
         
         """
         
@@ -519,12 +535,12 @@ class DTDataFile(object):
     def variable_named(self, name, use_modules=False):
         """Procedural API for getting a value from disk.
         
-        Arguments:
-        name -- the variable name as user-visible in the file (without the trailing nul)
-        use_modules -- try to convert to abstract type by introspection of available modules
+        *name*
+          the variable name as user-visible in the file (without the trailing nul)
+        *use_modules*
+          try to convert to abstract type by introspection of available modules
         
-        Returns:
-        A string, scalar, or numpy array.
+        Returns a string, scalar, or numpy array.
         
         This returns values as strings, scalars, or numpy arrays.  By default, no 
         attempt is made to convert a given array to its abstract type (so you can
@@ -627,6 +643,7 @@ class DTDataFile(object):
         return values.reshape(shape, order="C")        
     
     def dt_object_named(self, key):
+        """Returns a high-level DT object, if possible, by introspection."""
         # Tried to make this the default in __getitem__, but too many of the
         # modules use dictionary-style getters in from_data_file methods,
         # and that would be a compatibility nightmare.
@@ -869,11 +886,11 @@ class DTDataFile(object):
             
     def write_anonymous(self, obj, name):
         """Write an object that will not be visible in DataTank.
-        
-        Arguments:
-        
-        * array -- a string, numpy array, list, or tuple
-        * name -- name of the variable
+            
+        *array*
+          a string, numpy array, list, or tuple
+        *name*
+          name of the variable
         
         This is used for writing additional arrays and strings used by compound types,
         such as a 2D Mesh, which has an additional grid array.
@@ -915,13 +932,15 @@ class DTDataFile(object):
             
     def write_array(self, array, name, dt_type=None, time=None):
         """Write an array with optional time dependence.
-        
-        Arguments:
-        
-        * array -- a numpy array, list, or tuple
-        * name -- user-visible name of the array variable
-        * dt_type -- string type used by DataTank
-        * time -- time value if this variable is time-varying
+
+        *array*
+          a numpy array, list, or tuple
+        *name*
+          user-visible name of the array variable
+        *dt_type*
+          string type used by DataTank
+        *time*
+          time value if this variable is time-varying
         
         This will add a string to expose it in DataTank using the dt_type parameter, 
         which is a DataTank type such as "Array" or "NumberList."  The time parameter 
@@ -968,11 +987,12 @@ class DTDataFile(object):
     def write_string(self, string, name, time=None):
         """Write a string with time dependence.
         
-        Arguments:
-        
-        * string -- the value to save
-        * name -- the user-visible name of the string variable
-        * time -- time value if this variable is time-varying
+        *string*
+          the value to save
+        *name*
+          the user-visible name of the string variable
+        *time*
+          time value if this variable is time-varying
         
         If this is the first time this string has been written, this method will
         add a string to expose it in DataTank.  The time parameter is a 
@@ -1010,12 +1030,14 @@ class DTDataFile(object):
     def write(self, obj, name, dt_type=None, time=None):
         """Write a single value to a file object by name.
         
-        Arguments:
-        
-        * obj -- string, numpy array, list, tuple, or scalar value
-        * name -- user-visible name of the variable
-        * dt_type -- string type used by DataTank
-        * time -- time value if this variable is time-varying
+        *obj*
+          string, numpy array, list, tuple, or scalar value
+        *name*
+          user-visible name of the variable
+        *dt_type*
+          string type used by DataTank
+        *time*
+          time value if this variable is time-varying
 
         Handles various object types, and adds appropriate names so they're visible
         in DataTank.  String, scalar, ndarray, tuple, and list objects are supported,
@@ -1027,23 +1049,23 @@ class DTDataFile(object):
         parameter if you want something specific, such as "2D Point" for a point
         (although the caller has to ensure the shape is correct).
         
-        In addition, any object that implements __dt_type__ and __dt_write__ methods 
+        In addition, any object that implements :meth:`__dt_type__` and :meth:`__dt_write__` methods 
         can be passed, which allows saving compound types such as 2D Mesh or 2D Bitmap,
         without bloating up DTDataFile with all of those types.
         
-        The __dt_type__ method must return a DataTank type name:
+        The :meth:`__dt_type__` method must return a DataTank type name::
         
-            def __dt_type__(self):
-                return "2D Mesh"
+          def __dt_type__(self):
+              return "2D Mesh"
         
-        The __dt_write__ method should use write_anonymous to save all variables as
+        The :meth:`__dt_write__` method should use write_anonymous to save all variables as
         required for the object.  The datafile argument is this DTDataFile instance.
-        Note that __dt_write__ must not expose the variable by adding a "Seq" name, as
-        that is the responsibility of DTDataFile as the higher-level object.
+        Note that :meth:`__dt_write__` must not expose the variable by adding a "Seq" name, as
+        that is the responsibility of DTDataFile as the higher-level object.::
         
-            def __dt_write__(self, datafile, name):
-                ...
-                datafile.write_anonymous( ... , name)
+          def __dt_write__(self, datafile, name):
+              ...
+              datafile.write_anonymous( ... , name)
 
         """
         
