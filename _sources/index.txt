@@ -13,6 +13,7 @@ Contents:
 
    getting_started.rst
    classes.rst
+   bitmap2d.rst
 
 Indices and tables
 ==================
