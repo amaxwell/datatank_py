@@ -52,7 +52,7 @@
   <div class="section" id="getting-started">
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="installing-the-module">
-<span id="installing-docdir"></span><h2>Installing the module<a class="headerlink" href="#installing-the-module" title="Permalink to this headline">¶</a></h2>
+<span id="installing-module"></span><h2>Installing the module<a class="headerlink" href="#installing-the-module" title="Permalink to this headline">¶</a></h2>
 <p>You may already have <a class="reference external" href="https://github.com/amaxwell/datatank_py">datatank_py</a>
 installed &#8211; you can check by doing:</p>
 <div class="highlight-python"><div class="highlight"><pre>python -c &#39;import datatank_py&#39;
@@ -65,8 +65,55 @@ installed &#8211; you can check by doing:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="a-simple-example">
-<span id="simple-example"></span><h2>A simple example<a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-reading-a-datatank-file">
+<span id="file-read-example"></span><h2>Example: Reading a DataTank file<a class="headerlink" href="#example-reading-a-datatank-file" title="Permalink to this headline">¶</a></h2>
+<p>Create a data file in DataTank, and read the variables using <a class="reference internal" href="classes.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>.
+A few points are worth noting:</p>
+<ol class="arabic simple">
+<li>Variable structure is complicated, but is documented in DataTank&#8217;s manual
+(see the menu &#8220;Help -&gt; Manual -&gt; DataTank Manual (pdf)&#8221; in DataTank)</li>
+<li>Some arrays have one or more empty dimensions, and may need to be flattened</li>
+<li>Strings are <tt class="docutils literal"><span class="pre">unicode</span></tt> objects in Python</li>
+</ol>
+<img alt="_images/datafile_example_ss.png" src="_images/datafile_example_ss.png" />
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datatank_py.DTDataFile</span> <span class="kn">import</span> <span class="n">DTDataFile</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dtf</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;example.dtbin&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">dtf</span><span class="p">:</span>
+<span class="gp">... </span>  <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">dtf</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+<span class="gp">...</span>
+<span class="go">Seq_strings = StringList</span>
+<span class="go">Seq_numbers = NumberList</span>
+<span class="go">strings_offs = [[[0 2 4]]]</span>
+<span class="go">mesh_loc = [[[ 0.    0.    0.01  0.01]]]</span>
+<span class="go">mesh = [[[ 0.          0.00999983  0.01999867 ...,  0.83049737  0.83602598</span>
+<span class="go">    0.84147098]</span>
+<span class="go">  [ 0.          0.01000033  0.01999967 ...,  0.8305389   0.83606778</span>
+<span class="go">    0.84151306]</span>
+<span class="go">  [ 0.          0.01000183  0.02000267 ...,  0.8306635   0.83619321</span>
+<span class="go">    0.84163931]</span>
+<span class="go">  ...,</span>
+<span class="go">  [ 0.          0.0179523   0.0359028  ...,  1.49095827  1.50088355</span>
+<span class="go">    1.51065875]</span>
+<span class="go">  [ 0.          0.01822493  0.03644803 ...,  1.51360072  1.52367674</span>
+<span class="go">    1.53360039]</span>
+<span class="go">  [ 0.          0.01850785  0.03701385 ...,  1.53709759  1.54733002</span>
+<span class="go">    1.55740772]]]</span>
+<span class="go">numbers = [[[ 0.  1.  2.]]]</span>
+<span class="go">Seq_mesh = Mesh2D</span>
+<span class="go">strings = [u&#39;A&#39;, u&#39;B&#39;, u&#39;C&#39;]</span>
+</pre></div>
+</div>
+<p>At this point, you can manipulate or modify the variables, and can
+even append to the file. <em>However, you cannot modify existing variables
+in a file!</em></p>
+</div>
+<div class="section" id="example-manipulating-a-2d-mesh">
+<h2>Example: Manipulating a 2D mesh<a class="headerlink" href="#example-manipulating-a-2d-mesh" title="Permalink to this headline">¶</a></h2>
+<p id="mesh-example">In this example, we create a 2D mesh in DataTank and multiply it
+by a scalar value using Python. This is contrived, as it&#8217;s obviously
+easier to do this within DataTank itself! However, the code shown here
+is the basic skeleton of any DataTank module that you&#8217;ll create using
+Python.</p>
 <img alt="_images/mesh_example_ss.png" src="_images/mesh_example_ss.png" />
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 <span class="c"># coding: utf-8</span>
@@ -138,6 +185,11 @@ installed &#8211; you can check by doing:</p>
                 <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;Var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_mesh</span>
 </pre></div>
 </div>
+<p>If you&#8217;ve ever written a C++ program for DataTank, using the Xcode
+skeleton provided with it, the preceding code should look familiar.
+However, <cite>datatank_py</cite> implements and uses Python idioms whereever
+possible, as a straight C++ translation is undesirable for most Python
+programmers (not to say unreadable).</p>
 </div>
 </div>
 
@@ -151,7 +203,8 @@ installed &#8211; you can check by doing:</p>
   <ul>
 <li><a class="reference internal" href="#">Getting started</a><ul>
 <li><a class="reference internal" href="#installing-the-module">Installing the module</a></li>
-<li><a class="reference internal" href="#a-simple-example">A simple example</a></li>
+<li><a class="reference internal" href="#example-reading-a-datatank-file">Example: Reading a DataTank file</a></li>
+<li><a class="reference internal" href="#example-manipulating-a-2d-mesh">Example: Manipulating a 2D mesh</a></li>
 </ul>
 </li>
 </ul>
