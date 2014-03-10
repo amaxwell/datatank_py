@@ -1,0 +1,73 @@
+.. _classes:
+
+*******
+Classes
+*******
+
+DTDataFile
+==========
+
+.. autoclass:: datatank_py.DTDataFile.DTDataFile
+   :members:
+   :special-members: __init__
+   
+DTMesh2D
+========
+
+.. autoclass:: datatank_py.DTMesh2D.DTMesh2D
+   :members:
+   :special-members: __init__
+   
+DTPoint2D
+=========
+
+.. autoclass:: datatank_py.DTPoint2D.DTPoint2D
+   :members:
+   :special-members: __init__
+   
+DTPointCollection2D
+===================
+
+.. autoclass:: datatank_py.DTPointCollection2D.DTPointCollection2D
+   :members:
+   :special-members: __init__
+
+DTPointValue2D
+==============
+
+.. autoclass:: datatank_py.DTPointValue2D.DTPointValue2D
+   :members:
+   :special-members: __init__
+   
+DTPointValueCollection2D
+========================
+
+.. autoclass:: datatank_py.DTPointValueCollection2D.DTPointValueCollection2D
+   :members:
+   :special-members: __init__
+      
+DTStructuredGrid2D
+==================
+
+.. autoclass:: datatank_py.DTStructuredGrid2D.DTStructuredGrid2D
+   :members:
+   :special-members: __init__
+   
+DTStructuredMesh2D
+==================
+
+.. autoclass:: datatank_py.DTStructuredMesh2D.DTStructuredMesh2D
+   :members:
+   :special-members: __init__
+
+DTMask
+======
+.. autoclass:: datatank_py.DTMask.DTMask
+   :members:
+   :special-members: __init__
+   
+DTRegion2D
+==========
+.. autoclass:: datatank_py.DTRegion2D.DTRegion2D
+   :members:
+   :special-members: __init__

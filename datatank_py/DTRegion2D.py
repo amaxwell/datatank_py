@@ -4,22 +4,32 @@
 # This software is under a BSD license.  See LICENSE.txt for details.
 
 class DTRegion2D(object):
-    """2D region object."""
+    """2D region object.
+    
+    This is a rectangle, commonly used for cropping regions and
+    bounding boxes of objects. It's mainly provided for compatibility
+    with reading and writing other objects.
+    
+    """
     dt_type = ("2D Region", "Region2D")
+    """Type strings supported by DataTank"""
     
     def __init__(self, xmin=0, xmax=0, ymin=0, ymax=0):
-        super(DTRegion2D, self).__init__()
-        """Create a new 2D region (box).
-        
-        Arguments:
-        xmin -- left side x
-        xmax -- right side x
-        ymin -- bottom y
-        ymax -- top y
+        """
+        *xmin*
+          left side x
+        *xmax*
+          right side x
+        *ymin*
+          bottom y
+        *ymax*
+          top y
         
         Arguments are converted to double precision.
         
         """
+           
+        super(DTRegion2D, self).__init__()
                     
         self.xmin = float(xmin)
         self.ymin = float(ymin)

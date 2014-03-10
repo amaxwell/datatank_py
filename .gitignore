@@ -12,3 +12,6 @@
 
 # DTProgress can leave turds from testing
 DTProgress
+
+# Finder turds
+.DS_Store

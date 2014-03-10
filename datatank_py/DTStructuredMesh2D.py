@@ -7,20 +7,26 @@ from DTStructuredGrid2D import DTStructuredGrid2D, _squeeze2d
 import numpy as np
 
 class DTStructuredMesh2D(object):
-    """2D structured mesh object."""
+    """2D structured mesh object.
+    
+    This class corresponds to DataTank's DTStructuredMesh2D.
+    
+    """
+    
+    dt_type = ("2D Structured Mesh",)
+    """Type strings allowed by DataTank"""
     
     def __init__(self, values, grid=None):
-        super(DTStructuredMesh2D, self).__init__()
-        """Create a new 2D structured mesh.
-        
-        Arguments:
-        values -- 2D array of values
-        grid -- DTStructuredGrid2D object (defaults to unit grid) or the name of a previously saved grid
+        """
+        :param values: 2D array of values
+        :param grid: DTStructuredGrid2D object (defaults to unit grid) or the name of a previously saved grid
         
         Note that the values array must be ordered as (y, x) for compatibility
         with the grid and DataTank.
                 
         """                   
+        
+        super(DTStructuredMesh2D, self).__init__()
         
         values = _squeeze2d(values)
         shape = np.shape(values)
@@ -37,9 +43,11 @@ class DTStructuredMesh2D(object):
         self._values = values
     
     def grid(self):
+        """:returns: a :class:`datatank_py.DTStructuredGrid2D.DTStructuredGrid2D` instance"""
         return self._grid
         
     def values(self):
+        """:returns: a 2D numpy array of values at each grid node"""
         return self._values
         
     def __dt_type__(self):

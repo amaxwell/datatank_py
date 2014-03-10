@@ -5,7 +5,7 @@
 Getting started
 ***************
 
-.. _installing-docdir:
+.. _installing_module:
 
 Installing the module
 =====================
@@ -21,10 +21,61 @@ If that fails grab the latest version from GitHub with::
   > cd datatank_py
   > sudo python setup.py install
   
-.. _simple_example:
+.. _file_read_example:
 
-A simple example
-================
+Example: Reading a DataTank file
+================================
+
+Create a data file in DataTank, and read the variables using :class:`datatank_py.DTDataFile.DTDataFile`.
+A few points are worth noting:
+
+#. Variable structure is complicated, but is documented in DataTank's manual
+   (see the menu "Help -> Manual -> DataTank Manual (pdf)" in DataTank)
+#. Some arrays have one or more empty dimensions, and may need to be flattened
+#. Strings are ``unicode`` objects in Python
+
+.. image:: _static/datafile_example_ss.png
+
+>>> from datatank_py.DTDataFile import DTDataFile
+>>> dtf = DTDataFile("example.dtbin")
+>>> for name in dtf:
+...   print "%s = %s" % (name, dtf[name])
+... 
+Seq_strings = StringList
+Seq_numbers = NumberList
+strings_offs = [[[0 2 4]]]
+mesh_loc = [[[ 0.    0.    0.01  0.01]]]
+mesh = [[[ 0.          0.00999983  0.01999867 ...,  0.83049737  0.83602598
+    0.84147098]
+  [ 0.          0.01000033  0.01999967 ...,  0.8305389   0.83606778
+    0.84151306]
+  [ 0.          0.01000183  0.02000267 ...,  0.8306635   0.83619321
+    0.84163931]
+  ..., 
+  [ 0.          0.0179523   0.0359028  ...,  1.49095827  1.50088355
+    1.51065875]
+  [ 0.          0.01822493  0.03644803 ...,  1.51360072  1.52367674
+    1.53360039]
+  [ 0.          0.01850785  0.03701385 ...,  1.53709759  1.54733002
+    1.55740772]]]
+numbers = [[[ 0.  1.  2.]]]
+Seq_mesh = Mesh2D
+strings = [u'A', u'B', u'C']
+
+At this point, you can manipulate or modify the variables, and can
+even append to the file. *However, you cannot modify existing variables
+in a file!*
+
+Example: Manipulating a 2D mesh
+===============================
+
+.. _mesh_example:
+
+In this example, we create a 2D mesh in DataTank and multiply it
+by a scalar value using Python. This is contrived, as it's obviously
+easier to do this within DataTank itself! However, the code shown here
+is the basic skeleton of any DataTank module that you'll create using
+Python.
 
 .. image:: _static/mesh_example_ss.png
 
@@ -98,3 +149,10 @@ A simple example
                     # save the output variable; this will be visible to DataTank
                     #sys.stderr.write("%s: %s\n" % (type(output_string), output_string))
                     output_file["Var"] = output_mesh            
+
+If you've ever written a C++ program for DataTank, using the Xcode
+skeleton provided with it, the preceding code should look familiar.
+However, `datatank_py` implements and uses Python idioms whereever
+possible, as a straight C++ translation is undesirable for most Python
+programmers (not to say unreadable).
+

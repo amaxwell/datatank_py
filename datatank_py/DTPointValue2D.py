@@ -6,20 +6,24 @@
 class DTPointValue2D(object):
     """2D Point Value object."""
     
+    dt_type = ("2D Point Value",)
+    """Type strings allowed by DataTank"""
+    
     def __init__(self, x, y, value):
-        super(DTPointValue2D, self).__init__()
-        """Create a new 2D point value.
-        
-        Arguments:
-        x -- x value
-        y -- y value
-        value -- value
+        """
+        :param x: x coordinate
+        :param y: y coordinate
+        :param value: scalar value at this point
         
         """
-                    
+        super(DTPointValue2D, self).__init__()
+   
         self.x = float(x)
+        """:member x: x coordinate"""
         self.y = float(y)
+        """:member y: y coordinate"""
         self.value = float(value)
+        """:member value: scalar value at this point"""
         
     def __str__(self):
         return "2D Point Value ((%f, %f) : %f)" % (self.x, self.y, self.value)

@@ -6,18 +6,33 @@
 import numpy as np
 
 class DTMask(object):
-    """Mask object."""
+    """Mask object corresponding to DataTank's DTMask.
+    
+    This is typically used to mask out a portion of a mesh or
+    structured grid. Note that not all mesh types support a
+    mask in DataTank.
+    
+    The internal storage for this object mimics that used in
+    DTSource's C++ DTMask. It's very compact, but can be confusing
+    to work with. If you're doing manual hit-testing, it's easiest
+    to just use :meth:`datatank_py.DTMask.DTMask.mask_array` to
+    get an array matching the logical shape of your masked object.
+    
+    """
+    
+    dt_type = ("Mask", "DTMask")
+    """Type strings allowed by DataTank"""
     
     def __init__(self, mask_values):
-        super(DTMask, self).__init__()
         """Create a new mask.
-        
-        Arguments:
-        mask_values -- array of ones and zeroes, covering the full extent of
-        the array to be masked.
+                
+        *mask_values*
+          array of ones and zeroes, covering the full extent of the array to be masked.
         
         """
         
+        super(DTMask, self).__init__()
+
         # in Python order (zyx), same as a mesh values array
         mask_values = np.array(mask_values, dtype=np.bool)
         mask_shape = list(mask_values.shape)
@@ -74,12 +89,15 @@ class DTMask(object):
         return "Mask"
         
     def m(self):
+        """first logical dimension"""
         return self._m
         
     def n(self):
+        """second logical dimension"""
         return self._n
         
     def o(self):
+        """third logical dimension"""
         return self._o
         
     def __str__(self):
@@ -110,7 +128,8 @@ class DTMask(object):
         
     @classmethod
     def from_data_file(self, datafile, name):
-        """Instantiates a DTMask from a DTDataFile with the given variable name"""
+        """Instantiates a :class:`datatank_py.DTMask.DTMask` from a 
+        :class:`datatank_py.DTDataFile.DTDataFile`, using the given variable name"""
         intervals = datafile[name]
                 
         # return None if there is no mask

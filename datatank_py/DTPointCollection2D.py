@@ -9,18 +9,20 @@ import numpy as np
 class DTPointCollection2D(object):
     """2D Point collection object."""
     
+    dt_type = ("2D Point Collection",)
+    """Type strings allowed by DataTank"""
+    
     def __init__(self, xvalues, yvalues):
-        super(DTPointCollection2D, self).__init__()
-        """Create a new 2D point collection.
-        
-        Arguments:
-        xvalues -- array of x values
-        yvalues -- array of y values
+        """
+        :param xvalues: array of x values
+        :param yvalues: array of y values
         
         Pass empty arrays to get an empty collection
         that can be added to with add_point().
         
         """
+        
+        super(DTPointCollection2D, self).__init__()
         
         # Create a new point collection as either
         #     DTPointCollection2D(array)
@@ -40,11 +42,17 @@ class DTPointCollection2D(object):
         self._yvalues = np.array(yvalues).astype(np.double)
             
     def bounding_box(self):
+        """:returns: tuple with ``(xmin, xmax, ymin, ymax)``"""
         if self._xvalues == None or np.size(self._xvalues) == 0:
             return (-np.inf, np.inf, -np.inf, np.inf)
         return (np.nanmin(self._xvalues), np.nanmax(self._xvalues), np.nanmin(self._yvalues), np.nanmax(self._yvalues))
         
     def add_point(self, point):
+        """Add a point to the collection
+        
+        :param point: a :class:`datatank_py.DTPoint2D.DTPoint2D` instance
+        
+        """
         self._xvalues = np.append(self._xvalues, point.x)
         self._yvalues = np.append(self._yvalues, point.y)
         
