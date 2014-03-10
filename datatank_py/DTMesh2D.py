@@ -18,12 +18,9 @@ class DTMesh2D(object):
     
     def __init__(self, values, grid=None, mask=None):
         """
-        *values*
-          2D array of values
-        *grid*
-          (xmin, ymin, dx, dy) or None for unit grid
-        *mask*
-          a :class:`datatank_py.DTMask.DTMask` instance
+        :param values: 2D array of values
+        :param grid: (xmin, ymin, dx, dy) or `None` for unit grid
+        :param mask: a :class:`datatank_py.DTMask.DTMask` instance
         
         """
         
@@ -38,15 +35,15 @@ class DTMesh2D(object):
         self._mask = mask
         
     def grid(self):
-        """tuple with (xmin, ymin, dx, dy)"""
+        """:returns: tuple with (xmin, ymin, dx, dy)"""
         return self._grid
         
     def values(self):
-        """values at each grid node"""
+        """:returns: values at each grid node"""
         return self._values
         
     def mask(self):
-        """a :class:`datatank_py.DTMask.DTMask` instance or None"""
+        """:returns: a :class:`datatank_py.DTMask.DTMask` instance or None"""
         return self._mask
     
     def __dt_type__(self):

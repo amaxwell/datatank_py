@@ -9,17 +9,18 @@ import numpy as np
 class DTPointValueCollection2D(object):
     """2D Point Value collection object."""
     
+    dt_type = ("2D Point Value Collection",)
+    """Type strings allowed by DataTank"""
+    
     def __init__(self, points, values):
-        super(DTPointValueCollection2D, self).__init__()
-        """Create a new 2D point value collection.
+        """
+        :param points: a :class:`datatank_py.DTPointCollection2D.DTPointCollection2D` instance
+        :param values: an ordered collection of values corresponding to each point
         
-        Arguments:
-        points -- DTPointCollection2D object
-        values -- values corresponding to each point
-        
-        Point collection and values may be empty, but not None.
+        Point collection and values may be empty (length zero), but not `None`.
         
         """
+        super(DTPointValueCollection2D, self).__init__()
         
         assert points != None and values != None, "points and values are required"
         assert len(points) == len(values), "inconsistent lengths"
@@ -27,9 +28,14 @@ class DTPointValueCollection2D(object):
         self._values = np.array(values, dtype=np.double)
             
     def bounding_box(self):
+        """:returns: result of :meth:`datatank_py.DTPointCollection2D.DTPointCollection2D.bounding_box`"""
         return self._points.bounding_box()
         
     def add_point_value(self, point, value):
+        """
+        :param point: a :class:`datatank_py.DTPoint2D.DTPoint2D` instance
+        :param value: a scalar value associated with the point
+        """
         self._points.add_point(point)
         self._values = np.append(self._values, value)
     
@@ -52,11 +58,11 @@ class DTPointValueCollection2D(object):
         return s
         
     def points(self):
-        """returns DTPointCollection2D object"""
+        """:returns: a :class:`datatank_py.DTPointCollection2D.DTPointCollection2D` instance"""
         return self._points
         
     def values(self):
-        """returns vector of values"""
+        """:returns: vector of scalar values"""
         return self._values
     
     def __dt_type__(self):

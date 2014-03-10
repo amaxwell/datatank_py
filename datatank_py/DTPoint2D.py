@@ -6,21 +6,29 @@
 import numpy as np
 
 class DTPoint2D(object):
-    """2D Point object."""
+    """2D Point object. 
+    
+    This could really be a two-tuple, but we need to be
+    able to serialize it properly to a datafile.
+    
+    """
+    
     dt_type = ("2D Point",)
+    """Type strings allowed by DataTank"""
     
     def __init__(self, x, y):
-        super(DTPoint2D, self).__init__()
-        """Create a new 2D point.
-        
-        Arguments:
-        x -- x value
-        y -- y value
+        """
+        :param x: x coordinate
+        :param y: y coordinate
         
         """
+        
+        super(DTPoint2D, self).__init__()
                     
         self.x = float(x)
+        """:member x: x coordinate"""
         self.y = float(y)
+        """:member y: y coordinate"""
         
     def __str__(self):
         return "2D Point (%f, %f)" % (self.x, self.y)
