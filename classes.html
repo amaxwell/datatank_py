@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Classes &mdash; datatank_py 0.1 documentation</title>
+    <title>Other Classes &mdash; datatank_py 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="datatank_py 0.1 documentation" href="index.html" />
     <link rel="next" title="Georeferenced 2D Bitmap Example" href="bitmap2d.html" />
-    <link rel="prev" title="Getting started" href="getting_started.html" /> 
+    <link rel="prev" title="Data Files" href="datafile.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +38,7 @@
           <a href="bitmap2d.html" title="Georeferenced 2D Bitmap Example"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="getting_started.html" title="Getting started"
+          <a href="datafile.html" title="Data Files"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -49,330 +49,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="classes">
-<span id="id1"></span><h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="dtdatafile">
-<h2>DTDataFile<a class="headerlink" href="#dtdatafile" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="datatank_py.DTDataFile.DTDataFile">
-<em class="property">class </em><tt class="descclassname">datatank_py.DTDataFile.</tt><tt class="descname">DTDataFile</tt><big>(</big><em>file_path</em>, <em>truncate=False</em>, <em>readonly=False</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class roughly corresponds to the C++ DTDataFile class.</p>
-<p>Higher-level access is provided for some objects (e.g., PIL image),
-but it is primarily for writing arrays and strings.  In fact, all
-DataTank stores is arrays and strings, with naming conventions to
-define how they&#8217;re interpreted.</p>
-<p>You should not have multiple DTDataFile instances open for the same
-file on disk, or your file&#8217;s state will get trashed.</p>
-<p>Reading values is fairly easy, and DTDataFile provides a 
-dictionary-style interface to the variables.  For example,
-assuming that a variable named &#8220;Array_One&#8221; exists:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;a.dtbin&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s">&quot;Array_One&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>Setting is similar, but you&#8217;re at the mercy of the type conversion
-as in the write() method, and you can&#8217;t specify a time:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;a.dtbin&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">[</span><span class="s">&quot;My array&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">[</span><span class="s">&quot;My array&quot;</span><span class="p">]</span>
-<span class="go">array([[ 0.,  0.],</span>
-<span class="go">       [ 0.,  0.]])</span>
-</pre></div>
-</div>
-<p>Note that if you try to set the same variable name again,
-an exception will be thrown.  Don&#8217;t do that.</p>
-<p>You can also iterate a DTDataFile directly, and each iteration
-returns a variable name.  Variable names are unordered, as in
-hashing collections.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;a.dtbin&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">print</span> <span class="n">name</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="s">&quot;Var&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">print</span> <span class="n">f</span><span class="p">[</span><span class="s">&quot;Var&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>DTDataFile supports the with statement in Python 2.5 and 2.6,
-so you can use this idiom to ensure resources are cleaned up:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;foo.dtbin&quot;</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">df</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="n">df</span><span class="o">.</span><span class="n">write_2dmesh_one</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="s">&quot;FooBar&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>file_path</em>, <em>truncate=False</em>, <em>readonly=False</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>file_path</strong> &#8211; absolute or relative path</li>
-<li><strong>truncate</strong> &#8211; whether to truncate the file if it exists (default is <cite>False</cite>)</li>
-<li><strong>readonly</strong> &#8211; open the file for read-only access (default is <cite>False</cite>)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>The default mode is to append to a file, creating it if
-it doesn&#8217;t already exist.  Passing True for truncate will
-entirely clear the file&#8217;s content.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.close">
-<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Close the underlying file object.</p>
-<p>Further access to variables and names is not possible at this point
-and will raise an exception.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.dt_object_named">
-<tt class="descname">dt_object_named</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.dt_object_named" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a high-level DT object, if possible, by introspection</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.ordered_variable_names">
-<tt class="descname">ordered_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.ordered_variable_names" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of variable names ordered as in the file</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.path">
-<tt class="descname">path</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.path" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the file path</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.resolve_name">
-<tt class="descname">resolve_name</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.resolve_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resolve a name in case of shared variables.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; A potentially shared variable name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The underlying variable name, with all references resolved</td>
-</tr>
-</tbody>
-</table>
-<p>DataTank mesh objects can be written with a shared grid, for example,
-and just save a string pointing to the underlying grid name. This
-saves a lot of disk space, but means that you can end up with a string
-instead of the object you&#8217;re expecting.</p>
-<p>This method is pretty efficient in the common case of no redirect, as
-it only reads the header.  Other cases are a bit more expensive,
-but too tricky to be worth rewriting at the moment.</p>
-<p>Example from <a class="reference internal" href="#datatank_py.DTStructuredGrid2D.DTStructuredGrid2D" title="datatank_py.DTStructuredGrid2D.DTStructuredGrid2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTStructuredGrid2D.DTStructuredGrid2D</span></tt></a>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">name</span> <span class="o">=</span> <span class="n">datafile</span><span class="o">.</span><span class="n">resolve_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-<span class="n">gridx</span> <span class="o">=</span> <span class="n">datafile</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;_X&quot;</span><span class="p">]</span>
-<span class="n">gridy</span> <span class="o">=</span> <span class="n">datafile</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;_Y&quot;</span><span class="p">]</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="n">DTMask</span><span class="o">.</span><span class="n">from_data_file</span><span class="p">(</span><span class="n">datafile</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;_dom&quot;</span><span class="p">)</span>
-<span class="k">return</span> <span class="n">DTStructuredGrid2D</span><span class="p">(</span><span class="n">gridx</span><span class="p">,</span> <span class="n">gridy</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.variable_named">
-<tt class="descname">variable_named</tt><big>(</big><em>name</em>, <em>use_modules=False</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.variable_named" title="Permalink to this definition">¶</a></dt>
-<dd><p>Procedural API for getting a value from disk.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> &#8211; the variable name as user-visible in the file (without the trailing nul)</li>
-<li><strong>use_modules</strong> &#8211; try to convert to abstract type by introspection of available modules</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a string, scalar, or numpy array</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>This returns values as strings, scalars, or numpy arrays.  By default, no 
-attempt is made to convert a given array to its abstract type (so you can
-retrieve each plane of a 2D Bitmap object by name, but not as a PIL image).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.variable_names">
-<tt class="descname">variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.variable_names" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">unsorted list of variable names</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.write">
-<tt class="descname">write</tt><big>(</big><em>obj</em>, <em>name</em>, <em>dt_type=None</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a single value to a file object by name.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> &#8211; string, numpy array, list, tuple, or scalar value</li>
-<li><strong>name</strong> &#8211; user-visible name of the variable</li>
-<li><strong>dt_type</strong> &#8211; string type used by DataTank</li>
-<li><strong>time</strong> &#8211; time value if this variable is time-varying</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Handles various object types, and adds appropriate names so they&#8217;re visible
-in DataTank.  String, scalar, ndarray, tuple, and list objects are supported,
-although ndarray gives the most specific interface for precision and avoids
-type conversions.</p>
-<p>This method saves a 0D array (scalar) as a &#8220;Real Number&#8221;, a 1D array as a
-&#8220;List of Numbers&#8221; and other shapes as &#8220;Array&#8221; by default.  Use the dt_type
-parameter if you want something specific, such as &#8220;2D Point&#8221; for a point
-(although the caller has to ensure the shape is correct).</p>
-<p>In addition, any object that implements <tt class="xref py py-meth docutils literal"><span class="pre">__dt_type__()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">__dt_write__()</span></tt> methods 
-can be passed, which allows saving compound types such as 2D Mesh or 2D Bitmap,
-without bloating up DTDataFile with all of those types.</p>
-<p>The <tt class="xref py py-meth docutils literal"><span class="pre">__dt_type__()</span></tt> method must return a DataTank type name:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__dt_type__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s">&quot;2D Mesh&quot;</span>
-</pre></div>
-</div>
-<p>The <tt class="xref py py-meth docutils literal"><span class="pre">__dt_write__()</span></tt> method should use write_anonymous to save all variables as
-required for the object.  The datafile argument is this DTDataFile instance.
-Note that <tt class="xref py py-meth docutils literal"><span class="pre">__dt_write__()</span></tt> must not expose the variable by adding a &#8220;Seq&#8221; name, as
-that is the responsibility of DTDataFile as the higher-level object.:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__dt_write__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datafile</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="o">...</span>
-    <span class="n">datafile</span><span class="o">.</span><span class="n">write_anonymous</span><span class="p">(</span> <span class="o">...</span> <span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.write_anonymous">
-<tt class="descname">write_anonymous</tt><big>(</big><em>obj</em>, <em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write_anonymous" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write an object that will not be visible in DataTank.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>array</strong> &#8211; a string, numpy array, list, or tuple</li>
-<li><strong>name</strong> &#8211; name of the variable</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>This is used for writing additional arrays and strings used by compound types,
-such as a 2D Mesh, which has an additional grid array.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.write_array">
-<tt class="descname">write_array</tt><big>(</big><em>array</em>, <em>name</em>, <em>dt_type=None</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write an array with optional time dependence.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>array</strong> &#8211; a numpy array, list, or tuple</li>
-<li><strong>name</strong> &#8211; user-visible name of the array variable</li>
-<li><strong>dt_type</strong> &#8211; string type used by DataTank</li>
-<li><strong>time</strong> &#8211; time value if this variable is time-varying</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>This will add a string to expose it in DataTank using the dt_type parameter, 
-which is a DataTank type such as &#8220;Array&#8221; or &#8220;NumberList.&#8221;  The time parameter 
-is a double-precision floating point value, relative to DataTank&#8217;s time slider.</p>
-<p>Note that if time dependence is used, the caller is responsible for appending
-&#8220;_N&#8221; to the variable, where N is an integer &gt;= 0 and strictly increasing 
-with time.  A contrived example follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;foo.dtbin&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">point_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">point_test</span> <span class="o">=</span> <span class="n">point_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">point_test</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">... </span>    <span class="n">tp</span> <span class="o">=</span> <span class="s">&quot;2D Point Collection&quot;</span>
-<span class="gp">... </span>    <span class="n">tm</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">*</span> <span class="mf">2.</span>
-<span class="gp">... </span>    <span class="n">f</span><span class="o">.</span><span class="n">write_array</span><span class="p">(</span><span class="n">point_test</span><span class="p">,</span> <span class="s">&quot;Points_</span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">dt_type</span><span class="o">=</span><span class="n">tp</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">tm</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Note that the actual variable type is &#8220;2D Point Collection,&#8221; and the caller
-is responsible for setting the array shape correctly.  This should work for any
-array-based object in DataTank.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="datatank_py.DTDataFile.DTDataFile.write_string">
-<tt class="descname">write_string</tt><big>(</big><em>string</em>, <em>name</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a string with time dependence.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>string</strong> &#8211; the value to save</li>
-<li><strong>name</strong> &#8211; the user-visible name of the string variable</li>
-<li><strong>time</strong> &#8211; time value if this variable is time-varying</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>If this is the first time this string has been written, this method will
-add a string to expose it in DataTank.  The time parameter is a 
-double-precision floating point value, relative to DataTank&#8217;s time slider.</p>
-<p>Note that if time dependence is used, the caller is responsible for appending
-&#8220;_N&#8221; to the variable, where N is an integer &gt;= 0 and strictly increasing 
-with time.  A call might look like this:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;foo.dtbin&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">s</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="n">f</span><span class="o">.</span><span class="n">write_array</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">&quot;PointTest_</span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">time</span><span class="o">=</span><span class="n">idx</span> <span class="o">*</span> <span class="mf">2.</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-</div>
+  <div class="section" id="other-classes">
+<span id="id1"></span><h1>Other Classes<a class="headerlink" href="#other-classes" title="Permalink to this headline">¶</a></h1>
+<p>These classes are provided so that you can read, manipulate,
+and write DataTank objects using a <a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>
+instance for storage. The easiest way to create a new class is by examining
+the C++ DTSource classes inside the DataTank.app bundle.</p>
 <div class="section" id="dtmesh2d">
 <h2>DTMesh2D<a class="headerlink" href="#dtmesh2d" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -919,7 +601,7 @@ get an array matching the logical shape of your masked object.</p>
 <dt id="datatank_py.DTMask.DTMask.from_data_file">
 <em class="property">classmethod </em><tt class="descname">from_data_file</tt><big>(</big><em>datafile</em>, <em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTMask.DTMask.from_data_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiates a <a class="reference internal" href="#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></tt></a> from a 
-<a class="reference internal" href="#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>, using the given variable name</p>
+<a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>, using the given variable name</p>
 </dd></dl>
 
 <dl class="method">
@@ -993,8 +675,7 @@ with reading and writing other objects.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Classes</a><ul>
-<li><a class="reference internal" href="#dtdatafile">DTDataFile</a></li>
+<li><a class="reference internal" href="#">Other Classes</a><ul>
 <li><a class="reference internal" href="#dtmesh2d">DTMesh2D</a></li>
 <li><a class="reference internal" href="#dtpoint2d">DTPoint2D</a></li>
 <li><a class="reference internal" href="#dtpointcollection2d">DTPointCollection2D</a></li>
@@ -1009,8 +690,8 @@ with reading and writing other objects.</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="getting_started.html"
-                        title="previous chapter">Getting started</a></p>
+  <p class="topless"><a href="datafile.html"
+                        title="previous chapter">Data Files</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="bitmap2d.html"
                         title="next chapter">Georeferenced 2D Bitmap Example</a></p>
@@ -1046,7 +727,7 @@ with reading and writing other objects.</p>
           <a href="bitmap2d.html" title="Georeferenced 2D Bitmap Example"
              >next</a> |</li>
         <li class="right" >
-          <a href="getting_started.html" title="Getting started"
+          <a href="datafile.html" title="Data Files"
              >previous</a> |</li>
         <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
       </ul>

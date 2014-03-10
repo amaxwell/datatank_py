@@ -1,15 +1,13 @@
-.. _classes:
+.. _other_classes:
 
-*******
-Classes
-*******
+*************
+Other Classes
+*************
 
-DTDataFile
-==========
-
-.. autoclass:: datatank_py.DTDataFile.DTDataFile
-   :members:
-   :special-members: __init__
+These classes are provided so that you can read, manipulate,
+and write DataTank objects using a :class:`datatank_py.DTDataFile.DTDataFile`
+instance for storage. The easiest way to create a new class is by examining
+the C++ DTSource classes inside the DataTank.app bundle.
    
 DTMesh2D
 ========
