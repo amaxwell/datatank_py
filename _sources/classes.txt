@@ -18,10 +18,45 @@ DTMesh2D
    :members:
    :special-members: __init__
    
+DTPoint2D
+=========
+
+.. autoclass:: datatank_py.DTPoint2D.DTPoint2D
+   :members:
+   :special-members: __init__
+   
+DTPointCollection2D
+===================
+
+.. autoclass:: datatank_py.DTPointCollection2D.DTPointCollection2D
+   :members:
+   :special-members: __init__
+
+DTPointValue2D
+==============
+
+.. autoclass:: datatank_py.DTPointValue2D.DTPointValue2D
+   :members:
+   :special-members: __init__
+   
+DTPointValueCollection2D
+========================
+
+.. autoclass:: datatank_py.DTPointValueCollection2D.DTPointValueCollection2D
+   :members:
+   :special-members: __init__
+      
 DTStructuredGrid2D
 ==================
 
 .. autoclass:: datatank_py.DTStructuredGrid2D.DTStructuredGrid2D
+   :members:
+   :special-members: __init__
+   
+DTStructuredMesh2D
+==================
+
+.. autoclass:: datatank_py.DTStructuredMesh2D.DTStructuredMesh2D
    :members:
    :special-members: __init__
 

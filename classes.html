@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="datatank_py 0.1 documentation" href="index.html" />
-    <link rel="next" title="Getting started" href="bitmap2d.html" />
+    <link rel="next" title="Georeferenced 2D Bitmap Example" href="bitmap2d.html" />
     <link rel="prev" title="Getting started" href="getting_started.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="bitmap2d.html" title="Getting started"
+          <a href="bitmap2d.html" title="Georeferenced 2D Bitmap Example"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting started"
@@ -101,14 +101,19 @@ so you can use this idiom to ensure resources are cleaned up:</p>
 <dl class="method">
 <dt id="datatank_py.DTDataFile.DTDataFile.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>file_path</em>, <em>truncate=False</em>, <em>readonly=False</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><em>file_path</em></dt>
-<dd>absolute or relative path</dd>
-<dt><em>truncate</em></dt>
-<dd>whether to truncate the file if it exists (default is False)</dd>
-<dt><em>readonly</em></dt>
-<dd>open the file for read-only access (default is False)</dd>
-</dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_path</strong> &#8211; absolute or relative path</li>
+<li><strong>truncate</strong> &#8211; whether to truncate the file if it exists (default is <cite>False</cite>)</li>
+<li><strong>readonly</strong> &#8211; open the file for read-only access (default is <cite>False</cite>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>The default mode is to append to a file, creating it if
 it doesn&#8217;t already exist.  Passing True for truncate will
 entirely clear the file&#8217;s content.</p>
@@ -125,33 +130,60 @@ and will raise an exception.</p>
 <dl class="method">
 <dt id="datatank_py.DTDataFile.DTDataFile.dt_object_named">
 <tt class="descname">dt_object_named</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.dt_object_named" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a high-level DT object, if possible, by introspection.</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a high-level DT object, if possible, by introspection</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="datatank_py.DTDataFile.DTDataFile.ordered_variable_names">
 <tt class="descname">ordered_variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.ordered_variable_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of variable names ordered as in the file.</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of variable names ordered as in the file</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="datatank_py.DTDataFile.DTDataFile.path">
 <tt class="descname">path</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the file path.</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the file path</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="datatank_py.DTDataFile.DTDataFile.resolve_name">
 <tt class="descname">resolve_name</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.resolve_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve a name in case of shared variables.</p>
-<dl class="docutils">
-<dt><em>name</em></dt>
-<dd>A potentially shared variable name</dd>
-</dl>
-<p>Returns the underlying variable name, with all references resolved.
-DataTank objects can be written with a shared grid, for example,
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> &#8211; A potentially shared variable name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The underlying variable name, with all references resolved</td>
+</tr>
+</tbody>
+</table>
+<p>DataTank mesh objects can be written with a shared grid, for example,
 and just save a string pointing to the underlying grid name. This
-saves a lot of disk space.</p>
+saves a lot of disk space, but means that you can end up with a string
+instead of the object you&#8217;re expecting.</p>
 <p>This method is pretty efficient in the common case of no redirect, as
 it only reads the header.  Other cases are a bit more expensive,
 but too tricky to be worth rewriting at the moment.</p>
@@ -169,13 +201,21 @@ but too tricky to be worth rewriting at the moment.</p>
 <dt id="datatank_py.DTDataFile.DTDataFile.variable_named">
 <tt class="descname">variable_named</tt><big>(</big><em>name</em>, <em>use_modules=False</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.variable_named" title="Permalink to this definition">¶</a></dt>
 <dd><p>Procedural API for getting a value from disk.</p>
-<dl class="docutils">
-<dt><em>name</em></dt>
-<dd>the variable name as user-visible in the file (without the trailing nul)</dd>
-<dt><em>use_modules</em></dt>
-<dd>try to convert to abstract type by introspection of available modules</dd>
-</dl>
-<p>Returns a string, scalar, or numpy array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> &#8211; the variable name as user-visible in the file (without the trailing nul)</li>
+<li><strong>use_modules</strong> &#8211; try to convert to abstract type by introspection of available modules</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a string, scalar, or numpy array</p>
+</td>
+</tr>
+</tbody>
+</table>
 <p>This returns values as strings, scalars, or numpy arrays.  By default, no 
 attempt is made to convert a given array to its abstract type (so you can
 retrieve each plane of a 2D Bitmap object by name, but not as a PIL image).</p>
@@ -184,23 +224,34 @@ retrieve each plane of a 2D Bitmap object by name, but not as a PIL image).</p>
 <dl class="method">
 <dt id="datatank_py.DTDataFile.DTDataFile.variable_names">
 <tt class="descname">variable_names</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.variable_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unsorted list of variable names.</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">unsorted list of variable names</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="datatank_py.DTDataFile.DTDataFile.write">
 <tt class="descname">write</tt><big>(</big><em>obj</em>, <em>name</em>, <em>dt_type=None</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a single value to a file object by name.</p>
-<dl class="docutils">
-<dt><em>obj</em></dt>
-<dd>string, numpy array, list, tuple, or scalar value</dd>
-<dt><em>name</em></dt>
-<dd>user-visible name of the variable</dd>
-<dt><em>dt_type</em></dt>
-<dd>string type used by DataTank</dd>
-<dt><em>time</em></dt>
-<dd>time value if this variable is time-varying</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> &#8211; string, numpy array, list, tuple, or scalar value</li>
+<li><strong>name</strong> &#8211; user-visible name of the variable</li>
+<li><strong>dt_type</strong> &#8211; string type used by DataTank</li>
+<li><strong>time</strong> &#8211; time value if this variable is time-varying</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>Handles various object types, and adds appropriate names so they&#8217;re visible
 in DataTank.  String, scalar, ndarray, tuple, and list objects are supported,
 although ndarray gives the most specific interface for precision and avoids
@@ -232,12 +283,18 @@ that is the responsibility of DTDataFile as the higher-level object.:</p>
 <dt id="datatank_py.DTDataFile.DTDataFile.write_anonymous">
 <tt class="descname">write_anonymous</tt><big>(</big><em>obj</em>, <em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write_anonymous" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an object that will not be visible in DataTank.</p>
-<dl class="docutils">
-<dt><em>array</em></dt>
-<dd>a string, numpy array, list, or tuple</dd>
-<dt><em>name</em></dt>
-<dd>name of the variable</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>array</strong> &#8211; a string, numpy array, list, or tuple</li>
+<li><strong>name</strong> &#8211; name of the variable</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>This is used for writing additional arrays and strings used by compound types,
 such as a 2D Mesh, which has an additional grid array.</p>
 </dd></dl>
@@ -246,16 +303,20 @@ such as a 2D Mesh, which has an additional grid array.</p>
 <dt id="datatank_py.DTDataFile.DTDataFile.write_array">
 <tt class="descname">write_array</tt><big>(</big><em>array</em>, <em>name</em>, <em>dt_type=None</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write an array with optional time dependence.</p>
-<dl class="docutils">
-<dt><em>array</em></dt>
-<dd>a numpy array, list, or tuple</dd>
-<dt><em>name</em></dt>
-<dd>user-visible name of the array variable</dd>
-<dt><em>dt_type</em></dt>
-<dd>string type used by DataTank</dd>
-<dt><em>time</em></dt>
-<dd>time value if this variable is time-varying</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>array</strong> &#8211; a numpy array, list, or tuple</li>
+<li><strong>name</strong> &#8211; user-visible name of the array variable</li>
+<li><strong>dt_type</strong> &#8211; string type used by DataTank</li>
+<li><strong>time</strong> &#8211; time value if this variable is time-varying</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>This will add a string to expose it in DataTank using the dt_type parameter, 
 which is a DataTank type such as &#8220;Array&#8221; or &#8220;NumberList.&#8221;  The time parameter 
 is a double-precision floating point value, relative to DataTank&#8217;s time slider.</p>
@@ -281,14 +342,19 @@ array-based object in DataTank.</p>
 <dt id="datatank_py.DTDataFile.DTDataFile.write_string">
 <tt class="descname">write_string</tt><big>(</big><em>string</em>, <em>name</em>, <em>time=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTDataFile.DTDataFile.write_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a string with time dependence.</p>
-<dl class="docutils">
-<dt><em>string</em></dt>
-<dd>the value to save</dd>
-<dt><em>name</em></dt>
-<dd>the user-visible name of the string variable</dd>
-<dt><em>time</em></dt>
-<dd>time value if this variable is time-varying</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>string</strong> &#8211; the value to save</li>
+<li><strong>name</strong> &#8211; the user-visible name of the string variable</li>
+<li><strong>time</strong> &#8211; time value if this variable is time-varying</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>If this is the first time this string has been written, this method will
 add a string to expose it in DataTank.  The time parameter is a 
 double-precision floating point value, relative to DataTank&#8217;s time slider.</p>
@@ -317,14 +383,19 @@ with time.  A call might look like this:</p>
 <dl class="method">
 <dt id="datatank_py.DTMesh2D.DTMesh2D.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>values</em>, <em>grid=None</em>, <em>mask=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTMesh2D.DTMesh2D.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt><em>values</em></dt>
-<dd>2D array of values</dd>
-<dt><em>grid</em></dt>
-<dd>(xmin, ymin, dx, dy) or None for unit grid</dd>
-<dt><em>mask</em></dt>
-<dd>a <a class="reference internal" href="#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></tt></a> instance</dd>
-</dl>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>values</strong> &#8211; 2D array of values</li>
+<li><strong>grid</strong> &#8211; (xmin, ymin, dx, dy) or <cite>None</cite> for unit grid</li>
+<li><strong>mask</strong> &#8211; a <a class="reference internal" href="#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></tt></a> instance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -336,19 +407,322 @@ with time.  A call might look like this:</p>
 <dl class="method">
 <dt id="datatank_py.DTMesh2D.DTMesh2D.grid">
 <tt class="descname">grid</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTMesh2D.DTMesh2D.grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>tuple with (xmin, ymin, dx, dy)</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">tuple with (xmin, ymin, dx, dy)</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="datatank_py.DTMesh2D.DTMesh2D.mask">
 <tt class="descname">mask</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTMesh2D.DTMesh2D.mask" title="Permalink to this definition">¶</a></dt>
-<dd><p>a <a class="reference internal" href="#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></tt></a> instance or None</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></tt></a> instance or None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="datatank_py.DTMesh2D.DTMesh2D.values">
 <tt class="descname">values</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTMesh2D.DTMesh2D.values" title="Permalink to this definition">¶</a></dt>
-<dd><p>values at each grid node</p>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">values at each grid node</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtpoint2d">
+<h2>DTPoint2D<a class="headerlink" href="#dtpoint2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTPoint2D.DTPoint2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTPoint2D.</tt><tt class="descname">DTPoint2D</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#datatank_py.DTPoint2D.DTPoint2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D Point object.</p>
+<p>This could really be a two-tuple, but we need to be
+able to serialize it properly to a datafile.</p>
+<dl class="method">
+<dt id="datatank_py.DTPoint2D.DTPoint2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#datatank_py.DTPoint2D.DTPoint2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; x coordinate</li>
+<li><strong>y</strong> &#8211; y coordinate</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPoint2D.DTPoint2D.dt_type">
+<tt class="descname">dt_type</tt><em class="property"> = ('2D Point',)</em><a class="headerlink" href="#datatank_py.DTPoint2D.DTPoint2D.dt_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type strings allowed by DataTank</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPoint2D.DTPoint2D.x">
+<tt class="descname">x</tt><em class="property"> = None</em><a class="headerlink" href="#datatank_py.DTPoint2D.DTPoint2D.x" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Member x:</th><td class="field-body">x coordinate</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPoint2D.DTPoint2D.y">
+<tt class="descname">y</tt><em class="property"> = None</em><a class="headerlink" href="#datatank_py.DTPoint2D.DTPoint2D.y" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Member y:</th><td class="field-body">y coordinate</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtpointcollection2d">
+<h2>DTPointCollection2D<a class="headerlink" href="#dtpointcollection2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTPointCollection2D.DTPointCollection2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTPointCollection2D.</tt><tt class="descname">DTPointCollection2D</tt><big>(</big><em>xvalues</em>, <em>yvalues</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointCollection2D.DTPointCollection2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D Point collection object.</p>
+<dl class="method">
+<dt id="datatank_py.DTPointCollection2D.DTPointCollection2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>xvalues</em>, <em>yvalues</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointCollection2D.DTPointCollection2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xvalues</strong> &#8211; array of x values</li>
+<li><strong>yvalues</strong> &#8211; array of y values</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Pass empty arrays to get an empty collection
+that can be added to with add_point().</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPointCollection2D.DTPointCollection2D.add_point">
+<tt class="descname">add_point</tt><big>(</big><em>point</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointCollection2D.DTPointCollection2D.add_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a point to the collection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>point</strong> &#8211; a <a class="reference internal" href="#datatank_py.DTPoint2D.DTPoint2D" title="datatank_py.DTPoint2D.DTPoint2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPoint2D.DTPoint2D</span></tt></a> instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPointCollection2D.DTPointCollection2D.bounding_box">
+<tt class="descname">bounding_box</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPointCollection2D.DTPointCollection2D.bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">tuple with <tt class="docutils literal"><span class="pre">(xmin,</span> <span class="pre">xmax,</span> <span class="pre">ymin,</span> <span class="pre">ymax)</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPointCollection2D.DTPointCollection2D.dt_type">
+<tt class="descname">dt_type</tt><em class="property"> = ('2D Point Collection',)</em><a class="headerlink" href="#datatank_py.DTPointCollection2D.DTPointCollection2D.dt_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type strings allowed by DataTank</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtpointvalue2d">
+<h2>DTPointValue2D<a class="headerlink" href="#dtpointvalue2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTPointValue2D.DTPointValue2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTPointValue2D.</tt><tt class="descname">DTPointValue2D</tt><big>(</big><em>x</em>, <em>y</em>, <em>value</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointValue2D.DTPointValue2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D Point Value object.</p>
+<dl class="method">
+<dt id="datatank_py.DTPointValue2D.DTPointValue2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>x</em>, <em>y</em>, <em>value</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointValue2D.DTPointValue2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; x coordinate</li>
+<li><strong>y</strong> &#8211; y coordinate</li>
+<li><strong>value</strong> &#8211; scalar value at this point</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPointValue2D.DTPointValue2D.dt_type">
+<tt class="descname">dt_type</tt><em class="property"> = ('2D Point Value',)</em><a class="headerlink" href="#datatank_py.DTPointValue2D.DTPointValue2D.dt_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type strings allowed by DataTank</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPointValue2D.DTPointValue2D.value">
+<tt class="descname">value</tt><em class="property"> = None</em><a class="headerlink" href="#datatank_py.DTPointValue2D.DTPointValue2D.value" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Member value:</th><td class="field-body">scalar value at this point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPointValue2D.DTPointValue2D.x">
+<tt class="descname">x</tt><em class="property"> = None</em><a class="headerlink" href="#datatank_py.DTPointValue2D.DTPointValue2D.x" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Member x:</th><td class="field-body">x coordinate</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPointValue2D.DTPointValue2D.y">
+<tt class="descname">y</tt><em class="property"> = None</em><a class="headerlink" href="#datatank_py.DTPointValue2D.DTPointValue2D.y" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Member y:</th><td class="field-body">y coordinate</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtpointvaluecollection2d">
+<h2>DTPointValueCollection2D<a class="headerlink" href="#dtpointvaluecollection2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTPointValueCollection2D.</tt><tt class="descname">DTPointValueCollection2D</tt><big>(</big><em>points</em>, <em>values</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D Point Value collection object.</p>
+<dl class="method">
+<dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>points</em>, <em>values</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>points</strong> &#8211; a <a class="reference internal" href="#datatank_py.DTPointCollection2D.DTPointCollection2D" title="datatank_py.DTPointCollection2D.DTPointCollection2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPointCollection2D.DTPointCollection2D</span></tt></a> instance</li>
+<li><strong>values</strong> &#8211; an ordered collection of values corresponding to each point</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Point collection and values may be empty (length zero), but not <cite>None</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.add_point_value">
+<tt class="descname">add_point_value</tt><big>(</big><em>point</em>, <em>value</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.add_point_value" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>point</strong> &#8211; a <a class="reference internal" href="#datatank_py.DTPoint2D.DTPoint2D" title="datatank_py.DTPoint2D.DTPoint2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPoint2D.DTPoint2D</span></tt></a> instance</li>
+<li><strong>value</strong> &#8211; a scalar value associated with the point</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.bounding_box">
+<tt class="descname">bounding_box</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">result of <a class="reference internal" href="#datatank_py.DTPointCollection2D.DTPointCollection2D.bounding_box" title="datatank_py.DTPointCollection2D.DTPointCollection2D.bounding_box"><tt class="xref py py-meth docutils literal"><span class="pre">datatank_py.DTPointCollection2D.DTPointCollection2D.bounding_box()</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.dt_type">
+<tt class="descname">dt_type</tt><em class="property"> = ('2D Point Value Collection',)</em><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.dt_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type strings allowed by DataTank</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.points">
+<tt class="descname">points</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.points" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="#datatank_py.DTPointCollection2D.DTPointCollection2D" title="datatank_py.DTPointCollection2D.DTPointCollection2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPointCollection2D.DTPointCollection2D</span></tt></a> instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.values">
+<tt class="descname">values</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">vector of scalar values</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -442,6 +816,67 @@ automatically.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the logical grid size (y, x), even if stored as vectors.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtstructuredmesh2d">
+<h2>DTStructuredMesh2D<a class="headerlink" href="#dtstructuredmesh2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTStructuredMesh2D.DTStructuredMesh2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTStructuredMesh2D.</tt><tt class="descname">DTStructuredMesh2D</tt><big>(</big><em>values</em>, <em>grid=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTStructuredMesh2D.DTStructuredMesh2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D structured mesh object.</p>
+<p>This class corresponds to DataTank&#8217;s DTStructuredMesh2D.</p>
+<dl class="method">
+<dt id="datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>values</em>, <em>grid=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>values</strong> &#8211; 2D array of values</li>
+<li><strong>grid</strong> &#8211; DTStructuredGrid2D object (defaults to unit grid) or the name of a previously saved grid</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that the values array must be ordered as (y, x) for compatibility
+with the grid and DataTank.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.dt_type">
+<tt class="descname">dt_type</tt><em class="property"> = ('2D Structured Mesh',)</em><a class="headerlink" href="#datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.dt_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type strings allowed by DataTank</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.grid">
+<tt class="descname">grid</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.grid" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="#datatank_py.DTStructuredGrid2D.DTStructuredGrid2D" title="datatank_py.DTStructuredGrid2D.DTStructuredGrid2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTStructuredGrid2D.DTStructuredGrid2D</span></tt></a> instance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.values">
+<tt class="descname">values</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a 2D numpy array of values at each grid node</td>
 </tr>
 </tbody>
 </table>
@@ -561,7 +996,12 @@ with reading and writing other objects.</p>
 <li><a class="reference internal" href="#">Classes</a><ul>
 <li><a class="reference internal" href="#dtdatafile">DTDataFile</a></li>
 <li><a class="reference internal" href="#dtmesh2d">DTMesh2D</a></li>
+<li><a class="reference internal" href="#dtpoint2d">DTPoint2D</a></li>
+<li><a class="reference internal" href="#dtpointcollection2d">DTPointCollection2D</a></li>
+<li><a class="reference internal" href="#dtpointvalue2d">DTPointValue2D</a></li>
+<li><a class="reference internal" href="#dtpointvaluecollection2d">DTPointValueCollection2D</a></li>
 <li><a class="reference internal" href="#dtstructuredgrid2d">DTStructuredGrid2D</a></li>
+<li><a class="reference internal" href="#dtstructuredmesh2d">DTStructuredMesh2D</a></li>
 <li><a class="reference internal" href="#dtmask">DTMask</a></li>
 <li><a class="reference internal" href="#dtregion2d">DTRegion2D</a></li>
 </ul>
@@ -573,7 +1013,7 @@ with reading and writing other objects.</p>
                         title="previous chapter">Getting started</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="bitmap2d.html"
-                        title="next chapter">Getting started</a></p>
+                        title="next chapter">Georeferenced 2D Bitmap Example</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/classes.txt"
@@ -603,7 +1043,7 @@ with reading and writing other objects.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="bitmap2d.html" title="Getting started"
+          <a href="bitmap2d.html" title="Georeferenced 2D Bitmap Example"
              >next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting started"
