@@ -7,8 +7,8 @@ Getting started
 
 .. _installing-docdir:
 
-Installing your doc directory
-=============================
+Installing the module
+=====================
 
 You may already have `datatank_py <https://github.com/amaxwell/datatank_py>`_
 installed -- you can check by doing::
@@ -64,10 +64,11 @@ A simple example
         
             # This is the highest level way to get an object, but isn't a complete
             # feature for all classes yet. Alternate way to get it would be
-            # mesh = DTMesh2D.from_data_file(input_file, "input")
+            # mesh = DTMesh2D.from_data_file(input_file, "input"), which is
+            # slightly more verbose and requires you to import DTMesh2D.
             mesh = input_file.dt_object_named("input")
         
-            # This use Python's dictionary getter syntax to get a primitive object
+            # This uses Python's dictionary getter syntax to get a primitive object
             # that isn't wrapped in a DT class. This is the most convenient way to
             # get an array, number, string, or list of strings.
             scalar = input_file["scalar"]
