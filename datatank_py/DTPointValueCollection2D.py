@@ -7,7 +7,15 @@ from __future__ import with_statement
 import numpy as np
 
 class DTPointValueCollection2D(object):
-    """2D Point Value collection object."""
+    """2D Point Value collection object.
+    
+    Supported functions:
+    
+    * :py:func:`len`
+    * :py:func:`for`
+    * indexed access, e.g., ``foo[2]`` to get the second point
+    
+    """
     
     dt_type = ("2D Point Value Collection",)
     """Type strings allowed by DataTank"""

@@ -15,3 +15,11 @@ DataTank binary file (extension `.dtbin`).
 .. autoclass:: datatank_py.DTDataFile.DTDataFile
    :members:
    :special-members: __init__
+
+DTPyWrite
+=========
+
+.. automodule:: datatank_py.DTPyWrite
+   :members:
+   :special-members: __dt_write__, __dt_type__
+   

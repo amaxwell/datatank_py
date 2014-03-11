@@ -7,21 +7,27 @@ import numpy as np
 from DTPath2D import DTPath2D
 
 class DTPathValues2D(object):
-    """2D Path Values object."""
+    """2D Path Values object. This is a 2D path, with a scalar value
+    defined at each point.
+    
+    Supported functions:
+    
+    * :py:func:`len`
+    * :py:func:`for`
+    
+    """
     
     def __init__(self, path, values):
-        super(DTPathValues2D, self).__init__()
-        """Create a new 2D Path Values.
+        """
+        :param path: a :class:`datatank_py.DTPath2D.DTPath2D` instance
+        :param values: list or vector of values corresponding to each point in the path
         
-        Arguments:
-        path -- DTPath2D object
-        values -- list or vector of values corresponding to each point in the path
-        
-        Discussion:
         The inputs must have the same length.  Values will be packed to match the
         internal format of DTPath2D.
         
         """
+
+        super(DTPathValues2D, self).__init__()
         
         assert path != None and values != None, "DTPathValues2D: both path and values required"
         assert len(path) == len(values), "DTPathValues2D: inconsistent lengths: %s != %s" % (len(path), len(values))
@@ -62,6 +68,14 @@ class DTPathValues2D(object):
         for p in self:
             total_length += (len(p._path))
         return total_length
+        
+    def path(self):
+        """:returns: the underlying path (which may have subpaths)"""
+        return self._path
+        
+    def values(self):
+        """:returns: vector of values at each point in the path"""
+        return self._values
 
     def __dt_type__(self):
         return "2D Path Values"
