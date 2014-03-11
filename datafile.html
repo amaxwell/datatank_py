@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="datatank_py 0.1 documentation" href="index.html" />
-    <link rel="next" title="Other Classes" href="classes.html" />
+    <link rel="next" title="Classes" href="classes.html" />
     <link rel="prev" title="Getting started" href="getting_started.html" /> 
   </head>
   <body>
@@ -35,7 +35,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="classes.html" title="Other Classes"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="Classes"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting started"
@@ -377,6 +380,149 @@ with time.  A call might look like this:</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-datatank_py.DTPyWrite">
+<span id="dtpywrite"></span><h2>DTPyWrite<a class="headerlink" href="#module-datatank_py.DTPyWrite" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTPyWrite.DTPyWrite">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTPyWrite.</tt><tt class="descname">DTPyWrite</tt><a class="headerlink" href="#datatank_py.DTPyWrite.DTPyWrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class documenting methods that must be implemented for DTDataFile to load
+complex types by name.</p>
+<p>This is never instantiated directly. <a class="reference internal" href="#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a> 
+checks to ensure that an object implements all of the required methods, but you 
+are not required to use <a class="reference internal" href="#datatank_py.DTPyWrite.DTPyWrite" title="datatank_py.DTPyWrite.DTPyWrite"><tt class="xref py py-class docutils literal"><span class="pre">DTPyWrite</span></tt></a> as a base class.  It&#8217;s mainly 
+provided as a convenience and formal documentation.</p>
+<dl class="method">
+<dt id="datatank_py.DTPyWrite.DTPyWrite.__dt_type__">
+<tt class="descname">__dt_type__</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPyWrite.DTPyWrite.__dt_type__" title="Permalink to this definition">¶</a></dt>
+<dd><p>The variable type as required by DataTank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">variable type as a string</td>
+</tr>
+</tbody>
+</table>
+<p>This is a string description of the variable, which can be found in the
+DataTank manual PDF or in DTSource.  It&#8217;s easiest to look in DTSource, 
+since you&#8217;ll need to look there for the <a class="reference internal" href="#datatank_py.DTPyWrite.DTPyWrite.__dt_write__" title="datatank_py.DTPyWrite.DTPyWrite.__dt_write__"><tt class="xref py py-meth docutils literal"><span class="pre">__dt_write__()</span></tt></a> implementation anyway.
+You can find the type in the <tt class="docutils literal"><span class="pre">WriteOne()</span></tt> function for a particular class,
+such as:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// this is taken from DTPath2D.cpp</span>
+<span class="kt">void</span> <span class="nf">WriteOne</span><span class="p">(</span><span class="n">DTDataStorage</span> <span class="o">&amp;</span><span class="n">output</span><span class="p">,</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">name</span><span class="p">,</span><span class="k">const</span> <span class="n">DTPath2D</span> <span class="o">&amp;</span><span class="n">toWrite</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Write</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">toWrite</span><span class="p">);</span>
+    <span class="n">Write</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="s">&quot;Seq_&quot;</span><span class="o">+</span><span class="n">name</span><span class="p">,</span><span class="s">&quot;2D Path&quot;</span><span class="p">);</span>
+    <span class="n">output</span><span class="p">.</span><span class="n">Flush</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where the type is the string &#8220;2D Path&#8221;.  In some cases, it seems that
+multiple type names are recognized; e.g., &#8220;StringList&#8221; is written by
+DataTank, but &#8220;List of Strings&#8221; is used in DTSource.  Regardless, this
+is trivial; the <tt class="xref py py-meth docutils literal"><span class="pre">datatank_py.DTPath2D.DTPath2D.__dt_type__()</span></tt> 
+method looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__dt_type__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s">&quot;2D Path&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPyWrite.DTPyWrite.__dt_write__">
+<tt class="descname">__dt_write__</tt><big>(</big><em>datafile</em>, <em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyWrite.DTPyWrite.__dt_write__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write all associated values to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>datafile</strong> &#8211; a <a class="reference internal" href="#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a> instance</li>
+<li><strong>name</strong> &#8211; the name of the variable as it should appear in DataTank</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This method collects the necessary components of the compound object and
+writes them to the datafile.  The name is generally used as a base for
+associated variable names, since only one of the components can have the 
+&#8220;primary&#8221; name.  Again, the DataTank manual PDF or DTSource must be used
+here as a reference (DTSource is more complete).  In particular, you need
+to look at the <tt class="docutils literal"><span class="pre">Write()</span></tt> function implemented in the C++ class:</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="c1">// this is taken from DTPath2D.cpp</span>
+<span class="kt">void</span> <span class="nf">Write</span><span class="p">(</span><span class="n">DTDataStorage</span> <span class="o">&amp;</span><span class="n">output</span><span class="p">,</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">name</span><span class="p">,</span><span class="k">const</span> <span class="n">DTPath2D</span> <span class="o">&amp;</span><span class="n">thePath</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Write</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="n">name</span><span class="o">+</span><span class="s">&quot;_bbox2D&quot;</span><span class="p">,</span><span class="n">BoundingBox</span><span class="p">(</span><span class="n">thePath</span><span class="p">));</span>
+    <span class="n">Write</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">thePath</span><span class="p">.</span><span class="n">Data</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here the bounding box is written as <cite>name_bbox2D</cite>; this is just a 4 element
+double-precision array.  Next, the actual path array is saved under the name
+as passed in to the function.  The equivalent Python implementation is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__dt_write__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datafile</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="n">datafile</span><span class="o">.</span><span class="n">write_anonymous</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">(),</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;_bbox2D&quot;</span><span class="p">)</span>
+    <span class="n">datafile</span><span class="o">.</span><span class="n">write_anonymous</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_xvalues</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yvalues</span><span class="p">)),</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that <a class="reference internal" href="#datatank_py.DTDataFile.DTDataFile.write_anonymous" title="datatank_py.DTDataFile.DTDataFile.write_anonymous"><tt class="xref py py-meth docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile.write_anonymous()</span></tt></a> should be 
+used in order to avoid any variable name munging 
+(prepending &#8220;Seq_&#8221; in order to make the variable visible in DataTank).</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="datatank_py.DTPyWrite.DTPyWrite.from_data_file">
+<em class="property">classmethod </em><tt class="descname">from_data_file</tt><big>(</big><em>datafile</em>, <em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyWrite.DTPyWrite.from_data_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate a <tt class="xref py py-mod docutils literal"><span class="pre">datatank_py</span></tt> high-level object from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>datafile</strong> &#8211; a <a class="reference internal" href="#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a> instance</li>
+<li><strong>name</strong> &#8211; the name of the variable</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a properly initialized instance of the calling class</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This class method can be implemented to read necessary components of an object
+from a datafile.  For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">datatank_py.DTPath2D</span> <span class="kn">import</span> <span class="n">DTPath2D</span>
+<span class="kn">from</span> <span class="nn">datatank_py.DTDataFile</span> <span class="kn">import</span> <span class="n">DTDataFile</span>
+
+<span class="k">with</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;Input.dtbin&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">df</span><span class="p">:</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">DTPath2D</span><span class="o">.</span><span class="n">from_data_file</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s">&quot;My Path&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will try to create a <a class="reference internal" href="classes.html#datatank_py.DTPath2D.DTPath2D" title="datatank_py.DTPath2D.DTPath2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPath2D.DTPath2D</span></tt></a> from
+variables named &#8220;My Path&#8221; in the given data file.  
+In general, this is the inverse of the <a class="reference internal" href="#datatank_py.DTPyWrite.DTPyWrite.__dt_write__" title="datatank_py.DTPyWrite.DTPyWrite.__dt_write__"><tt class="xref py py-meth docutils literal"><span class="pre">__dt_write__()</span></tt></a> method,
+but may be slightly more tricky due to naming conventions in DataTank and
+optional data that DataTank may or may not include.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="datatank_py.DTPyWrite.dt_writer">
+<tt class="descclassname">datatank_py.DTPyWrite.</tt><tt class="descname">dt_writer</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyWrite.dt_writer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check to ensure conformance to dt_writer protocol.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if the object implements the required methods</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -389,6 +535,7 @@ with time.  A call might look like this:</p>
   <ul>
 <li><a class="reference internal" href="#">Data Files</a><ul>
 <li><a class="reference internal" href="#id1">DTDataFile</a></li>
+<li><a class="reference internal" href="#module-datatank_py.DTPyWrite">DTPyWrite</a></li>
 </ul>
 </li>
 </ul>
@@ -398,7 +545,7 @@ with time.  A call might look like this:</p>
                         title="previous chapter">Getting started</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="classes.html"
-                        title="next chapter">Other Classes</a></p>
+                        title="next chapter">Classes</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/datafile.txt"
@@ -428,7 +575,10 @@ with time.  A call might look like this:</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="classes.html" title="Other Classes"
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="Classes"
              >next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting started"

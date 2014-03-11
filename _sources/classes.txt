@@ -1,14 +1,9 @@
-.. _other_classes:
+.. _classes:
 
-*************
-Other Classes
-*************
+*******
+Classes
+*******
 
-These classes are provided so that you can read, manipulate,
-and write DataTank objects using a :class:`datatank_py.DTDataFile.DTDataFile`
-instance for storage. The easiest way to create a new class is by examining
-the C++ DTSource classes inside the DataTank.app bundle.
-   
 DTMesh2D
 ========
 
@@ -57,6 +52,18 @@ DTStructuredMesh2D
 .. autoclass:: datatank_py.DTStructuredMesh2D.DTStructuredMesh2D
    :members:
    :special-members: __init__
+   
+DTPath2D
+========
+.. autoclass:: datatank_py.DTPath2D.DTPath2D
+   :members:
+   :special-members: __init__   
+
+DTPathValues2D
+==============
+.. autoclass:: datatank_py.DTPathValues2D.DTPathValues2D
+   :members:
+   :special-members: __init__   
 
 DTMask
 ======

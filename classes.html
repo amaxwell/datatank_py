@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Other Classes &mdash; datatank_py 0.1 documentation</title>
+    <title>Classes &mdash; datatank_py 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -49,12 +49,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="other-classes">
-<span id="id1"></span><h1>Other Classes<a class="headerlink" href="#other-classes" title="Permalink to this headline">¶</a></h1>
-<p>These classes are provided so that you can read, manipulate,
-and write DataTank objects using a <a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>
-instance for storage. The easiest way to create a new class is by examining
-the C++ DTSource classes inside the DataTank.app bundle.</p>
+  <div class="section" id="classes">
+<span id="id1"></span><h1>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="dtmesh2d">
 <h2>DTMesh2D<a class="headerlink" href="#dtmesh2d" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -194,6 +190,12 @@ able to serialize it properly to a datafile.</p>
 <dt id="datatank_py.DTPointCollection2D.DTPointCollection2D">
 <em class="property">class </em><tt class="descclassname">datatank_py.DTPointCollection2D.</tt><tt class="descname">DTPointCollection2D</tt><big>(</big><em>xvalues</em>, <em>yvalues</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointCollection2D.DTPointCollection2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>2D Point collection object.</p>
+<p>Supported functions:</p>
+<ul class="simple">
+<li><tt class="xref py py-func docutils literal"><span class="pre">len()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">for()</span></tt></li>
+<li>indexed access, e.g., <tt class="docutils literal"><span class="pre">foo[2]</span></tt> to get the second point</li>
+</ul>
 <dl class="method">
 <dt id="datatank_py.DTPointCollection2D.DTPointCollection2D.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>xvalues</em>, <em>yvalues</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointCollection2D.DTPointCollection2D.__init__" title="Permalink to this definition">¶</a></dt>
@@ -327,6 +329,12 @@ that can be added to with add_point().</p>
 <dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D">
 <em class="property">class </em><tt class="descclassname">datatank_py.DTPointValueCollection2D.</tt><tt class="descname">DTPointValueCollection2D</tt><big>(</big><em>points</em>, <em>values</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>2D Point Value collection object.</p>
+<p>Supported functions:</p>
+<ul class="simple">
+<li><tt class="xref py py-func docutils literal"><span class="pre">len()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">for()</span></tt></li>
+<li>indexed access, e.g., <tt class="docutils literal"><span class="pre">foo[2]</span></tt> to get the second point</li>
+</ul>
 <dl class="method">
 <dt id="datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>points</em>, <em>values</em><big>)</big><a class="headerlink" href="#datatank_py.DTPointValueCollection2D.DTPointValueCollection2D.__init__" title="Permalink to this definition">¶</a></dt>
@@ -567,6 +575,208 @@ with the grid and DataTank.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="dtpath2d">
+<h2>DTPath2D<a class="headerlink" href="#dtpath2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTPath2D.DTPath2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTPath2D.</tt><tt class="descname">DTPath2D</tt><big>(</big><em>xvalues</em>, <em>yvalues</em>, <em>points_only=True</em><big>)</big><a class="headerlink" href="#datatank_py.DTPath2D.DTPath2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D Path object.</p>
+<p>Supported functions:</p>
+<ul class="simple">
+<li><tt class="xref py py-func docutils literal"><span class="pre">len()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">for()</span></tt></li>
+</ul>
+<dl class="method">
+<dt id="datatank_py.DTPath2D.DTPath2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>xvalues</em>, <em>yvalues</em>, <em>points_only=True</em><big>)</big><a class="headerlink" href="#datatank_py.DTPath2D.DTPath2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xvalues</strong> &#8211; array of x values</li>
+<li><strong>yvalues</strong> &#8211; array of y values</li>
+<li><strong>points_only</strong> (<em>boolean</em>) &#8211; indicating whether shape information is included</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The input arrays must have the same length.</strong></p>
+<p>If <cite>points_only</cite> is set to <cite>False</cite>, <cite>xvalues</cite> and <cite>yvalues</cite> are assumed to have the
+correct packed array format for a DTPath2D, including all subpaths.  Otherwise,
+they are assumed to define points of a single path, and the necessary subpath
+metadata is computed.  In general, you would only pass <cite>False</cite> if reading a path
+from a file generated by DataTank.</p>
+<dl class="docutils">
+<dt>In DTSource, the array has one of two formats:</dt>
+<dd><ol class="first last arabic simple">
+<li>2xN with a packed loop format.</li>
+<li>4xN that saves every line segment.</li>
+</ol>
+</dd>
+</dl>
+<p>In datatank_py, only the 2xN format is supported.  It&#8217;s more efficient, and more
+compatible with DTSource manipulation.</p>
+<dl class="docutils">
+<dt>Layout is:</dt>
+<dd><div class="first last line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">DTPath2D._xvalues</span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">0</span> <span class="pre">x1</span> <span class="pre">....</span> <span class="pre">xN</span> <span class="pre">0</span> <span class="pre">x1</span> <span class="pre">...</span> <span class="pre">xM</span> <span class="pre">...]</span></tt></div>
+<div class="line"><tt class="docutils literal"><span class="pre">DTPath2D._yvalues</span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">N</span> <span class="pre">y1</span> <span class="pre">....</span> <span class="pre">yN</span> <span class="pre">M</span> <span class="pre">y1</span> <span class="pre">...</span> <span class="pre">yM</span> <span class="pre">...]</span></tt></div>
+</div>
+</dd>
+</dl>
+<p>This allows multiple loops to be saved in a single array.</p>
+<p>DTPath2D allows iteration over subpaths (called &#8220;loops&#8221; in DTSource),
+for easier manipulation and serialization of individual paths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPath2D.DTPath2D.add_loop">
+<tt class="descname">add_loop</tt><big>(</big><em>xvalues</em>, <em>yvalues</em><big>)</big><a class="headerlink" href="#datatank_py.DTPath2D.DTPath2D.add_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a loop (subpath) to this path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xvalues</strong> &#8211; vector of x coordinates</li>
+<li><strong>yvalues</strong> &#8211; vector of y coordinates</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPath2D.DTPath2D.bounding_box">
+<tt class="descname">bounding_box</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPath2D.DTPath2D.bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a 4-tuple <tt class="docutils literal"><span class="pre">(xmin,</span> <span class="pre">xmax,</span> <span class="pre">ymin,</span> <span class="pre">ymax)</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPath2D.DTPath2D.number_of_loops">
+<tt class="descname">number_of_loops</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPath2D.DTPath2D.number_of_loops" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of subpaths (loops) in this path.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPath2D.DTPath2D.point_list">
+<tt class="descname">point_list</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPath2D.DTPath2D.point_list" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a list of DTPoint2D objects.</td>
+</tr>
+</tbody>
+</table>
+<p>Raises an exception if this path has subpaths, so iterate
+if you have multiple loops. Note that these loops will be
+single-loop paths.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">all_points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">subpath</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+<span class="gp">... </span>  <span class="n">all_points</span> <span class="o">+=</span> <span class="n">subpath</span><span class="o">.</span><span class="n">point_list</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPath2D.DTPath2D.sparsified_path">
+<tt class="descname">sparsified_path</tt><big>(</big><em>step</em><big>)</big><a class="headerlink" href="#datatank_py.DTPath2D.DTPath2D.sparsified_path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a sparsified path (copy) of the receiver.</td>
+</tr>
+</tbody>
+</table>
+<p>Sparsifies by index; no smoothing or distance considerations</p>
+<p>Sparsifies a new path by taking every N-th point, where N = step.
+Does not modify the original path object.  If a closed path was
+passed in, the returned path is also closed.  Raises an exception
+if sparsifying any subpath would result in fewer than 2 points.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dtpathvalues2d">
+<h2>DTPathValues2D<a class="headerlink" href="#dtpathvalues2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTPathValues2D.DTPathValues2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTPathValues2D.</tt><tt class="descname">DTPathValues2D</tt><big>(</big><em>path</em>, <em>values</em><big>)</big><a class="headerlink" href="#datatank_py.DTPathValues2D.DTPathValues2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D Path Values object. This is a 2D path, with a scalar value
+defined at each point.</p>
+<p>Supported functions:</p>
+<ul class="simple">
+<li><tt class="xref py py-func docutils literal"><span class="pre">len()</span></tt></li>
+<li><tt class="xref py py-func docutils literal"><span class="pre">for()</span></tt></li>
+</ul>
+<dl class="method">
+<dt id="datatank_py.DTPathValues2D.DTPathValues2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>path</em>, <em>values</em><big>)</big><a class="headerlink" href="#datatank_py.DTPathValues2D.DTPathValues2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> &#8211; a <a class="reference internal" href="#datatank_py.DTPath2D.DTPath2D" title="datatank_py.DTPath2D.DTPath2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPath2D.DTPath2D</span></tt></a> instance</li>
+<li><strong>values</strong> &#8211; list or vector of values corresponding to each point in the path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The inputs must have the same length.  Values will be packed to match the
+internal format of DTPath2D.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPathValues2D.DTPathValues2D.path">
+<tt class="descname">path</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPathValues2D.DTPathValues2D.path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the underlying path (which may have subpaths)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTPathValues2D.DTPathValues2D.values">
+<tt class="descname">values</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTPathValues2D.DTPathValues2D.values" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">vector of values at each point in the path</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="dtmask">
 <h2>DTMask<a class="headerlink" href="#dtmask" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -675,7 +885,7 @@ with reading and writing other objects.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Other Classes</a><ul>
+<li><a class="reference internal" href="#">Classes</a><ul>
 <li><a class="reference internal" href="#dtmesh2d">DTMesh2D</a></li>
 <li><a class="reference internal" href="#dtpoint2d">DTPoint2D</a></li>
 <li><a class="reference internal" href="#dtpointcollection2d">DTPointCollection2D</a></li>
@@ -683,6 +893,8 @@ with reading and writing other objects.</p>
 <li><a class="reference internal" href="#dtpointvaluecollection2d">DTPointValueCollection2D</a></li>
 <li><a class="reference internal" href="#dtstructuredgrid2d">DTStructuredGrid2D</a></li>
 <li><a class="reference internal" href="#dtstructuredmesh2d">DTStructuredMesh2D</a></li>
+<li><a class="reference internal" href="#dtpath2d">DTPath2D</a></li>
+<li><a class="reference internal" href="#dtpathvalues2d">DTPathValues2D</a></li>
 <li><a class="reference internal" href="#dtmask">DTMask</a></li>
 <li><a class="reference internal" href="#dtregion2d">DTRegion2D</a></li>
 </ul>
