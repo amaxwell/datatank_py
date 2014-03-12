@@ -65,6 +65,12 @@ DTPathValues2D
    :members:
    :special-members: __init__   
 
+DTPlot1D
+==============
+.. autoclass:: datatank_py.DTPlot1D.DTPlot1D
+   :members:
+   :special-members: __init__   
+
 DTMask
 ======
 .. autoclass:: datatank_py.DTMask.DTMask
