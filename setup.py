@@ -8,7 +8,7 @@ setup(
     packages = find_packages(),
     
     install_requires = ['numpy>1.0'],
-    zip_safe = False
+    zip_safe = False,
     author = "Adam R. Maxwell",
     author_email = "amaxwell@mac.com",
     description = "Python modules for creating and modifying DataTank files",
