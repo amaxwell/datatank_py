@@ -1,8 +1,8 @@
 .. _classes:
 
-*******
-Classes
-*******
+***************
+General Classes
+***************
 
 DTMesh2D
 ========

@@ -45,10 +45,13 @@ class _DTBitmap2D(type):
 
         
 class DTBitmap2D(object):
-    """Base implementation for DTBitmap2D.
+    """Base implementation for DTBitmap2D. This is a gray or color (RGB)
+    image, with an optional alpha channel. It also has spatial data, so
+    it can be displayed in DataTank on a physical grid, rather than the
+    logical grid of pixels.
         
-    Provides implementation of DTPyWrite for all subclasses, and
-    can be instantiated directly to use as a container.
+    Provides implementation of :class:`datatank_py.DTPyWrite.DTPyWrite` for
+    all subclasses, and can be instantiated directly to use as a container.
             
     """
     
@@ -57,34 +60,34 @@ class DTBitmap2D(object):
     dt_type = ("2D Bitmap",)
     
     def __init__(self, path_or_image=None):
-        """Initializes a new DTBitmap2D object.
+        """
+        *param path_or_image* a path to an image file or a PIL image object
+
+        :returns: An object that implements :class:`datatank_py.DTPyWrite.DTPyWrite`. Don't rely on the class name for anything.
         
-        Arguments:
-        path_or_image -- a path to an image file or a PIL image object
-
-        Returns:
-        An object that implements DTPyWrite.  It maybe DTBitmap2D or one
-        of the private subclasses.  Don't rely on the class for anything.
-
-        The argument now defaults to None.  In that case, you'll get back
-        an object that implements dt_write, but you are responsible for
+        If you pass the default argument, you'll get back
+        an object that implements :meth:`dt_write`, and you are responsible for
         filling in its attributes.  These are:
-          • grid -- optional, of the form [x0, y0, dx, dy]
-          • red, green, blue -- required for RGB image only
-          • gray -- required for grayscale image only
-          • alpha -- optional
+        
+        :member grid: optional, of the form [x0, y0, dx, dy]
+        :member red: required for RGB image only
+        :member green: required for RGB image only
+        :member blue: required for RGB image only
+        :member gray: required for grayscale image only
+        :member alpha: optional
+          
         Each must be a 2D numpy array, and you are responsible for ensuring
         a consistent shape and proper dimension.  This is basically 
-        equivalent to the way DTSource constructs a DTBitmap2D.  Note that 
+        equivalent to the way DTSource constructs a C++ :class:`DTBitmap2D`.  Note that 
         DataTank only supports 8 bit and 16 bit images.
 
         If a PIL image is provided, it will be used as-is, and the grid
         will be a unit grid with origin at (0, 0).  If a path is provided,
-        DTBitmap2D will try to use GDAL to load the image and extract its
+        :class:`DTBitmap2D` will try to use GDAL to load the image and extract its
         components, as well as any spatial referencing included with the
         image.  If GDAL fails for any reason, PIL will be used as a fallback.
 
-        Note that DTBitmap2D does not attempt to be lazy at loading data; it
+        Note that :class:`DTBitmap2D` does not attempt to be lazy at loading data; it
         will read the entire image into memory as soon as you instantiate it.
         
         """
@@ -95,6 +98,7 @@ class DTBitmap2D(object):
             setattr(self, n, None)
     
     def dtype(self):
+        """:returns: a NumPy array datatype :class:`numpy.dtype`"""
         for x in DTBitmap2D.CHANNEL_NAMES:
             v = getattr(self, x)
             if v != None:
@@ -102,24 +106,30 @@ class DTBitmap2D(object):
         return None
         
     def channel_count(self):
+        """:returns: number of channels, including data and alpha"""
         if self.gray != None:
             return 2 if self.alpha != None else 1
         return 4 if self.alpha != None else 3
         
     def has_alpha(self):
+        """:returns boolean: ``True`` if the image has an alpha channel"""
         nchan = self.channel_count()
         return nchan == 2 or nchan == 4
         
     def is_gray(self):
+        """:returns boolean: ``True`` if the image is grayscale (not RBG or RBGA)"""
         return self.channel_count() < 3
         
     def pil_image(self):
-        """Attempt to convert a raw image to a PIL Image object
+        """Attempt to convert a raw image to a :mod:`PIL` Image object.
         
-        Returns:
-        A PIL Image, or None if PIL can't be loaded or if the conversion failed.
-        Only tested with 8-bit images, but gray/gray+alpha and RGB/RGBA
-        have all been tested.
+        :returns: a :mod:`PIL` Image, or ``None`` if :mod:`PIL` can't be loaded or if the conversion failed.
+        
+        **Requires PIL**
+        
+        This allows you to run PIL image filters and operations. 
+        *Only tested with 8-bit images, but gray/gray+alpha and RGB/RGBA
+        have all been tested.*
         
         """
         
@@ -153,11 +163,20 @@ class DTBitmap2D(object):
     def mesh_from_channel(self, channel="gray"):
         """Extract a given bitmap plane as a DTMesh2D object.
         
-        Arguments:
-        channel -- defaults to gray, but may be one of (red, green, blue, gray, alpha)
+        :param channel: may be one of (`red`, `green`, `blue`, `gray`, `alpha`)
         
-        Returns:
-        A 2D Mesh object, which uses the grid of the image.
+        :returns: a :class:`datatank_py.DTMesh2D.DTMesh2D` instance
+        
+        **Requires GDAL**
+        
+        This is how you would extract raw pixels and georegistration data from
+        e.g., a 32-bit GeoTIFF or other image supported by GDAL, and bring it
+        in to DataTank. This is particularly useful for elevation data.
+        
+        The returned mesh will use the spatial grid (origin and pixel size) of the image.
+        Note that the image's ``nodata`` attribute will be used to create
+        an appropriate :class:`datatank_py.DTMask.DTMask` which will be applied
+        to the mesh. The nodata value is obtained from GDAL.
 
         >>> from datatank_py.DTBitmap2D import DTBitmap2D
         >>> img = DTBitmap2D("int16.tiff")
@@ -166,7 +185,7 @@ class DTBitmap2D(object):
         >>> img = DTBitmap2D("rgb_geo.tiff")
         >>> img.mesh_from_channel(channel="red")
         <datatank_py.DTMesh2D.DTMesh2D object at 0x10049ab90>
-        
+                
         """
         
         from datatank_py.DTMesh2D import DTMesh2D
@@ -180,25 +199,25 @@ class DTBitmap2D(object):
         return DTMesh2D(values, grid=self.grid, mask=mask)
         
     def raster_size(self):
-        """Size in pixels, 2-tuple ordered as (horizontal, vertical)."""
+        """:returns: size in pixels, 2-tuple ordered as `(horizontal, vertical)`."""
         shape = self.gray.shape if self.is_gray() else self.red.shape
         return tuple(reversed(shape))
         
     def write_geotiff(self, output_path, projection_name):
         """Save a DTBitmap2D as a GeoTIFF file.
         
-        Arguments:
-        output_path -- A file path; all parent directories must exist.
-        projection_name -- The spatial reference system to associate with
-        the file being save.  For example, EPSG:4326 and WGS84 are both
-        valid.  See the documentation for OSRSpatialReference::SetFromUserInput
-        at http://www.gdal.org/ogr/classOGRSpatialReference.html        
+        :param output_path: a file path; all parent directories must exist
+        :param projection_name: the spatial reference system to associate with the image
+        
+        **Requires GDAL**
+
+        The spatial reference must be a string recognized by GDAL.
+        For example, `EPSG:4326` and `WGS84` are both
+        valid. See the documentation for OSRSpatialReference::SetFromUserInput
+        at `<http://www.gdal.org/ogr/classOGRSpatialReference.html>`_
         for more specific details.
         
-        Returns:
-        Nothing.
-        
-        Note that exceptions will be raised if the DTBitmap2D is not valid
+        Note that exceptions will be raised if the :class:`DTBitmap2D` is not valid
         (has no data), or if any GDAL functions fail.  This method has only
         been tested with 8-bit images, but gray/rgb/alpha images work as
         expected.
@@ -291,12 +310,10 @@ class DTBitmap2D(object):
     def from_data_file(self, datafile, name):
         """Create a new instance from a DTDataFile by name.
         
-        Arguments:
-        datafile -- An open DTDataFile instance
-        name -- The name of the DTBitmap2D object in the file (including any time index)
+        :param datafile: an open DTDataFile instance
+        :param name: the name of the DTBitmap2D object in the file (including any time index)
         
-        Returns:
-        A new DTBitmap2D instance.
+        :returns: a new DTBitmap2D instance
         
         """
         

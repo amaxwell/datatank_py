@@ -57,6 +57,21 @@ def __bitmap_planes_from_imagerep(image_rep):
     return (red, green, blue, alpha)
     
 def ci_image_from_planes(red, green, blue):
+    """Create a Quartz CIImage from bitmap data.
+    
+    :param red: a NumPy 2D array of bitmap values
+    :param green: a NumPy 2D array of bitmap values
+    :param blue: a NumPy 2D array of bitmap values
+    
+    :returns: a :class:`Quartz.CIImage` instance
+    
+    **Requires Mac OS X and PyObjC**
+    
+    The :class:`Quartz.CIImage` is only useful for applying :class:`Quartz.CIFilter`
+    or other transformations using PyObjC. Only 8-bit RGB images are supported at
+    this time, and your image data will be truncated if it is not 8-bit.
+    
+    """
     
     from Quartz import CIImage
     from Quartz import CGDataProviderCreateWithCFData, CGImageCreate, CGColorSpaceCreateWithName
@@ -90,6 +105,20 @@ def ci_image_from_planes(red, green, blue):
     return ci_image
     
 def dt_bitmap2d_from_ci_image(ci_image, width, height, grid):
+    """
+    :param ci_image: a :class:`Quartz.CIImage` instance from PyObjC
+    :param width: desired width in pixels
+    :param height: desired height in pixels
+    :param grid: a four-tuple (x0, y0, dx, dy) spatial grid
+    
+    :returns: a :class:`datatank_py.DTBitmap2D.DTBitmap2D` instance
+    
+    **Requires Mac OS X and PyObjC**
+
+    This function allows you to turn a :class:`Quartz.CIImage` into an object
+    that DataTank can use. Only 8-bit RGB images are supported at this time.
+    
+    """
     
     from datatank_py.DTBitmap2D import DTBitmap2D
     from Quartz import CGRectMake, CGPointZero
@@ -116,6 +145,23 @@ def dt_bitmap2d_from_ci_image(ci_image, width, height, grid):
     return dt_bitmap
     
 def ci_filter_named(filter_name):
+    """:returns: a :class:`Quartz:CIFilter` with the given name
+
+    **Requires Mac OS X and PyObjC**
+    
+    These filters can be applied to a :class:`Quartz.CIImage` using::
+    
+        ci_image = ci_image_from_planes(r, g, b)
+        filt = ci_filter_named("CIExposureAdjust")
+        filt.setValue_forKey_(ci_image, "inputImage")
+        filt.setValue_forKey_(0.2, "inputEV")
+        ci_image = filt.valueForKey_("outputImage")
+    
+    From this point, you would apply another filter or use :func:`dt_bitmap2d_from_ci_image` 
+    to convert the image to
+    a :class:`datatank_py.DTBitmap2D.DTBitmap2D` for DataTank.
+    
+    """
     from Quartz import CIFilter
     return CIFilter.filterWithName_(filter_name)
 

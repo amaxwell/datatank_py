@@ -14,7 +14,7 @@ Contents:
    getting_started.rst
    datafile.rst
    classes.rst
-   bitmap2d.rst
+   image_classes.rst
 
 Indices and tables
 ==================

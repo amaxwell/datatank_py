@@ -1,14 +1,21 @@
-.. _bitmap2d:
+
+.. _image_example:
 
 
-*******************************
-Georeferenced 2D Bitmap Example
-*******************************
+***************************
+Working with 2D Bitmap Data
+***************************
 
-.. _bitmap2d_prereqs:
+.. _image_prereqs:
 
 Prerequisites
 =============
+
+To gain any more functionality beyond simple read/write of DataTank images,
+you will need to install one or more of these modules.
+
+GDAL
+----
 
 You may already have `GDAL <https://pypi.python.org/pypi/GDAL/>`_
 and its Python bindings installed -- you can check by doing::
@@ -19,11 +26,28 @@ For a binary install of GDAL, see
 `this page <http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries>`_
 which has links for various platforms. The Mac OS X framework package
 includes Python bindings.
+
+PIL
+---
+
+The `Python Imaging Library <https://pypi.python.org/pypi/PIL>`_ 
+is also required for some operations, and
+is generally a useful thing to have. You can check for it with::
+
+  python -c 'import Image'
+
+If it's not installed, you can try::
+
+  sudo easy_install PIL
+  
+This may or may not give you a useful module, depending on what
+shared libraries you have available. Refer to the PIL documentation
+for more details.
   
 .. _bitmap2d_example:
 
-Usage example
-=============
+Geospatial image example
+========================
 
 .. image:: _static/ss_image_as_bitmap.png
 
@@ -109,3 +133,19 @@ the words above.
             # need to save a StringList of execution errors as Seq_ExecutionErrors
             if len(errors):
                 output_file["ExecutionErrors"] = errors
+
+.. _image_classes:
+   
+DTBitmap2D
+==========
+
+.. autoclass:: datatank_py.DTBitmap2D.DTBitmap2D
+    :members:
+    :special-members: __init__
+   
+DTPyCoreImage
+=============
+
+.. automodule:: datatank_py.DTPyCoreImage
+    :members:
+    :special-members:
