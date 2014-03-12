@@ -4,7 +4,7 @@
 from setuptools import setup, find_packages
 setup(
     name = "datatank_py",
-    version = "0.1",
+    version = "0.3",
     packages = find_packages(),
     
     install_requires = ['numpy>1.0'],
@@ -15,5 +15,5 @@ setup(
     license = "BSD New",
     url = "http://github.com/amaxwell/datatank_py",
     doc_url = "http://amaxwell.github.io/datatank_py",
-    download_url = "http://github.com/amaxwell/datatank_py/tarball/0.1",
+    download_url = "http://github.com/amaxwell/datatank_py/tarball/0.3",
 )
