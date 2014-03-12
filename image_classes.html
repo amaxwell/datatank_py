@@ -1,0 +1,544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Working with 2D Bitmap Data &mdash; datatank_py 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="datatank_py 0.1 documentation" href="index.html" />
+    <link rel="prev" title="General Classes" href="classes.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="General Classes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="working-with-2d-bitmap-data">
+<span id="image-example"></span><h1>Working with 2D Bitmap Data<a class="headerlink" href="#working-with-2d-bitmap-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="prerequisites">
+<span id="image-prereqs"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>To gain any more functionality beyond simple read/write of DataTank images,
+you will need to install one or more of these modules.</p>
+<div class="section" id="gdal">
+<h3>GDAL<a class="headerlink" href="#gdal" title="Permalink to this headline">¶</a></h3>
+<p>You may already have <a class="reference external" href="https://pypi.python.org/pypi/GDAL/">GDAL</a>
+and its Python bindings installed &#8211; you can check by doing:</p>
+<div class="highlight-python"><div class="highlight"><pre>python -c &#39;import gdal&#39;
+</pre></div>
+</div>
+<p>For a binary install of GDAL, see
+<a class="reference external" href="http://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries">this page</a>
+which has links for various platforms. The Mac OS X framework package
+includes Python bindings.</p>
+</div>
+<div class="section" id="pil">
+<h3>PIL<a class="headerlink" href="#pil" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="https://pypi.python.org/pypi/PIL">Python Imaging Library</a>
+is also required for some operations, and
+is generally a useful thing to have. You can check for it with:</p>
+<div class="highlight-python"><div class="highlight"><pre>python -c &#39;import Image&#39;
+</pre></div>
+</div>
+<p>If it&#8217;s not installed, you can try:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo easy_install PIL
+</pre></div>
+</div>
+<p>This may or may not give you a useful module, depending on what
+shared libraries you have available. Refer to the PIL documentation
+for more details.</p>
+</div>
+</div>
+<div class="section" id="geospatial-image-example">
+<span id="bitmap2d-example"></span><h2>Geospatial image example<a class="headerlink" href="#geospatial-image-example" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/ss_image_as_bitmap.png" src="_images/ss_image_as_bitmap.png" />
+<p>This example shows different ways of passing a file to an external program.
+In one case, we pass a DataTank &#8220;File&#8221; object, which results in a hard link
+named &#8220;Image File&#8221; in the Python program&#8217;s working directory. This is most
+efficient in terms of disk space, but sometimes a geospatial raster includes
+a so-called &#8220;world file&#8221; which provides coordinate information, rather than
+embedding it in the TIFF tags.
+For example, &#8220;my_geotiff.tiff&#8221; could have a corresponding &#8220;my_geotiff.tfw&#8221;
+and GDAL knows to look for that file alongside the GeoTIFF. In that case,
+you need to pass the absolute path.</p>
+<p>Clear as mud? Use The Source, Luke! Hopefully this example will clarify
+the words above.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="c"># This software is under a BSD license.  See LICENSE.txt for details.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">datatank_py.DTDataFile</span> <span class="kn">import</span> <span class="n">DTDataFile</span>
+<span class="kn">from</span> <span class="nn">datatank_py.DTBitmap2D</span> <span class="kn">import</span> <span class="n">DTBitmap2D</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="c">#</span>
+    <span class="c"># This program replaces a standard DataTank External Program module</span>
+    <span class="c"># in C++.  Note that it must be executable (chmod 755 in Terminal)</span>
+    <span class="c"># and gdal and numpy are required.</span>
+    <span class="c">#</span>
+    <span class="c"># It takes as input a file path, then loads an image from it, using</span>
+    <span class="c"># GDAL to determine the raster origin and pixel size.  The image is</span>
+    <span class="c"># then saved as a 2D Bitmap object, either 8 or 16 bits as needed.</span>
+    <span class="c">#</span>
+    <span class="c"># Note that this is not appropriate for elevation data, as DataTank</span>
+    <span class="c"># will normalize the file range from [0, 1] if you extract the gray</span>
+    <span class="c"># component.</span>
+    <span class="c">#</span>
+
+    <span class="n">input_file</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;Input.dtbin&quot;</span><span class="p">)</span>
+
+    <span class="c"># DT creates this hard link in the working directory, if passed a file.</span>
+    <span class="c"># This is preferred, as it&#39;s fewer variables in DataTank, but if you</span>
+    <span class="c"># have a world file, GDAL needs to be able to find it in the original</span>
+    <span class="c"># directory.</span>
+    <span class="n">image_path</span> <span class="o">=</span> <span class="s">&quot;Image File&quot;</span>
+
+    <span class="c"># if no path set, then use the file itself (preferable)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">input_file</span><span class="p">[</span><span class="s">&quot;Image Path&quot;</span><span class="p">]</span>
+
+    <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">image_path</span><span class="p">:</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">image_path</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s"> does not exist&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">image_path</span><span class="p">))</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">DTBitmap2D</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c"># set an error and bail out; DataTank doesn&#39;t appear to use this, but displays</span>
+        <span class="c"># stderr output instead, so print them also</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;Unable to open as an image file&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;Output.dtbin&quot;</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;ExecutionErrors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errors</span>
+            <span class="n">output_file</span><span class="o">.</span><span class="p">[</span><span class="s">&quot;ExecutionTime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;Output.dtbin&quot;</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+
+        <span class="n">output_file</span><span class="o">.</span><span class="p">[</span><span class="s">&quot;ExecutionTime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;Var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">img</span>
+
+        <span class="c"># need to save a StringList of execution errors as Seq_ExecutionErrors</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">):</span>
+            <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;ExecutionErrors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errors</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dtbitmap2d">
+<span id="image-classes"></span><h2>DTBitmap2D<a class="headerlink" href="#dtbitmap2d" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTBitmap2D.</tt><tt class="descname">DTBitmap2D</tt><big>(</big><em>path_or_image=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base implementation for DTBitmap2D. This is a gray or color (RGB)
+image, with an optional alpha channel. It also has spatial data, so
+it can be displayed in DataTank on a physical grid, rather than the
+logical grid of pixels.</p>
+<p>Provides implementation of <a class="reference internal" href="datafile.html#datatank_py.DTPyWrite.DTPyWrite" title="datatank_py.DTPyWrite.DTPyWrite"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPyWrite.DTPyWrite</span></tt></a> for
+all subclasses, and can be instantiated directly to use as a container.</p>
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>path_or_image=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>param path_or_image</em> a path to an image file or a PIL image object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An object that implements <a class="reference internal" href="datafile.html#datatank_py.DTPyWrite.DTPyWrite" title="datatank_py.DTPyWrite.DTPyWrite"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPyWrite.DTPyWrite</span></tt></a>. Don&#8217;t rely on the class name for anything.</td>
+</tr>
+</tbody>
+</table>
+<p>If you pass the default argument, you&#8217;ll get back
+an object that implements <tt class="xref py py-meth docutils literal"><span class="pre">dt_write()</span></tt>, and you are responsible for
+filling in its attributes.  These are:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Member grid:</th><td class="field-body">optional, of the form [x0, y0, dx, dy]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Member red:</th><td class="field-body">required for RGB image only</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Member green:</th><td class="field-body">required for RGB image only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Member blue:</th><td class="field-body">required for RGB image only</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Member gray:</th><td class="field-body">required for grayscale image only</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Member alpha:</th><td class="field-body">optional</td>
+</tr>
+</tbody>
+</table>
+<p>Each must be a 2D numpy array, and you are responsible for ensuring
+a consistent shape and proper dimension.  This is basically 
+equivalent to the way DTSource constructs a C++ <tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt>.  Note that 
+DataTank only supports 8 bit and 16 bit images.</p>
+<p>If a PIL image is provided, it will be used as-is, and the grid
+will be a unit grid with origin at (0, 0).  If a path is provided,
+<tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt> will try to use GDAL to load the image and extract its
+components, as well as any spatial referencing included with the
+image.  If GDAL fails for any reason, PIL will be used as a fallback.</p>
+<p>Note that <tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt> does not attempt to be lazy at loading data; it
+will read the entire image into memory as soon as you instantiate it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.channel_count">
+<tt class="descname">channel_count</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.channel_count" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of channels, including data and alpha</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.dtype">
+<tt class="descname">dtype</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.dtype" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a NumPy array datatype <tt class="xref py py-class docutils literal"><span class="pre">numpy.dtype</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.from_data_file">
+<em class="property">classmethod </em><tt class="descname">from_data_file</tt><big>(</big><em>datafile</em>, <em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.from_data_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance from a DTDataFile by name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>datafile</strong> &#8211; an open DTDataFile instance</li>
+<li><strong>name</strong> &#8211; the name of the DTBitmap2D object in the file (including any time index)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a new DTBitmap2D instance</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.has_alpha">
+<tt class="descname">has_alpha</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.has_alpha" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if the image has an alpha channel</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.is_gray">
+<tt class="descname">is_gray</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.is_gray" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if the image is grayscale (not RBG or RBGA)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel">
+<tt class="descname">mesh_from_channel</tt><big>(</big><em>channel='gray'</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a given bitmap plane as a DTMesh2D object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>channel</strong> &#8211; may be one of (<cite>red</cite>, <cite>green</cite>, <cite>blue</cite>, <cite>gray</cite>, <cite>alpha</cite>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="classes.html#datatank_py.DTMesh2D.DTMesh2D" title="datatank_py.DTMesh2D.DTMesh2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMesh2D.DTMesh2D</span></tt></a> instance</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requires GDAL</strong></p>
+<p>This is how you would extract raw pixels and georegistration data from
+e.g., a 32-bit GeoTIFF or other image supported by GDAL, and bring it
+in to DataTank. This is particularly useful for elevation data.</p>
+<p>The returned mesh will use the spatial grid (origin and pixel size) of the image.
+Note that the image&#8217;s <tt class="docutils literal"><span class="pre">nodata</span></tt> attribute will be used to create
+an appropriate <a class="reference internal" href="classes.html#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></tt></a> which will be applied
+to the mesh. The nodata value is obtained from GDAL.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datatank_py.DTBitmap2D</span> <span class="kn">import</span> <span class="n">DTBitmap2D</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">DTBitmap2D</span><span class="p">(</span><span class="s">&quot;int16.tiff&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">mesh_from_channel</span><span class="p">()</span>
+<span class="go">&lt;datatank_py.DTMesh2D.DTMesh2D object at 0x101a7a1d0&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">DTBitmap2D</span><span class="p">(</span><span class="s">&quot;rgb_geo.tiff&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">mesh_from_channel</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">)</span>
+<span class="go">&lt;datatank_py.DTMesh2D.DTMesh2D object at 0x10049ab90&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.pil_image">
+<tt class="descname">pil_image</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.pil_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to convert a raw image to a <tt class="xref py py-mod docutils literal"><span class="pre">PIL</span></tt> Image object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <tt class="xref py py-mod docutils literal"><span class="pre">PIL</span></tt> Image, or <tt class="docutils literal"><span class="pre">None</span></tt> if <tt class="xref py py-mod docutils literal"><span class="pre">PIL</span></tt> can&#8217;t be loaded or if the conversion failed.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requires PIL</strong></p>
+<p>This allows you to run PIL image filters and operations. 
+<em>Only tested with 8-bit images, but gray/gray+alpha and RGB/RGBA
+have all been tested.</em></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.raster_size">
+<tt class="descname">raster_size</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.raster_size" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">size in pixels, 2-tuple ordered as <cite>(horizontal, vertical)</cite>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff">
+<tt class="descname">write_geotiff</tt><big>(</big><em>output_path</em>, <em>projection_name</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a DTBitmap2D as a GeoTIFF file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_path</strong> &#8211; a file path; all parent directories must exist</li>
+<li><strong>projection_name</strong> &#8211; the spatial reference system to associate with the image</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requires GDAL</strong></p>
+<p>The spatial reference must be a string recognized by GDAL.
+For example, <cite>EPSG:4326</cite> and <cite>WGS84</cite> are both
+valid. See the documentation for OSRSpatialReference::SetFromUserInput
+at <a class="reference external" href="http://www.gdal.org/ogr/classOGRSpatialReference.html">http://www.gdal.org/ogr/classOGRSpatialReference.html</a>
+for more specific details.</p>
+<p>Note that exceptions will be raised if the <tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt> is not valid
+(has no data), or if any GDAL functions fail.  This method has only
+been tested with 8-bit images, but gray/rgb/alpha images work as
+expected.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-datatank_py.DTPyCoreImage">
+<span id="dtpycoreimage"></span><h2>DTPyCoreImage<a class="headerlink" href="#module-datatank_py.DTPyCoreImage" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="datatank_py.DTPyCoreImage.ci_filter_named">
+<tt class="descclassname">datatank_py.DTPyCoreImage.</tt><tt class="descname">ci_filter_named</tt><big>(</big><em>filter_name</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyCoreImage.ci_filter_named" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <tt class="xref py py-class docutils literal"><span class="pre">Quartz:CIFilter</span></tt> with the given name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requires Mac OS X and PyObjC</strong></p>
+<p>These filters can be applied to a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> using:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ci_image</span> <span class="o">=</span> <span class="n">ci_image_from_planes</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">filt</span> <span class="o">=</span> <span class="n">ci_filter_named</span><span class="p">(</span><span class="s">&quot;CIExposureAdjust&quot;</span><span class="p">)</span>
+<span class="n">filt</span><span class="o">.</span><span class="n">setValue_forKey_</span><span class="p">(</span><span class="n">ci_image</span><span class="p">,</span> <span class="s">&quot;inputImage&quot;</span><span class="p">)</span>
+<span class="n">filt</span><span class="o">.</span><span class="n">setValue_forKey_</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="s">&quot;inputEV&quot;</span><span class="p">)</span>
+<span class="n">ci_image</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">valueForKey_</span><span class="p">(</span><span class="s">&quot;outputImage&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From this point, you would apply another filter or use <a class="reference internal" href="#datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image" title="datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image"><tt class="xref py py-func docutils literal"><span class="pre">dt_bitmap2d_from_ci_image()</span></tt></a> 
+to convert the image to
+a <a class="reference internal" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="datatank_py.DTBitmap2D.DTBitmap2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTBitmap2D.DTBitmap2D</span></tt></a> for DataTank.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="datatank_py.DTPyCoreImage.ci_image_from_planes">
+<tt class="descclassname">datatank_py.DTPyCoreImage.</tt><tt class="descname">ci_image_from_planes</tt><big>(</big><em>red</em>, <em>green</em>, <em>blue</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyCoreImage.ci_image_from_planes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Quartz CIImage from bitmap data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>red</strong> &#8211; a NumPy 2D array of bitmap values</li>
+<li><strong>green</strong> &#8211; a NumPy 2D array of bitmap values</li>
+<li><strong>blue</strong> &#8211; a NumPy 2D array of bitmap values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> instance</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requires Mac OS X and PyObjC</strong></p>
+<p>The <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> is only useful for applying <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIFilter</span></tt>
+or other transformations using PyObjC. Only 8-bit RGB images are supported at
+this time, and your image data will be truncated if it is not 8-bit.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image">
+<tt class="descclassname">datatank_py.DTPyCoreImage.</tt><tt class="descname">dt_bitmap2d_from_ci_image</tt><big>(</big><em>ci_image</em>, <em>width</em>, <em>height</em>, <em>grid</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ci_image</strong> &#8211; a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> instance from PyObjC</li>
+<li><strong>width</strong> &#8211; desired width in pixels</li>
+<li><strong>height</strong> &#8211; desired height in pixels</li>
+<li><strong>grid</strong> &#8211; a four-tuple (x0, y0, dx, dy) spatial grid</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a <a class="reference internal" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="datatank_py.DTBitmap2D.DTBitmap2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTBitmap2D.DTBitmap2D</span></tt></a> instance</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Requires Mac OS X and PyObjC</strong></p>
+<p>This function allows you to turn a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> into an object
+that DataTank can use. Only 8-bit RGB images are supported at this time.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Working with 2D Bitmap Data</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li><a class="reference internal" href="#gdal">GDAL</a></li>
+<li><a class="reference internal" href="#pil">PIL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#geospatial-image-example">Geospatial image example</a></li>
+<li><a class="reference internal" href="#dtbitmap2d">DTBitmap2D</a></li>
+<li><a class="reference internal" href="#module-datatank_py.DTPyCoreImage">DTPyCoreImage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="classes.html"
+                        title="previous chapter">General Classes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/image_classes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="classes.html" title="General Classes"
+             >previous</a> |</li>
+        <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Adam R. Maxwell.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
