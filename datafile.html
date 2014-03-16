@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="datatank_py 0.1 documentation" href="index.html" />
-    <link rel="next" title="General Classes" href="classes.html" />
+    <link rel="next" title="2D Classes" href="classes.html" />
     <link rel="prev" title="Getting started" href="getting_started.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="classes.html" title="General Classes"
+          <a href="classes.html" title="2D Classes"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting started"
@@ -523,6 +523,83 @@ optional data that DataTank may or may not include.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-datatank_py.DTError">
+<span id="dterror"></span><h2>DTError<a class="headerlink" href="#module-datatank_py.DTError" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="datatank_py.DTError.DTErrorMessage">
+<tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">DTErrorMessage</tt><big>(</big><em>fcn</em>, <em>msg</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.DTErrorMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accumulate a message and echo to standard error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fcn</strong> &#8211; typically a function or module name</li>
+<li><strong>msg</strong> &#8211; an error or warning message</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Typically you call this each time an error or warning
+should be presented, then call <a class="reference internal" href="#datatank_py.DTError.DTSaveError" title="datatank_py.DTError.DTSaveError"><tt class="xref py py-func docutils literal"><span class="pre">DTSaveError()</span></tt></a> before exiting.
+This is aimed exclusively at DataTank module/external program
+usage.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="datatank_py.DTError.DTSaveError">
+<tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">DTSaveError</tt><big>(</big><em>datafile</em>, <em>name='ExecutionErrors'</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.DTSaveError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save accumulated messages to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>datafile</strong> &#8211; a DTDataFile instance, open for writing</li>
+<li><strong>name</strong> &#8211; defaults to &#8220;ExecutionErrors&#8221; for DataTank</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This will cause all messages accumulated with <a class="reference internal" href="#datatank_py.DTError.DTErrorMessage" title="datatank_py.DTError.DTErrorMessage"><tt class="xref py py-func docutils literal"><span class="pre">DTErrorMessage()</span></tt></a>
+to be displayed in DataTank&#8217;s Messages panel.
+This is aimed exclusively at DataTank module/external program
+usage.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="dtprogress">
+<h2>DTProgress<a class="headerlink" href="#dtprogress" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="datatank_py.DTProgress.DTProgress">
+<em class="property">class </em><tt class="descclassname">datatank_py.DTProgress.</tt><tt class="descname">DTProgress</tt><a class="headerlink" href="#datatank_py.DTProgress.DTProgress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drive progress indicator for DataTank.</p>
+<p>Call update_percentage periodically to get correct progress bar
+timing during a long-running external program.  The implementation
+creates a file called DTProgress in the current working directory,
+and DataTank reads that file to update its progress bar.</p>
+<p><a class="reference external" href="http://www.visualdatatools.com/phpBB2/viewtopic.php?t=158">http://www.visualdatatools.com/phpBB2/viewtopic.php?t=158</a></p>
+<dl class="method">
+<dt id="datatank_py.DTProgress.DTProgress.update_percentage">
+<tt class="descname">update_percentage</tt><big>(</big><em>percent</em><big>)</big><a class="headerlink" href="#datatank_py.DTProgress.DTProgress.update_percentage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the progress indicator if needed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>percent</strong> &#8211; percentage as floating point value (0 ≤ percent ≤ 1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>Only updates the progress file on integral percentage points, so
+can be called as frequently as needed.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -536,6 +613,8 @@ optional data that DataTank may or may not include.</p>
 <li><a class="reference internal" href="#">Data Files</a><ul>
 <li><a class="reference internal" href="#id1">DTDataFile</a></li>
 <li><a class="reference internal" href="#module-datatank_py.DTPyWrite">DTPyWrite</a></li>
+<li><a class="reference internal" href="#module-datatank_py.DTError">DTError</a></li>
+<li><a class="reference internal" href="#dtprogress">DTProgress</a></li>
 </ul>
 </li>
 </ul>
@@ -545,7 +624,7 @@ optional data that DataTank may or may not include.</p>
                         title="previous chapter">Getting started</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="classes.html"
-                        title="next chapter">General Classes</a></p>
+                        title="next chapter">2D Classes</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/datafile.txt"
@@ -578,7 +657,7 @@ optional data that DataTank may or may not include.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="classes.html" title="General Classes"
+          <a href="classes.html" title="2D Classes"
              >next</a> |</li>
         <li class="right" >
           <a href="getting_started.html" title="Getting started"

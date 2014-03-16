@@ -23,3 +23,14 @@ DTPyWrite
    :members:
    :special-members: __dt_write__, __dt_type__
    
+DTError
+=======
+
+.. automodule:: datatank_py.DTError
+   :members:
+
+DTProgress
+==========
+
+.. autoclass:: datatank_py.DTProgress.DTProgress
+   :members:
