@@ -11,19 +11,16 @@ class DTRegion2D(object):
     with reading and writing other objects.
     
     """
+    
     dt_type = ("2D Region", "Region2D")
     """Type strings supported by DataTank"""
     
     def __init__(self, xmin=0, xmax=0, ymin=0, ymax=0):
         """
-        *xmin*
-          left side x
-        *xmax*
-          right side x
-        *ymin*
-          bottom y
-        *ymax*
-          top y
+        :param xmin: left side x
+        :param xmax: right side x
+        :param ymin: bottom y
+        :param ymax: top y
         
         Arguments are converted to double precision.
         

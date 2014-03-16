@@ -8,22 +8,29 @@ from DTMask import DTMask
 import numpy as np
 
 class DTStructuredGrid3D(object):
-    """3D structured grid object."""
+    """3D structured grid object.
+
+    This class corresponds to DataTank's DTStructuredGrid3D.
+    
+    """
+    
+    dt_type = ("3D Structured Grid",)
+    """Type strings allowed by DataTank"""
     
     def __init__(self, x, y, z, mask=None):
-        super(DTStructuredGrid3D, self).__init__()
-        """Create a new 3D structured grid.
-        
-        Arguments:
-        x -- vector or 3D array of x values
-        y -- vector or 3D array of y values
-        z -- vector or 3D array of z values
+        """
+        :param x: vector or 3D array of x values
+        :param y: vector or 3D array of y values
+        :param z: vector or 3D array of z values
+        :param mask: optional :class:`datatank_py.DTMask.DTMask` object
         
         Note: if a full 3D array is passed, it must be ordered as (z, y, x)
         for compatibility with DataTank.  When using vectors, this is handled
         automatically.
                 
         """       
+        
+        super(DTStructuredGrid3D, self).__init__()
         
         sx = np.shape(x)
         sy = np.shape(y)
@@ -62,13 +69,15 @@ class DTStructuredGrid3D(object):
         return "3D Structured Grid"
         
     def shape(self):
-        """Returns logical shape of grid, not underlying array or vector"""
+        """:returns: the logical grid size (z, y, x), even if stored as vectors."""
         return self._logical_shape
         
     def bounding_box(self):
+        """:returns: a :class:`datatank_py.DTRegion3D.DTRegion3D` instance"""
         return DTRegion3D(np.nanmin(self._x), np.nanmax(self._x), np.nanmin(self._y), np.nanmax(self._y), np.nanmin(self._z), np.nanmax(self._z))
         
     def full_x(self):
+        """:returns: a 3D array of all x-values"""
         if self._logical_shape == np.shape(self._x):
             return self._x
 
@@ -79,6 +88,7 @@ class DTStructuredGrid3D(object):
         return full_x
  
     def full_y(self):
+        """:returns: a 3D array of all x-values"""
         if self._logical_shape == np.shape(self._y):
             return self._y
 
@@ -89,6 +99,7 @@ class DTStructuredGrid3D(object):
         return full_y
 
     def full_z(self):
+        """:returns: a 3D array of all x-values"""
         if self._logical_shape == np.shape(self._z):
             return self._z
         
@@ -101,7 +112,13 @@ class DTStructuredGrid3D(object):
         return full_z
 
     def slice_xy(self, zero_based_slice_index):
-        """Slice the grid based on index in the Z dimension."""
+        """Slice the grid based on index in the Z dimension.
+        
+        :param zero_based_slice_index: slice index, which is zero-based (unlike DataTank, which is 1-based)
+        
+        :returns: a :class:`datatank_py.DTStructuredGrid2D.DTStructuredGrid2D` instance
+        
+        """
         from DTStructuredGrid2D import DTStructuredGrid2D
         if np.shape(self._x)[0] == 1:
             assert np.shape(self._y)[0] == 1, "inconsistent x and y shapes"
@@ -114,7 +131,13 @@ class DTStructuredGrid3D(object):
             return DTStructuredGrid2D(x, y)
         
     def slice_yz(self, zero_based_slice_index):
-        """Slice the grid based on index in the Y dimension."""
+        """Slice the grid based on index in the Y dimension.
+        
+        :param zero_based_slice_index: slice index, which is zero-based (unlike DataTank, which is 1-based)
+
+        :returns: a :class:`datatank_py.DTStructuredGrid2D.DTStructuredGrid2D` instance
+        
+        """
         from DTStructuredGrid2D import DTStructuredGrid2D
         x = self.full_y()[:,:,zero_based_slice_index]
         y = self.full_z()[:,:,zero_based_slice_index]
@@ -127,7 +150,13 @@ class DTStructuredGrid3D(object):
         return DTStructuredGrid2D(x, y)
         
     def slice_xz(self, zero_based_slice_index):
-        """Slice the grid based on index in the X dimension."""
+        """Slice the grid based on index in the X dimension.
+        
+        :param zero_based_slice_index: slice index, which is zero-based (unlike DataTank, which is 1-based)
+
+        :returns: a :class:`datatank_py.DTStructuredGrid2D.DTStructuredGrid2D` instance
+        
+        """
         from DTStructuredGrid2D import DTStructuredGrid2D
         x = self.full_x()[:,zero_based_slice_index,:]
         y = self.full_z()[:,zero_based_slice_index,:]

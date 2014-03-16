@@ -13,15 +13,13 @@ _errors = []
 def DTErrorMessage(fcn, msg):
     """Accumulate a message and echo to standard error.
     
-    Arguments:
-    fcn -- typically a function or module name
-    msg -- an error or warning message
-    
-    Returns:
-    Nothing
+    :param fcn: typically a function or module name
+    :param msg: an error or warning message
     
     Typically you call this each time an error or warning
-    should be presented, then call DTSaveError before exiting.
+    should be presented, then call :func:`DTSaveError` before exiting.
+    This is aimed exclusively at DataTank module/external program
+    usage.
     
     """
     
@@ -35,14 +33,13 @@ def DTErrorMessage(fcn, msg):
 def DTSaveError(datafile, name="ExecutionErrors"):
     """Save accumulated messages to a file.
     
-    Arguments:
-    datafile -- an open DTDataFile instance
-    name -- defaults to "ExecutionErrors" for DataTank
+    :param datafile: a DTDataFile instance, open for writing
+    :param name: defaults to "ExecutionErrors" for DataTank
     
-    Returns:
-    Nothing
-    
-    This will be displayed in DataTank's Messages panel.
+    This will cause all messages accumulated with :func:`DTErrorMessage`
+    to be displayed in DataTank's Messages panel.
+    This is aimed exclusively at DataTank module/external program
+    usage.
     
     """
     

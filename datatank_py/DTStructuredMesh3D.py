@@ -7,18 +7,24 @@ from DTStructuredGrid3D import DTStructuredGrid3D
 import numpy as np
 
 class DTStructuredMesh3D(object):
-    """3D structured mesh object."""
+    """3D structured mesh object.
+    
+    This class corresponds to DataTank's DTStructuredMesh3D.
+    
+    """
+    
+    dt_type = ("3D Structured Mesh",)
+    """Type strings allowed by DataTank"""
     
     def __init__(self, values, grid=None):
         super(DTStructuredMesh3D, self).__init__()
-        """Create a new 3D structured mesh.
-        
-        Arguments:
-        values -- 3D array of values
-        grid -- DTStructuredGrid3D object (defaults to unit grid) or the name of a previously saved grid
+        """
+        :param values: 3D array of values
+        :param grid: :class:`datatank_py.DTStructuredGrid3D.DTStructuredGrid3D` instance or the name of a previously saved grid
         
         Note that the values array must be ordered as (z, y, x) for compatibility
-        with the grid and DataTank.
+        with the grid and DataTank. Previously saved grids names are only applicable
+        for a given file, obviously.
                 
         """                   
         
@@ -36,25 +42,43 @@ class DTStructuredMesh3D(object):
         self._values = values
         
     def grid(self):
-        """DTStructuredGrid3D instance"""
+        """:returns: :class:`datatank_py.DTStructuredGrid3D.DTStructuredGrid3D` instance"""
         return self._grid
     
     def slice_xy(self, zero_based_slice_index):
-        """Slice the mesh based on index in the Z dimension."""
+        """Slice the grid based on index in the Z dimension.
+        
+        :param zero_based_slice_index: slice index, which is zero-based (unlike DataTank, which is 1-based)
+        
+        :returns: a :class:`datatank_py.DTStructuredMesh2D.DTStructuredMesh2D` instance
+        
+        """
         from DTStructuredMesh2D import DTStructuredMesh2D
         grid = self._grid.slice_xy(zero_based_slice_index)
         values = self._values[zero_based_slice_index,:,:]
         return DTStructuredMesh2D(values, grid=grid)
         
     def slice_yz(self, zero_based_slice_index):
-        """Slice the mesh based on index in the Y dimension."""
+        """Slice the mesh based on index in the Y dimension.
+        
+        :param zero_based_slice_index: slice index, which is zero-based (unlike DataTank, which is 1-based)
+        
+        :returns: a :class:`datatank_py.DTStructuredMesh2D.DTStructuredMesh2D` instance
+        
+        """
         from DTStructuredMesh2D import DTStructuredMesh2D
         grid = self._grid.slice_yz(zero_based_slice_index)
         values = self._values[:,:,zero_based_slice_index]
         return DTStructuredMesh2D(values, grid=grid)
 
     def slice_xz(self, zero_based_slice_index):
-        """Slice the mesh based on index in the X dimension."""
+        """Slice the mesh based on index in the X dimension.
+        
+        :param zero_based_slice_index: slice index, which is zero-based (unlike DataTank, which is 1-based)
+        
+        :returns: a :class:`datatank_py.DTStructuredMesh2D.DTStructuredMesh2D` instance
+        
+        """
         from DTStructuredMesh2D import DTStructuredMesh2D
         grid = self._grid.slice_xz(zero_based_slice_index)
         values = self._values[:,zero_based_slice_index,:]

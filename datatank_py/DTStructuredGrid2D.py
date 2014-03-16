@@ -30,6 +30,9 @@ class DTStructuredGrid2D(object):
     
     """
     
+    dt_type = ("2D Structured Grid",)
+    """Type strings allowed by DataTank"""
+    
     def __init__(self, x, y, mask=None):
         """
         :param x: vector or 2D array of x values

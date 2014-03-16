@@ -11,7 +11,8 @@ class DTProgress(object):
     
     Call update_percentage periodically to get correct progress bar
     timing during a long-running external program.  The implementation
-    creates a file called DTProgress in the current working directory.
+    creates a file called DTProgress in the current working directory,
+    and DataTank reads that file to update its progress bar.
     
     http://www.visualdatatools.com/phpBB2/viewtopic.php?t=158
     
@@ -25,6 +26,8 @@ class DTProgress(object):
         
     def update_percentage(self, percent):
         """Updates the progress indicator if needed.
+        
+        :param percent: percentage as floating point value (0 ≤ percent ≤ 1.0)
         
         Only updates the progress file on integral percentage points, so
         can be called as frequently as needed.
