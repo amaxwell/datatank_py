@@ -71,6 +71,34 @@ DTStructuredMesh2D
    :members:
    :special-members: __init__
    
+DTStructuredVectorField2D
+=========================
+
+.. autoclass:: datatank_py.DTStructuredVectorField2D.DTStructuredVectorField2D
+   :members:
+   :special-members: __init__
+
+DTTriangularGrid2D
+==================
+
+.. autoclass:: datatank_py.DTTriangularGrid2D.DTTriangularGrid2D
+   :members:
+   :special-members: __init__
+
+DTTriangularMesh2D
+==================
+
+.. autoclass:: datatank_py.DTTriangularMesh2D.DTTriangularMesh2D
+   :members:
+   :special-members: __init__
+
+DTTriangularVectorField2D
+=========================
+
+.. autoclass:: datatank_py.DTTriangularVectorField2D.DTTriangularVectorField2D
+   :members:
+   :special-members: __init__
+   
 DTPath2D
 ========
 .. autoclass:: datatank_py.DTPath2D.DTPath2D
@@ -112,3 +140,10 @@ DTStructuredMesh3D
 .. autoclass:: datatank_py.DTStructuredMesh3D.DTStructuredMesh3D
    :members:
    :special-members: __init__  
+
+DTStructuredVectorField3D
+=========================
+
+.. autoclass:: datatank_py.DTStructuredVectorField3D.DTStructuredVectorField3D
+   :members:
+   :special-members: __init__

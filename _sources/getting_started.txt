@@ -130,7 +130,10 @@ Python.
                 output_mesh = computation(mesh, scalar)
             except Exception, e:
                 DTErrorMessage("my_example.py", "Exception raised: %s" % (e))
-                   
+                
+                # exit or continue here is your choice as the programmer
+                exit(1)
+                                   
             # create or truncate the output file    
             with DTDataFile("Output.dtbin", truncate=True) as output_file:
             
