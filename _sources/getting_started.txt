@@ -26,13 +26,8 @@ If that fails grab the latest version from GitHub with::
 Example: Reading a DataTank file
 ================================
 
-Create a data file in DataTank, and read the variables using :class:`datatank_py.DTDataFile.DTDataFile`.
-A few points are worth noting:
-
-#. Variable structure is complicated, but is documented in DataTank's manual
-   (see the menu "Help -> Manual -> DataTank Manual (pdf)" in DataTank)
-#. Some arrays have one or more empty dimensions, and may need to be flattened
-#. Strings are ``unicode`` objects in Python
+Create a data file in DataTank called ``example.dtbin``, 
+and read the variables using :class:`datatank_py.DTDataFile.DTDataFile`.
 
 .. image:: _static/datafile_example_ss.png
 
@@ -62,8 +57,15 @@ numbers = [[[ 0.  1.  2.]]]
 Seq_mesh = Mesh2D
 strings = [u'A', u'B', u'C']
 
+Key points from this exercise:
+
+#. Variable structure is complicated, but is documented in DataTank's manual
+   (see the menu "Help -> Manual -> DataTank Manual (pdf)" in DataTank)
+#. Some arrays have one or more empty dimensions, and may need to be flattened
+#. Strings are ``unicode`` objects in Python
+
 At this point, you can manipulate or modify the variables, and can
-even append to the file. *However, you cannot modify existing variables
+even append to the file. *However, you cannot rewrite existing variables
 in a file!*
 
 Example: Manipulating a 2D mesh
@@ -84,23 +86,18 @@ Python.
     #!/usr/bin/env python
     # coding: utf-8
 
-    # These are basically like C includes; you can also use
-    # `from datatank_py import *` to get everything, but then
-    # you refer to classes as DTDataFile.DTDataFile("/tmp/blah")
-    # and so forth.
     from datatank_py.DTDataFile import DTDataFile
     from datatank_py.DTMesh2D import DTMesh2D
+
+    # import all functions from DTError
+    from datatank_py.DTError import *
 
     from time import time
     import sys
 
     def computation(mesh, scalar):
     
-        # mesh is DTMesh2D
-        # scalar is float
-        # return a DTMesh2D object
-    
-        # here we get the values, which is a 2D mesh
+        # here we get the value array from the DTMesh2D object
         values = mesh.values()
     
         # just multiply all values by the constant
@@ -121,38 +118,35 @@ Python.
         
             # This uses Python's dictionary getter syntax to get a primitive object
             # that isn't wrapped in a DT class. This is the most convenient way to
-            # get an array, number, string, or list of strings.
+            # get an array, number, string, or list of strings. The name "scalar"
+            # comes from DataTank, and can include any Unicode characters.
             scalar = input_file["scalar"]
         
             start_time = time()
-            errors = []
         
             # This is just an example; another possibility is wrapping the entire
             # main call in an exception handler.
             try:
                 output_mesh = computation(mesh, scalar)
             except Exception, e:
-                errors.append("Exception raised: %s" % (e))
-            
+                DTErrorMessage("my_example.py", "Exception raised: %s" % (e))
+                   
             # create or truncate the output file    
             with DTDataFile("Output.dtbin", truncate=True) as output_file:
+            
                 # record computation time
                 output_file["ExecutionTime"] = (time() - start_time)
         
-                # DataTank seems to display stderr instead of the error list, so
-                # make sure to write to both.
-                if len(errors):
-                    output_file["ExecutionErrors"] = errors
-                    sys.stderr.write("%s\n" % errors)
+                # save errors (if any)
+                DTSaveError(output_file)
             
-                else:
-                    # save the output variable; this will be visible to DataTank
-                    #sys.stderr.write("%s: %s\n" % (type(output_string), output_string))
-                    output_file["Var"] = output_mesh            
-
-If you've ever written a C++ program for DataTank, using the Xcode
-skeleton provided with it, the preceding code should look familiar.
-However, `datatank_py` implements and uses Python idioms whereever
+                # Save the output variable; DataTank expects returned variables
+                # to be named "Var".
+                output_file["Var"] = output_mesh
+            
+If you've ever written a C++ program for DataTank using the Xcode
+skeleton it creates, the preceding code should look familiar.
+However, ``datatank_py`` implements and uses Python idioms wherever
 possible, as a straight C++ translation is undesirable for most Python
-programmers (not to say unreadable).
+programmers (as well as downright unreadable).
 

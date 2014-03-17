@@ -70,14 +70,8 @@ installed &#8211; you can check by doing:</p>
 </div>
 <div class="section" id="example-reading-a-datatank-file">
 <span id="file-read-example"></span><h2>Example: Reading a DataTank file<a class="headerlink" href="#example-reading-a-datatank-file" title="Permalink to this headline">¶</a></h2>
-<p>Create a data file in DataTank, and read the variables using <a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>.
-A few points are worth noting:</p>
-<ol class="arabic simple">
-<li>Variable structure is complicated, but is documented in DataTank&#8217;s manual
-(see the menu &#8220;Help -&gt; Manual -&gt; DataTank Manual (pdf)&#8221; in DataTank)</li>
-<li>Some arrays have one or more empty dimensions, and may need to be flattened</li>
-<li>Strings are <tt class="docutils literal"><span class="pre">unicode</span></tt> objects in Python</li>
-</ol>
+<p>Create a data file in DataTank called <tt class="docutils literal"><span class="pre">example.dtbin</span></tt>,
+and read the variables using <a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>.</p>
 <img alt="_images/datafile_example_ss.png" src="_images/datafile_example_ss.png" />
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datatank_py.DTDataFile</span> <span class="kn">import</span> <span class="n">DTDataFile</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dtf</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;example.dtbin&quot;</span><span class="p">)</span>
@@ -106,8 +100,15 @@ A few points are worth noting:</p>
 <span class="go">strings = [u&#39;A&#39;, u&#39;B&#39;, u&#39;C&#39;]</span>
 </pre></div>
 </div>
+<p>Key points from this exercise:</p>
+<ol class="arabic simple">
+<li>Variable structure is complicated, but is documented in DataTank&#8217;s manual
+(see the menu &#8220;Help -&gt; Manual -&gt; DataTank Manual (pdf)&#8221; in DataTank)</li>
+<li>Some arrays have one or more empty dimensions, and may need to be flattened</li>
+<li>Strings are <tt class="docutils literal"><span class="pre">unicode</span></tt> objects in Python</li>
+</ol>
 <p>At this point, you can manipulate or modify the variables, and can
-even append to the file. <em>However, you cannot modify existing variables
+even append to the file. <em>However, you cannot rewrite existing variables
 in a file!</em></p>
 </div>
 <div class="section" id="example-manipulating-a-2d-mesh">
@@ -121,23 +122,18 @@ Python.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
 <span class="c"># coding: utf-8</span>
 
-<span class="c"># These are basically like C includes; you can also use</span>
-<span class="c"># `from datatank_py import *` to get everything, but then</span>
-<span class="c"># you refer to classes as DTDataFile.DTDataFile(&quot;/tmp/blah&quot;)</span>
-<span class="c"># and so forth.</span>
 <span class="kn">from</span> <span class="nn">datatank_py.DTDataFile</span> <span class="kn">import</span> <span class="n">DTDataFile</span>
 <span class="kn">from</span> <span class="nn">datatank_py.DTMesh2D</span> <span class="kn">import</span> <span class="n">DTMesh2D</span>
+
+<span class="c"># import all functions from DTError</span>
+<span class="kn">from</span> <span class="nn">datatank_py.DTError</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">def</span> <span class="nf">computation</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">scalar</span><span class="p">):</span>
 
-    <span class="c"># mesh is DTMesh2D</span>
-    <span class="c"># scalar is float</span>
-    <span class="c"># return a DTMesh2D object</span>
-
-    <span class="c"># here we get the values, which is a 2D mesh</span>
+    <span class="c"># here we get the value array from the DTMesh2D object</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
     <span class="c"># just multiply all values by the constant</span>
@@ -158,41 +154,38 @@ Python.</p>
 
         <span class="c"># This uses Python&#39;s dictionary getter syntax to get a primitive object</span>
         <span class="c"># that isn&#39;t wrapped in a DT class. This is the most convenient way to</span>
-        <span class="c"># get an array, number, string, or list of strings.</span>
+        <span class="c"># get an array, number, string, or list of strings. The name &quot;scalar&quot;</span>
+        <span class="c"># comes from DataTank, and can include any Unicode characters.</span>
         <span class="n">scalar</span> <span class="o">=</span> <span class="n">input_file</span><span class="p">[</span><span class="s">&quot;scalar&quot;</span><span class="p">]</span>
 
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c"># This is just an example; another possibility is wrapping the entire</span>
         <span class="c"># main call in an exception handler.</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">output_mesh</span> <span class="o">=</span> <span class="n">computation</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">scalar</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;Exception raised: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="n">DTErrorMessage</span><span class="p">(</span><span class="s">&quot;my_example.py&quot;</span><span class="p">,</span> <span class="s">&quot;Exception raised: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
         <span class="c"># create or truncate the output file</span>
         <span class="k">with</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;Output.dtbin&quot;</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+
             <span class="c"># record computation time</span>
             <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;ExecutionTime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
 
-            <span class="c"># DataTank seems to display stderr instead of the error list, so</span>
-            <span class="c"># make sure to write to both.</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">):</span>
-                <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;ExecutionErrors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">errors</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">errors</span><span class="p">)</span>
+            <span class="c"># save errors (if any)</span>
+            <span class="n">DTSaveError</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
 
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c"># save the output variable; this will be visible to DataTank</span>
-                <span class="c">#sys.stderr.write(&quot;%s: %s\n&quot; % (type(output_string), output_string))</span>
-                <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;Var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_mesh</span>
+            <span class="c"># Save the output variable; DataTank expects returned variables</span>
+            <span class="c"># to be named &quot;Var&quot;.</span>
+            <span class="n">output_file</span><span class="p">[</span><span class="s">&quot;Var&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_mesh</span>
 </pre></div>
 </div>
-<p>If you&#8217;ve ever written a C++ program for DataTank, using the Xcode
-skeleton provided with it, the preceding code should look familiar.
-However, <cite>datatank_py</cite> implements and uses Python idioms whereever
+<p>If you&#8217;ve ever written a C++ program for DataTank using the Xcode
+skeleton it creates, the preceding code should look familiar.
+However, <tt class="docutils literal"><span class="pre">datatank_py</span></tt> implements and uses Python idioms wherever
 possible, as a straight C++ translation is undesirable for most Python
-programmers (not to say unreadable).</p>
+programmers (as well as downright unreadable).</p>
 </div>
 </div>
 
