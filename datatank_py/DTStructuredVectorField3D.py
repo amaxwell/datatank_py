@@ -7,19 +7,21 @@ from DTStructuredGrid3D import DTStructuredGrid3D
 import numpy as np
 
 class DTStructuredVectorField3D(object):
-    """3D structured vector field object."""
+    """3D vector field on a structured grid."""
     
     def __init__(self, u, v, w, grid=None):
-        super(DTStructuredVectorField3D, self).__init__()
-        """Create a new 3D structured vector field.
+        """
+        :param u: 3D array of values
+        :param v: 3D array of values
+        :param w: 3D array of values
+        :param grid: :class:`datatank_py.DTStructuredGrid3D.DTStructuredGrid3D` object (defaults to unit grid) or the name of a previously saved grid
         
-        Arguments:
-        u -- 3D array of values
-        v -- 3D array of values
-        w -- 3D array of values
-        grid -- DTStructuredGrid3D object (defaults to unit grid) or the name of a previously saved grid
+        Note that the ``u``, ``v``, ``w`` arrays must be arranged as ``(z, y, x)`` for compatibility
+        with the grid and DataTank.
                 
-        """                   
+        """
+        
+        super(DTStructuredVectorField3D, self).__init__()
         
         shape = np.shape(u)
         assert len(shape) == 3, "values array must be 3D"
@@ -40,15 +42,19 @@ class DTStructuredVectorField3D(object):
         self._w = w
     
     def grid(self):
+        """:returns: a :class:`datatank_py.DTStructuredGrid3D.DTStructuredGrid3D` instance"""
         return self._grid
         
     def u(self):
+        """:returns: u component of vector field (3D array)"""
         return self._u
         
     def v(self):
+        """:returns: v component of vector field (3D array)"""
         return self._v
 
     def w(self):
+        """:returns: w component of vector field (3D array)"""
         return self._w
 
     def __dt_type__(self):

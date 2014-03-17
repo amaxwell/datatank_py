@@ -7,21 +7,23 @@ from DTStructuredGrid2D import DTStructuredGrid2D
 import numpy as np
 
 class DTStructuredVectorField2D(object):
-    """2D structured vector field object."""
+    """2D vector field on a structured grid."""
+    
+    dt_type = ("2D Structured Vector Field",)
+    """Type strings allowed by DataTank"""
     
     def __init__(self, u, v, grid=None):
-        super(DTStructuredVectorField2D, self).__init__()
-        """Create a new 2D structured vector field.
+        """
+        :param u: 2D array of values
+        :param v: 2D array of values
+        :param grid: :class:`datatank_py.DTStructuredGrid2D.DTStructuredGrid2D` object (defaults to unit grid) or the name of a previously saved grid
         
-        Arguments:
-        u -- 2D array of values
-        v -- 2D array of values
-        grid -- DTStructuredGrid2D object (defaults to unit grid) or the name of a previously saved grid
-        
-        Note that the u, v arrays must be ordered as (y, x) for compatibility
+        Note that the ``u``, ``v`` arrays must be arranged as ``(y, x)`` for compatibility
         with the grid and DataTank.
                         
-        """                   
+        """
+        
+        super(DTStructuredVectorField2D, self).__init__()        
         
         u = np.squeeze(u)
         v = np.squeeze(v)
@@ -41,12 +43,15 @@ class DTStructuredVectorField2D(object):
         self._v = v
         
     def grid(self):
+        """:returns: a :class:`datatank_py.DTStructuredGrid2D.DTStructuredGrid2D` instance"""
         return self._grid
         
     def u(self):
+        """:returns: u component of vector field (2D array)"""
         return self._u
         
     def v(self):
+        """:returns: v component of vector field (2D array)"""
         return self._v
     
     def __dt_type__(self):

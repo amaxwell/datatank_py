@@ -8,15 +8,17 @@ import numpy as np
 class DTTriangularMesh2D(object):
     """2D triangular mesh object."""
     
+    dt_type = ("2D Triangular Mesh",)
+    """Type strings allowed by DataTank"""
+    
     def __init__(self, grid, values):
-        super(DTTriangularMesh2D, self).__init__()
-        """Create a new 2D triangular mesh.
-        
-        Arguments:
-        grid -- DTTriangularGrid2D object
-        values -- vector or list of values
+        """
+        :param grid: :class:`datatank_py.DTTriangularGrid2D.DTTriangularGrid2D` instance
+        :param values: vector or list of values in nodal order
                 
         """            
+
+        super(DTTriangularMesh2D, self).__init__()
                            
         values = np.squeeze(values)
         assert grid.number_of_points() == len(values)
@@ -27,13 +29,29 @@ class DTTriangularMesh2D(object):
         return "2D Triangular Mesh"
         
     def grid(self):
-        """returns DTTriangularGrid2D"""
+        """:returns: a :class:`datatank_py.DTTriangularGrid2D.DTTriangularGrid2D` instance"""
         return self._grid
         
     def bounding_box(self):
+        """:returns: a :class:`datatank_py.DTRegion2D.DTRegion2D` instance"""
         return self._grid.bounding_box()
         
     def write_with_shared_grid(self, datafile, name, grid_name, time, time_index):
+        """Allows saving a single grid and sharing it amongst different time
+        values of a variable.
+        
+        :param datafile: a :class:`datatank_py.DTDataFile.DTDataFile` open for writing
+        :param name: the mesh variable's name
+        :param grid_name: the grid name to be shared (will not be visible in DataTank)
+        :param time: the time value for this step (DataTank's ``t`` variable)
+        :param time_index: the corresponding integer index of this time step
+        
+        This is an advanced technique, but it can give a significant space savings in
+        a data file. It's not widely implemented, since it's not clear yet if this
+        is the best API.
+        
+        """
+        
         if grid_name not in datafile:
             datafile.write_anonymous(self._grid, grid_name)
             datafile.write_anonymous(self.__dt_type__(), "Seq_" + name)
