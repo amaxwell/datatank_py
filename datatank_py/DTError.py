@@ -13,9 +13,9 @@ _errors = []
 def DTErrorMessage(fcn, msg):
     """Accumulate a message and echo to standard error.
     
-    :param fcn: typically a function or module name
+    :param fcn: typically a function or module name (pass ``None`` to use argv[0])
     :param msg: an error or warning message
-    
+        
     Typically you call this each time an error or warning
     should be presented, then call :func:`DTSaveError` before exiting.
     This is aimed exclusively at DataTank module/external program
