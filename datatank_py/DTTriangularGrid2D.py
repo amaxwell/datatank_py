@@ -26,14 +26,17 @@ class DTTriangularGrid2D(object):
         ===========   =======  =======  ============  ============  ============
         Point Index   Point X  Point Y  Connection 1  Connection 2  Connection 3
         ===========   =======  =======  ============  ============  ============
-        0             1.0      1.0      2             5             7
-        1             2.0      1.0      1             7             9
+        0             1.0      1.0      0             1             112
+        1             2.0      1.0      112           1             114
+        2             3.0      3.0      113           1             114
         …             …        …        …             …             …
         m             99.0     99.0     m-1           m-20          m-57
         ===========   =======  =======  ============  ============  ============
         
         The values in the ``connections`` array refer to point indices, and
-        allow reconstruction of the unstructured triangular network.
+        allow reconstruction of the unstructured triangular network. 
+        
+        **Note that DataTank expects zero-based connection indices.**
                 
         """            
                            
