@@ -117,6 +117,12 @@ DTRegion2D
    :members:
    :special-members: __init__
    
+DTVector2D
+==========
+.. autoclass:: datatank_py.DTVector2D.DTVector2D
+   :members:
+   :special-members: __init__
+
 .. _3d_classes:
 
 **********

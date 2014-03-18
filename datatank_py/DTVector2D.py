@@ -6,17 +6,18 @@
 class DTVector2D(object):
     """2D Vector object."""
     
+    dt_type = ("2D Vector",)
+    """Type strings allowed by DataTank"""
+    
     def __init__(self, x, y, u, v):
-        super(DTVector2D, self).__init__()
-        """Create a new 2D vector.
-        
-        Arguments:
-        x -- x location
-        y -- y location
-        u -- x magnitude
-        v -- y magnitude
+        """
+        :param x: x location
+        :param y: y location
+        :param u: x magnitude
+        :param v: y magnitude
         
         """
+        super(DTVector2D, self).__init__()
                     
         self.x = float(x)
         self.y = float(y)
