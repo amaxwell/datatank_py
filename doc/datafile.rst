@@ -55,7 +55,7 @@ variables all at once.
     
         # dummy input file, just as boilerplate
         input_file = DTDataFile("Input.dtbin")
-        COUNT = input_file["count"]
+        COUNT = int(input_file["count"])
         input_file.close()
     
         start_time = time()

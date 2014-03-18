@@ -9,14 +9,15 @@ from datatank_py.DTSeries import DTSeriesGroup
 from datatank_py.DTMesh2D import DTMesh2D
 from time import time
 import numpy as np
+import sys
 
 if __name__ == '__main__':
     
     # dummy input file, just as boilerplate
     input_file = DTDataFile("Input.dtbin")
-    COUNT = input_file["count"]
+    COUNT = int(input_file["count"])
     input_file.close()
-    
+        
     start_time = time()
     
     with DTDataFile("Output.dtbin", truncate=True) as df:
