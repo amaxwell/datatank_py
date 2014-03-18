@@ -19,18 +19,16 @@ class DTSeries(object):
     """
     
     def __init__(self, datafile, series_name, series_type):
-        super(DTSeries, self).__init__()
-        """Create a new series.
-        
-        Arguments:
-        datafile -- an empty DTDataFile instance
-        series_name -- the name of the series variable
-        series_type -- the type of the series variable
+        """
+        :param datafile: an empty :class:`datatank_py.DTDataFile.DTDataFile` instance
+        :param series_name: the name of the series variable
+        :param series_type: the type of the series variable
         
         The name will typically be "Var", and the type will be whatever is the
         base type stored, such as "Group" for a group object.
         
         """
+        super(DTSeries, self).__init__()
         
         self._name = series_name
         self._time_values = []
@@ -43,22 +41,32 @@ class DTSeries(object):
         datafile.write_anonymous(series_type, "Seq_" + series_name)
     
     def datafile(self):
+        """:returns: the :class:`datatank_py.DTDataFile.DTDataFile` instance used for storage"""
         return self._datafile
         
     def savecount(self):
+        """:returns: the number of time values stored"""
         return len(self.time_values())
         
     def basename(self):
+        """:returns: name of the form 'name_N' where N is the result of :meth:savecount"""
         return "%s_%d" % (self._name, self.savecount() - 1)
     
     def time_values(self):
+        """:returns: vector of time values stored"""
         return self._time_values
         
     def last_time(self):
+        """:returns: last time value stored or ``None`` if no values are stored"""
         return self.time_values()[-1] if self.savecount() else None
         
     def shared_save(self, time):
+        """
+        :param time: time value to store to disk
         
+        Saves the current time value and an appropriate variable name to
+        disk.
+        """
         # DTSource logs error and returns false here; assert since these are really
         # programmer errors in our case.
         assert time >= 0, "time must not be negative"
@@ -72,17 +80,25 @@ class DTSeries(object):
         self._datafile.write_anonymous(time, self.basename() + "_time")
         
 class DTSeriesGroup(DTSeries):
-    """Base series group class"""
+    """Base series group class."""
+    
     def __init__(self, datafile, name, name_to_type):
-        """Create a new series group.
-        
-        Arguments:
-        datafile -- an empty DTDataFile instance
-        name -- the name of the group
-        name_to_type -- a dictionary mapping variable names to DataTank types, such as
-                        { "Output Array":"Array", "Single Value":"Real Number" }.
+        """
+        :param datafile: an empty :class:`datatank_py.DTDataFile.DTDataFile` instance
+        :param name: the name of the group
+        :param name_to_type: a dictionary mapping variable names to DataTank types
                         
-        This defines the structure of the group.  
+        This ``name_to_type`` dictionary defines the structure of the group::
+        
+            { "My Output Array":"Array", "My Scalar Value":"Real Number" }
+            
+        You can look up the DataTank type names in its PDF help manual, or for
+        compound objects supported in :mod:`datatank_py`, you can use something
+        like::
+        
+            from datatank_py.DTMesh2D import DTMesh2D
+            from datatank_py.DTPointCollection2D import DTPointCollection2D
+            { "My 2D Mesh":DTMesh2D.dt_type[0], "My Points":DTPointCollection2D.dt_type[0] }
                         
         """
         
@@ -105,15 +121,19 @@ class DTSeriesGroup(DTSeries):
     def add(self, time, values):
         """Add a dictionary of values.
         
-        Arguments:
-        time -- the time value represented by these values
-        values -- dictionary mapping variable name to value
+        :param time: the time value represented by these values
+        :param values: dictionary mapping variable name to value
                 
         When adding to the group, all variables must be present, or an exception 
         will be raised.  The caller is responsible for ensuring that value types 
         must be consistent with the expected data.  Compound types (e.g., 2D Mesh) 
         are supported via wrapper objects that implement the dt_write protocol.
         See DTDataFile documentation for more details.
+        
+        Example::
+        
+            group.add(idx / 10., { "Output Mesh":DTMesh2D(mesh, grid=grid), "Output Index":idx })
+            
         
         """
         
