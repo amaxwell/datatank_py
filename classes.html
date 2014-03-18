@@ -916,25 +916,32 @@ contrived example:</p>
 <tr class="row-even"><td>0</td>
 <td>1.0</td>
 <td>1.0</td>
-<td>2</td>
-<td>5</td>
-<td>7</td>
+<td>0</td>
+<td>1</td>
+<td>112</td>
 </tr>
 <tr class="row-odd"><td>1</td>
 <td>2.0</td>
 <td>1.0</td>
+<td>112</td>
 <td>1</td>
-<td>7</td>
-<td>9</td>
+<td>114</td>
 </tr>
-<tr class="row-even"><td>…</td>
+<tr class="row-even"><td>2</td>
+<td>3.0</td>
+<td>3.0</td>
+<td>113</td>
+<td>1</td>
+<td>114</td>
+</tr>
+<tr class="row-odd"><td>…</td>
 <td>…</td>
 <td>…</td>
 <td>…</td>
 <td>…</td>
 <td>…</td>
 </tr>
-<tr class="row-odd"><td>m</td>
+<tr class="row-even"><td>m</td>
 <td>99.0</td>
 <td>99.0</td>
 <td>m-1</td>
@@ -945,6 +952,7 @@ contrived example:</p>
 </table>
 <p>The values in the <tt class="docutils literal"><span class="pre">connections</span></tt> array refer to point indices, and
 allow reconstruction of the unstructured triangular network.</p>
+<p><strong>Note that DataTank expects zero-based connection indices.</strong></p>
 </dd></dl>
 
 <dl class="method">
@@ -1059,7 +1067,105 @@ values of a variable.</p>
 </table>
 <p>This is an advanced technique, but it can give a significant space savings in
 a data file. It&#8217;s not widely implemented, since it&#8217;s not clear yet if this
-is the best API.</p>
+is the best API, but the following example shows how it&#8217;s used:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">datatank_py.DTDataFile</span> <span class="kn">import</span> <span class="n">DTDataFile</span>
+<span class="kn">from</span> <span class="nn">datatank_py.DTTriangularGrid2D</span> <span class="kn">import</span> <span class="n">DTTriangularGrid2D</span>
+<span class="kn">from</span> <span class="nn">datatank_py.DTTriangularMesh2D</span> <span class="kn">import</span> <span class="n">DTTriangularMesh2D</span>
+
+<span class="c"># files that exist in the current directory</span>
+<span class="n">grid_filename</span> <span class="o">=</span> <span class="s">&quot;grid.txt&quot;</span>
+
+<span class="c"># this is a time-varying list of depths at each node</span>
+<span class="n">depth_filename</span> <span class="o">=</span> <span class="s">&quot;depths.txt&quot;</span>
+
+<span class="c"># function that returns a DTTriangularGrid2D</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">parse_grid_from_path</span><span class="p">(</span><span class="n">grid_filename</span><span class="p">)</span>
+
+<span class="c"># this can be any string; the user won&#39;t see it</span>
+<span class="n">shared_grid_name</span> <span class="o">=</span> <span class="n">grid_filename</span>
+
+<span class="k">with</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;Output.dtbin&quot;</span><span class="p">,</span> <span class="n">truncate</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">dtf</span><span class="p">:</span>
+    
+    <span class="c"># a bunch of this is related to parsing the textfile                </span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">depth_filename</span><span class="p">,</span> <span class="s">&quot;rU&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">asciivalues</span><span class="p">:</span>
+        
+        <span class="c"># here we have some state variables, but the time ones are relevant</span>
+        <span class="n">passed_header</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">accumulated_values</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c"># this is a time extracted from the file (a floating point value)</span>
+        <span class="n">timeval</span> <span class="o">=</span> <span class="bp">None</span>
+        
+        <span class="c"># this is the zero-based index of the timeval</span>
+        <span class="n">time_index</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c"># this is the initial value of the timeval variable</span>
+        <span class="n">base_timeval</span> <span class="o">=</span> <span class="bp">None</span>
+        
+        <span class="k">for</span> <span class="n">lineidx</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">asciivalues</span><span class="p">):</span>
+            
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;TS&quot;</span><span class="p">):</span>
+                
+                <span class="c"># If we&#39;ve already seen a timeval, a &quot;TS&quot; marker means that we&#39;re starting </span>
+                <span class="c"># another block of depth values so we&#39;re going to save the previous </span>
+                <span class="c"># timestep to disk.</span>
+                <span class="k">if</span> <span class="n">timeval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">passed_header</span> <span class="ow">is</span> <span class="bp">True</span>
+                    
+                    <span class="c"># save the t0 if we haven&#39;t already done so</span>
+                    <span class="k">if</span> <span class="n">base_timeval</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                        <span class="n">base_timeval</span> <span class="o">=</span> <span class="n">timeval</span>
+                        
+                    <span class="c"># create a DTTriangularMesh2D as usual, with grid and values</span>
+                    <span class="c"># note that a 32-bit float will save significant space over</span>
+                    <span class="c"># a double, if you can live with the reduced precision.</span>
+                    <span class="n">mesh</span> <span class="o">=</span> <span class="n">DTTriangularMesh2D</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">accumulated_values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+                    
+                    <span class="c"># This is the floating point time value that will be used for</span>
+                    <span class="c"># DataTank&#39;s time slider. Here I&#39;m using hours.</span>
+                    <span class="n">dttime_hours</span> <span class="o">=</span> <span class="p">(</span><span class="n">timeval</span> <span class="o">-</span> <span class="n">base_timeval</span><span class="p">)</span> <span class="o">/</span> <span class="mf">3600.</span>
+                    
+                    <span class="c"># Now, save it off. The variable in the file will be visible as &quot;Depth&quot;,</span>
+                    <span class="c"># and write_with_shared_grid() will take care of saving the grid for the</span>
+                    <span class="c"># first time and then saving the name on subsequent time steps.</span>
+                    <span class="c">#</span>
+                    <span class="c"># The dttime_hours variable is our slider time, and time_index is passed</span>
+                    <span class="c"># so that write_with_shared_grid() can create the correct variable name,</span>
+                    <span class="c"># i.e., &quot;Depth_0, Depth_1, Depth_2, … Depth_N&quot; for successive time steps.</span>
+                    <span class="c">#</span>
+                    <span class="n">mesh</span><span class="o">.</span><span class="n">write_with_shared_grid</span><span class="p">(</span><span class="n">dtf</span><span class="p">,</span> <span class="s">&quot;Depth&quot;</span><span class="p">,</span> <span class="n">shared_grid_name</span><span class="p">,</span> <span class="n">dttime_hours</span><span class="p">,</span> <span class="n">time_index</span><span class="p">)</span>
+                    
+                    <span class="c">#</span>
+                    <span class="c"># This code shows what write_with_shared_grid() is really doing in our specific</span>
+                    <span class="c"># example:</span>
+                    <span class="c">#</span>
+                    <span class="c"># dtf.write(mesh, &quot;Depth_%d&quot; % (time_index), time=(timeval - base_timeval))</span>
+                    <span class="c"># dtf.write_anonymous(shared_grid_name, &quot;Depth_%d&quot; % (time_index))</span>
+                    <span class="c"># dtf.write_anonymous(np.array(accumulated_values).astype(np.float32), &quot;Depth_%d_V&quot; % (time_index))</span>
+                    <span class="c"># dtf.write_anonymous(np.array((timeval - base_timeval,)), &quot;Depth_%d_time&quot; % (time_index))</span>
+                    
+                    <span class="n">time_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                
+                <span class="c"># update our state variables and continue parsing the file    </span>
+                <span class="n">ts</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">time_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">timeval</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_str</span><span class="p">)</span>
+                
+                <span class="c"># this will be the start of a new vector of depth values</span>
+                <span class="n">accumulated_values</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">passed_header</span> <span class="o">=</span> <span class="bp">True</span>
+        
+            <span class="k">elif</span> <span class="n">passed_header</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;ENDDS&quot;</span><span class="p">):</span>
+                <span class="c"># here we&#39;re just saving off an individual depth value for a node</span>
+                <span class="n">accumulated_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>    
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;Ignored: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -1144,6 +1250,7 @@ values of a variable.</p>
 <p>This is an advanced technique, but it can give a significant space savings in
 a data file. It&#8217;s not widely implemented, since it&#8217;s not clear yet if this
 is the best API.</p>
+<p>For an example, see <a class="reference internal" href="#datatank_py.DTTriangularMesh2D.DTTriangularMesh2D.write_with_shared_grid" title="datatank_py.DTTriangularMesh2D.DTTriangularMesh2D.write_with_shared_grid"><tt class="xref py py-meth docutils literal"><span class="pre">datatank_py.DTTriangularMesh2D.DTTriangularMesh2D.write_with_shared_grid()</span></tt></a></p>
 </dd></dl>
 
 </dd></dl>
