@@ -657,7 +657,7 @@ variables all at once.</p>
 
     <span class="c"># dummy input file, just as boilerplate</span>
     <span class="n">input_file</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;Input.dtbin&quot;</span><span class="p">)</span>
-    <span class="n">COUNT</span> <span class="o">=</span> <span class="n">input_file</span><span class="p">[</span><span class="s">&quot;count&quot;</span><span class="p">]</span>
+    <span class="n">COUNT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">input_file</span><span class="p">[</span><span class="s">&quot;count&quot;</span><span class="p">])</span>
     <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
