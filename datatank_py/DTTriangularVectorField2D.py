@@ -54,6 +54,8 @@ class DTTriangularVectorField2D(object):
         a data file. It's not widely implemented, since it's not clear yet if this
         is the best API.
         
+        For an example, see :meth:`datatank_py.DTTriangularMesh2D.DTTriangularMesh2D.write_with_shared_grid`
+        
         """
 
         if grid_name not in datafile:

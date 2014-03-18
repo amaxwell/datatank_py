@@ -58,48 +58,91 @@ class DTTriangularMesh2D(object):
             from datatank_py.DTTriangularGrid2D import DTTriangularGrid2D
             from datatank_py.DTTriangularMesh2D import DTTriangularMesh2D
             
+            # files that exist in the current directory
             grid_filename = "grid.txt"
+            
+            # this is a time-varying list of depths at each node
             depth_filename = "depths.txt"
             
-            bathy_mesh = parse_bathymetry_mesh_from_path(grid_filename)
+            # function that returns a DTTriangularGrid2D
+            grid = parse_grid_from_path(grid_filename)
+            
+            # this can be any string; the user won't see it
             shared_grid_name = grid_filename
             
             with DTDataFile("Output.dtbin", truncate=True) as dtf:
-                dtf["Bathymetry"] = bathy_mesh
-                dtf.write_anonymous(bathy_mesh.grid(), shared_grid_name)
-                dtf.write_anonymous("2D Triangular Mesh", "Seq_Depth")
                 
+                # a bunch of this is related to parsing the textfile                
                 with open(depth_filename, "rU") as asciivalues:
                     
+                    # here we have some state variables, but the time ones are relevant
                     passed_header = False
-                    timeval = None
                     accumulated_values = []
+                    
+                    # this is a time extracted from the file (a floating point value)
+                    timeval = None
+                    
+                    # this is the zero-based index of the timeval
                     time_index = 0
+                    
+                    # this is the initial value of the timeval variable
                     base_timeval = None
                     
                     for lineidx, line in enumerate(asciivalues):
                         
                         line = line.strip()
                         if line.startswith("TS"):
+                            
+                            # If we've already seen a timeval, a "TS" marker means that we're starting 
+                            # another block of depth values so we're going to save the previous 
+                            # timestep to disk.
                             if timeval is not None:
                                 assert passed_header is True
+                                
+                                # save the t0 if we haven't already done so
                                 if base_timeval is None:
                                     base_timeval = timeval
-                                mesh = DTTriangularMesh2D(bathy_mesh.grid(), np.array(accumulated_values, dtype=np.float32))
-                                dttime_hours = (timeval - base_timeval) / 3600.
-                                mesh.write_with_shared_grid(dtf, "Depth", shared_grid_name, dttime_hours, time_index)
-                                #dtf.write(mesh, "Depth_%d" % (time_index), time=(timeval - base_timeval))
-                                #dtf.write_anonymous(shared_grid_name, "Depth_%d" % (time_index))
-                                #dtf.write_anonymous(np.array(accumulated_values).astype(np.float32), "Depth_%d_V" % (time_index))
-                                #dtf.write_anonymous(np.array((timeval - base_timeval,)), "Depth_%d_time" % (time_index))
-                                time_index += 1
+                                    
+                                # create a DTTriangularMesh2D as usual, with grid and values
+                                # note that a 32-bit float will save significant space over
+                                # a double, if you can live with the reduced precision.
+                                mesh = DTTriangularMesh2D(grid, np.array(accumulated_values, dtype=np.float32))
                                 
+                                # This is the floating point time value that will be used for
+                                # DataTank's time slider. Here I'm using hours.
+                                dttime_hours = (timeval - base_timeval) / 3600.
+                                
+                                # Now, save it off. The variable in the file will be visible as "Depth",
+                                # and write_with_shared_grid() will take care of saving the grid for the
+                                # first time and then saving the name on subsequent time steps.
+                                #
+                                # The dttime_hours variable is our slider time, and time_index is passed
+                                # so that write_with_shared_grid() can create the correct variable name,
+                                # i.e., "Depth_0, Depth_1, Depth_2, … Depth_N" for successive time steps.
+                                #
+                                mesh.write_with_shared_grid(dtf, "Depth", shared_grid_name, dttime_hours, time_index)
+                                
+                                #
+                                # This code shows what write_with_shared_grid() is really doing in our specific
+                                # example:
+                                #
+                                # dtf.write(mesh, "Depth_%d" % (time_index), time=(timeval - base_timeval))
+                                # dtf.write_anonymous(shared_grid_name, "Depth_%d" % (time_index))
+                                # dtf.write_anonymous(np.array(accumulated_values).astype(np.float32), "Depth_%d_V" % (time_index))
+                                # dtf.write_anonymous(np.array((timeval - base_timeval,)), "Depth_%d_time" % (time_index))
+                                
+                                time_index += 1
+                            
+                            # update our state variables and continue parsing the file    
                             ts, zero, time_str = line.split()
                             timeval = float(time_str)
+                            
+                            # this will be the start of a new vector of depth values
                             accumulated_values = []
                             passed_header = True
                     
                         elif passed_header and not line.startswith("ENDDS"):
+                            # here we're just saving off an individual depth value for a node
                             accumulated_values.append(float(line))    
                         else:
                             print "Ignored: %s" % (line)

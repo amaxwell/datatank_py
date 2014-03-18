@@ -480,6 +480,9 @@ class DTDataFile(object):
           gridy = datafile[name + "_Y"]
           mask = DTMask.from_data_file(datafile, name + "_dom")
           return DTStructuredGrid2D(gridx, gridy, mask=mask)
+          
+        For an example of writing a shared grid see 
+        :meth:`datatank_py.DTTriangularMesh2D.DTTriangularMesh2D.write_with_shared_grid`
         
         """
         
