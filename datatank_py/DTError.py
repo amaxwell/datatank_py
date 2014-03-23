@@ -3,7 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-__all__ = ["DTErrorMessage", "DTSaveError", "dt_set_log_identifier", "dt_use_syslog"]
+__all__ = ["dt_set_log_identifier", "dt_use_syslog", "DTErrorMessage", "DTSaveError", "DTWarningMessage"]
 
 import sys
 import os
@@ -18,10 +18,11 @@ def dt_set_log_identifier(ctxt):
     
     :param ctxt: a string that will usefully identify this log message
     
-    Typically you should just pass in the basename of your Python script here.
+    Call this before using :func:`DTErrorMessage` or other mechanisms; 
+    just pass in the basename of your Python script.
     Since DataTank changes executable names in modules (and perhaps other times),
     the default of ``sys.argv[0]`` isn't effective in tracking down
-    error messages, since they're all attributed to "runme" or something similar.
+    error messages, as they're all attributed to "runme" or something similar.
     
     """
     
@@ -33,6 +34,9 @@ def dt_use_syslog(should_use):
     """Allows you to copy all messages to syslog.
     
     :param should_use: pass ``True`` to use syslog
+    
+    This can be useful in case your program croaks before results
+    get handed back to DataTank. Currently disabled by default.
     
     """
     
