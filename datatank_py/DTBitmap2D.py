@@ -120,6 +120,32 @@ class DTBitmap2D(object):
         """:returns boolean: ``True`` if the image is grayscale (not RBG or RBGA)"""
         return self.channel_count() < 3
         
+    def equalize_histogram(self):
+        
+        def _histeq(im):
+            
+            # http://www.janeriksolem.net/2009/06/histogram-equalization-with-python-and.html
+            max_value = np.finfo(im.dtype).max if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).max
+
+            #get image histogram
+            imhist, bins = np.histogram(im.flatten(), max_value + 1, normed=True)
+            cdf = imhist.cumsum() #cumulative distribution function
+            cdf = max_value * cdf / cdf[-1] #normalize
+
+            #use linear interpolation of cdf to find new pixel values
+            im2 = np.interp(im.flatten(), bins[:-1], cdf)
+
+            return im2.reshape(im.shape).astype(im.dtype)
+        
+        if self.gray != None:
+            self.gray = _histeq(self.gray)
+        if self.red != None:
+            self.red = _histeq(self.red)
+        if self.green != None:
+            self.green = _histeq(self.green)
+        if self.blue != None:
+            self.blue = _histeq(self.blue)
+        
     def pil_image(self):
         """Attempt to convert a raw image to a :mod:`PIL` Image object.
         
