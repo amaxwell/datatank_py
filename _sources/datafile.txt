@@ -100,7 +100,6 @@ DTError
 
 .. automodule:: datatank_py.DTError
    :members:
-   :special-members: __all__
 
 DTProgress
 ==========

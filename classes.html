@@ -271,7 +271,9 @@ get an array matching the logical shape of your masked object.</p>
 <dt id="datatank_py.DTMesh2D.DTMesh2D">
 <em class="property">class </em><tt class="descclassname">datatank_py.DTMesh2D.</tt><tt class="descname">DTMesh2D</tt><big>(</big><em>values</em>, <em>grid=None</em>, <em>mask=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTMesh2D.DTMesh2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>2D Mesh object.</p>
-<p>This class corresponds to DataTank&#8217;s DTMesh2D object.</p>
+<p>This class corresponds to DataTank&#8217;s DTMesh2D object. Note that
+a 2D Mesh object is always single or double precision floating
+point, so integer values will be converted.</p>
 <dl class="method">
 <dt id="datatank_py.DTMesh2D.DTMesh2D.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>values</em>, <em>grid=None</em>, <em>mask=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTMesh2D.DTMesh2D.__init__" title="Permalink to this definition">¶</a></dt>
@@ -329,7 +331,7 @@ get an array matching the logical shape of your masked object.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">values at each grid node</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">numpy array of floating-point values at each grid node</td>
 </tr>
 </tbody>
 </table>

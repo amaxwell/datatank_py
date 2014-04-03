@@ -761,6 +761,38 @@ See DTDataFile documentation for more details.</p>
 <div class="section" id="module-datatank_py.DTError">
 <span id="dterror"></span><h2>DTError<a class="headerlink" href="#module-datatank_py.DTError" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="datatank_py.DTError.dt_set_log_identifier">
+<tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">dt_set_log_identifier</tt><big>(</big><em>ctxt</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.dt_set_log_identifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the default logging identifier to something useful.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ctxt</strong> &#8211; a string that will usefully identify this log message</td>
+</tr>
+</tbody>
+</table>
+<p>Typically you should just pass in the basename of your Python script here.
+Since DataTank changes executable names in modules (and perhaps other times),
+the default of <tt class="docutils literal"><span class="pre">sys.argv[0]</span></tt> isn&#8217;t effective in tracking down
+error messages, since they&#8217;re all attributed to &#8220;runme&#8221; or something similar.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="datatank_py.DTError.dt_use_syslog">
+<tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">dt_use_syslog</tt><big>(</big><em>should_use</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.dt_use_syslog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows you to copy all messages to syslog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>should_use</strong> &#8211; pass <tt class="docutils literal"><span class="pre">True</span></tt> to use syslog</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="datatank_py.DTError.DTErrorMessage">
 <tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">DTErrorMessage</tt><big>(</big><em>fcn</em>, <em>msg</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.DTErrorMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accumulate a message and echo to standard error.</p>
@@ -805,35 +837,9 @@ usage.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="datatank_py.DTError.dt_set_log_identifier">
-<tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">dt_set_log_identifier</tt><big>(</big><em>ctxt</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.dt_set_log_identifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the default logging identifier to something useful.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ctxt</strong> &#8211; a string that will usefully identify this log message</td>
-</tr>
-</tbody>
-</table>
-<p>Typically you should just pass in the basename of your Python script here.
-Since DataTank changes executable names in modules (and perhaps other times),
-the default of <tt class="docutils literal"><span class="pre">sys.argv[0]</span></tt> isn&#8217;t effective in tracking down
-error messages, since they&#8217;re all attributed to &#8220;runme&#8221; or something similar.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="datatank_py.DTError.dt_use_syslog">
-<tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">dt_use_syslog</tt><big>(</big><em>should_use</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.dt_use_syslog" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allows you to copy all messages to syslog.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>should_use</strong> &#8211; pass <tt class="docutils literal"><span class="pre">True</span></tt> to use syslog</td>
-</tr>
-</tbody>
-</table>
+<dt id="datatank_py.DTError.DTWarningMessage">
+<tt class="descclassname">datatank_py.DTError.</tt><tt class="descname">DTWarningMessage</tt><big>(</big><em>fcn</em>, <em>msg</em><big>)</big><a class="headerlink" href="#datatank_py.DTError.DTWarningMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls <a class="reference internal" href="#datatank_py.DTError.DTErrorMessage" title="datatank_py.DTError.DTErrorMessage"><tt class="xref py py-func docutils literal"><span class="pre">DTErrorMessage()</span></tt></a>, which is what C++ DTSource does.</p>
 </dd></dl>
 
 </div>
