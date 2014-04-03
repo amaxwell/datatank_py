@@ -185,6 +185,8 @@ class DTBitmap2D(object):
         >>> img = DTBitmap2D("rgb_geo.tiff")
         >>> img.mesh_from_channel(channel="red")
         <datatank_py.DTMesh2D.DTMesh2D object at 0x10049ab90>
+        
+        **The returned mesh will contain values in floating point**
                 
         """
         

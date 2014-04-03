@@ -3,7 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-__all__ = ["DTErrorMessage", "DTSaveError", "dt_set_log_identifier", "dt_use_syslog"]
+__all__ = ["dt_set_log_identifier", "dt_use_syslog", "DTErrorMessage", "DTSaveError", "DTWarningMessage"]
 
 import sys
 import os
