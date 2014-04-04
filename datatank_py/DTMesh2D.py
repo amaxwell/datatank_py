@@ -9,7 +9,9 @@ from DTMask import DTMask
 class DTMesh2D(object):
     """2D Mesh object.
     
-    This class corresponds to DataTank's DTMesh2D object.
+    This class corresponds to DataTank's DTMesh2D object. Note that
+    a 2D Mesh object is always single or double precision floating
+    point, so integer values will be converted.
     
     """
     
@@ -39,7 +41,7 @@ class DTMesh2D(object):
         return self._grid
         
     def values(self):
-        """:returns: values at each grid node"""
+        """:returns: numpy array of floating-point values at each grid node"""
         return self._values
         
     def mask(self):

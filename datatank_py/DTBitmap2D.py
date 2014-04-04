@@ -120,6 +120,35 @@ class DTBitmap2D(object):
         """:returns boolean: ``True`` if the image is grayscale (not RBG or RBGA)"""
         return self.channel_count() < 3
         
+    def equalize_histogram(self):
+        
+        def _histeq(im):
+            
+            max_value = np.finfo(im.dtype).max if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).max
+            min_value = np.finfo(im.dtype).min if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).min
+            bin_count = max_value - min_value
+            
+            # http://www.janeriksolem.net/2009/06/histogram-equalization-with-python-and.html
+            # compute image histogram
+            imhist, bins = np.histogram(im.flatten(), bins=range(bin_count), range=(min_value, max_value), density=True)
+            cdf = imhist.cumsum() #cumulative distribution function
+            # !!! fixme; max_value or difference?
+            cdf = max_value * cdf / cdf[-1] #normalize
+
+            #use linear interpolation of cdf to find new pixel values
+            im2 = np.interp(im.flatten(), bins[:-1], cdf)
+
+            return im2.reshape(im.shape).astype(im.dtype)
+        
+        if self.gray != None:
+            self.gray = _histeq(self.gray)
+        if self.red != None:
+            self.red = _histeq(self.red)
+        if self.green != None:
+            self.green = _histeq(self.green)
+        if self.blue != None:
+            self.blue = _histeq(self.blue)
+        
     def pil_image(self):
         """Attempt to convert a raw image to a :mod:`PIL` Image object.
         
@@ -185,6 +214,8 @@ class DTBitmap2D(object):
         >>> img = DTBitmap2D("rgb_geo.tiff")
         >>> img.mesh_from_channel(channel="red")
         <datatank_py.DTMesh2D.DTMesh2D object at 0x10049ab90>
+        
+        **The returned mesh will contain values in floating point**
                 
         """
         
