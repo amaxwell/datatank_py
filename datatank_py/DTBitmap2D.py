@@ -124,12 +124,15 @@ class DTBitmap2D(object):
         
         def _histeq(im):
             
-            # http://www.janeriksolem.net/2009/06/histogram-equalization-with-python-and.html
             max_value = np.finfo(im.dtype).max if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).max
-
-            #get image histogram
-            imhist, bins = np.histogram(im.flatten(), max_value + 1, normed=True)
+            min_value = np.finfo(im.dtype).min if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).min
+            bin_count = max_value - min_value
+            
+            # http://www.janeriksolem.net/2009/06/histogram-equalization-with-python-and.html
+            # compute image histogram
+            imhist, bins = np.histogram(im.flatten(), bins=range(bin_count), range=(min_value, max_value), density=True)
             cdf = imhist.cumsum() #cumulative distribution function
+            # !!! fixme; max_value or difference?
             cdf = max_value * cdf / cdf[-1] #normalize
 
             #use linear interpolation of cdf to find new pixel values
