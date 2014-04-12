@@ -60,6 +60,30 @@ class DTStructuredMesh2D(object):
         datafile.write_anonymous(self._grid, name)
         datafile.write_anonymous(self._values, name + "_V")
         
+    def write_with_shared_grid(self, datafile, name, grid_name, time, time_index):
+        """Allows saving a single grid and sharing it amongst different time
+        values of a variable.
+        
+        :param datafile: a :class:`datatank_py.DTDataFile.DTDataFile` open for writing
+        :param name: the mesh variable's name
+        :param grid_name: the grid name to be shared (will not be visible in DataTank)
+        :param time: the time value for this step (DataTank's ``t`` variable)
+        :param time_index: the corresponding integer index of this time step
+        
+        This is an advanced technique, but it can give a significant space savings in
+        a data file. It's not widely implemented, since it's not clear yet if this
+        is the best API.
+        """
+        
+        if grid_name not in datafile:
+            datafile.write_anonymous(self._grid, grid_name)
+            datafile.write_anonymous(self.__dt_type__(), "Seq_" + name)
+            
+        varname = "%s_%d" % (name, time_index)
+        datafile.write_anonymous(grid_name, varname)
+        datafile.write_anonymous(self._values, varname + "_V")
+        datafile.write_anonymous(np.array((time,)), varname + "_time")
+        
     @classmethod
     def from_data_file(self, datafile, name):
     
