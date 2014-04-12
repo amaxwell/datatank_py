@@ -91,7 +91,8 @@ class DTBitmap2D(object):
         If you have an image with more than 4 bands, you can choose which to
         represent as red, green, blue, and alpha by passing :param rgba_bands:.
         For instance, if you have LANDSAT 8 multispectral imagery, you could pass
-        (4, 3, 2) to get a true color image.
+        (4, 3, 2) to get a true color image. By default, an image with more than
+        4 bands will give an error.
 
         Note that :class:`DTBitmap2D` does not attempt to be lazy at loading data; it
         will read the entire image into memory as soon as you instantiate it.
@@ -127,6 +128,10 @@ class DTBitmap2D(object):
         return self.channel_count() < 3
         
     def synthesize_alpha(self):
+        """Adds or overwrites an alpha channel corresponding to all zero-valued RGB pixels.
+        This is not very smart, as it doesn't check for neighboring pixels; you can end up
+        turning actual black pixels transparent.
+        """
         
         # more generally, should probably be dtype.min values
         image_dtype = self.red.dtype
@@ -143,6 +148,8 @@ class DTBitmap2D(object):
         self.alpha = np.where(alpha == 0, 0, data_flag).astype(image_dtype)
         
     def equalize_histogram(self):
+        """Alters the image by equalizing the histogram among any non-alpha bands.
+        """
         
         def _histeq(im):
             
@@ -154,8 +161,8 @@ class DTBitmap2D(object):
             # compute image histogram
             imhist, bins = np.histogram(im.flatten(), bins=range(bin_count), range=(min_value, max_value), density=True)
             cdf = imhist.cumsum() #cumulative distribution function
-            # !!! fixme; max_value or difference?
-            cdf = max_value * cdf / cdf[-1] #normalize
+            # 
+            cdf = (max_value - min_value) * cdf / cdf[-1] #normalize
 
             #use linear interpolation of cdf to find new pixel values
             im2 = np.interp(im.flatten(), bins[:-1], cdf)
@@ -405,6 +412,8 @@ class _DTGDALBitmap2D(DTBitmap2D):
         if rgba_bands is None:
             rgba_bands = range(1, dataset.RasterCount + 1)
         channel_count = len(rgba_bands)
+        
+        assert channel_count <= dataset.RasterCount, "Requested %d raster bands from an image that has %d bands" % (channel_count, dataset.RasterCount)
             
         for band_index in rgba_bands:
             band = dataset.GetRasterBand(band_index)
