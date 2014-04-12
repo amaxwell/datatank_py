@@ -794,6 +794,31 @@ with the grid and DataTank.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.write_with_shared_grid">
+<tt class="descname">write_with_shared_grid</tt><big>(</big><em>datafile</em>, <em>name</em>, <em>grid_name</em>, <em>time</em>, <em>time_index</em><big>)</big><a class="headerlink" href="#datatank_py.DTStructuredMesh2D.DTStructuredMesh2D.write_with_shared_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows saving a single grid and sharing it amongst different time
+values of a variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>datafile</strong> &#8211; a <a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a> open for writing</li>
+<li><strong>name</strong> &#8211; the mesh variable&#8217;s name</li>
+<li><strong>grid_name</strong> &#8211; the grid name to be shared (will not be visible in DataTank)</li>
+<li><strong>time</strong> &#8211; the time value for this step (DataTank&#8217;s <tt class="docutils literal"><span class="pre">t</span></tt> variable)</li>
+<li><strong>time_index</strong> &#8211; the corresponding integer index of this time step</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This is an advanced technique, but it can give a significant space savings in
+a data file. It&#8217;s not widely implemented, since it&#8217;s not clear yet if this
+is the best API.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>

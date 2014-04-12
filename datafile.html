@@ -772,10 +772,11 @@ See DTDataFile documentation for more details.</p>
 </tr>
 </tbody>
 </table>
-<p>Typically you should just pass in the basename of your Python script here.
+<p>Call this before using <a class="reference internal" href="#datatank_py.DTError.DTErrorMessage" title="datatank_py.DTError.DTErrorMessage"><tt class="xref py py-func docutils literal"><span class="pre">DTErrorMessage()</span></tt></a> or other mechanisms; 
+just pass in the basename of your Python script.
 Since DataTank changes executable names in modules (and perhaps other times),
 the default of <tt class="docutils literal"><span class="pre">sys.argv[0]</span></tt> isn&#8217;t effective in tracking down
-error messages, since they&#8217;re all attributed to &#8220;runme&#8221; or something similar.</p>
+error messages, as they&#8217;re all attributed to &#8220;runme&#8221; or something similar.</p>
 </dd></dl>
 
 <dl class="function">
@@ -790,6 +791,8 @@ error messages, since they&#8217;re all attributed to &#8220;runme&#8221; or som
 </tr>
 </tbody>
 </table>
+<p>This can be useful in case your program croaks before results
+get handed back to DataTank. Currently disabled by default.</p>
 </dd></dl>
 
 <dl class="function">
