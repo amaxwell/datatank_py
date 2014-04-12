@@ -59,9 +59,10 @@ class DTBitmap2D(object):
     CHANNEL_NAMES = ("red", "green", "blue", "alpha", "gray")
     dt_type = ("2D Bitmap",)
     
-    def __init__(self, path_or_image=None):
+    def __init__(self, path_or_image=None, rgba_bands=None):
         """
-        *param path_or_image* a path to an image file or a PIL image object
+        :param path_or_image: a path to an image file or a PIL image object
+        :param rgba_bands: a 1-4 element tuple mapping one-based band indexes to (r, g, b, a)
 
         :returns: An object that implements :class:`datatank_py.DTPyWrite.DTPyWrite`. Don't rely on the class name for anything.
         
@@ -86,6 +87,11 @@ class DTBitmap2D(object):
         :class:`DTBitmap2D` will try to use GDAL to load the image and extract its
         components, as well as any spatial referencing included with the
         image.  If GDAL fails for any reason, PIL will be used as a fallback.
+        
+        If you have an image with more than 4 bands, you can choose which to
+        represent as red, green, blue, and alpha by passing :param rgba_bands:.
+        For instance, if you have LANDSAT 8 multispectral imagery, you could pass
+        (4, 3, 2) to get a true color image.
 
         Note that :class:`DTBitmap2D` does not attempt to be lazy at loading data; it
         will read the entire image into memory as soon as you instantiate it.
@@ -119,6 +125,22 @@ class DTBitmap2D(object):
     def is_gray(self):
         """:returns boolean: ``True`` if the image is grayscale (not RBG or RBGA)"""
         return self.channel_count() < 3
+        
+    def synthesize_alpha(self):
+        
+        # more generally, should probably be dtype.min values
+        image_dtype = self.red.dtype
+        alpha = np.zeros(self.red.shape, dtype=image_dtype)
+        data_flag = np.iinfo(image_dtype).max
+        
+        # sum all channels; it'll overflow, but we only care about pixels that
+        # are zero (ignoring possible wraparound to zero in summation)
+        alpha += self.red
+        alpha += self.green
+        alpha += self.blue
+        
+        # make sure to set the data type, or DataTank will squawk
+        self.alpha = np.where(alpha == 0, 0, data_flag).astype(image_dtype)
         
     def equalize_histogram(self):
         
@@ -360,7 +382,7 @@ class DTBitmap2D(object):
 
 class _DTGDALBitmap2D(DTBitmap2D):
     """Private subclass that wraps up the GDAL logic."""
-    def __init__(self, image_path):
+    def __init__(self, image_path, rgba_bands=None):
         
         super(_DTGDALBitmap2D, self).__init__()
         
@@ -378,10 +400,13 @@ class _DTGDALBitmap2D(DTBitmap2D):
         dataset = gdal.Open(image_path, GA_ReadOnly)
         (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
         
-        channel_count = dataset.RasterCount
         bands = []
         self.nodata = None
-        for band_index in range(1, channel_count + 1):
+        if rgba_bands is None:
+            rgba_bands = range(1, dataset.RasterCount + 1)
+        channel_count = len(rgba_bands)
+            
+        for band_index in rgba_bands:
             band = dataset.GetRasterBand(band_index)
             if self.nodata == None:
                 self.nodata = band.GetNoDataValue()
