@@ -134,7 +134,7 @@ class DTBitmap2D(object):
         """
         
         # more generally, should probably be dtype.min values
-        image_dtype = self.red.dtype
+        image_dtype = self.dtype()
         alpha = np.zeros(self.red.shape, dtype=image_dtype)
         data_flag = np.iinfo(image_dtype).max
         
@@ -150,6 +150,22 @@ class DTBitmap2D(object):
     def equalize_histogram(self):
         """Alters the image by equalizing the histogram among any non-alpha bands.
         """
+        
+        try:
+            from skimage import exposure, img_as_int, rescale_intensity
+            sys.stderr.write("using scikit-image\n")
+            img_dtype = self.dtype()
+            if self.gray != None:
+                self.gray = rescale_intensity(img_as_int(exposure.equalize_hist(self.gray)), in_range=(0, 2**16 - 1))
+            if self.red != None:
+                self.red = rescale_intensity(img_as_int(exposure.equalize_hist(self.red)), in_range=(0, 2**16 - 1))
+            if self.green != None:
+                self.green = rescale_intensity(img_as_int(exposure.equalize_hist(self.green)), in_range=(0, 2**16 - 1))
+            if self.blue != None:
+                self.blue = rescale_intensity(img_as_int(exposure.equalize_hist(self.blue)), in_range=(0, 2**16 - 1))
+            return None
+        except Exception, e:
+            pass
         
         def _histeq(im):
             
@@ -491,7 +507,7 @@ class _DTGDALBitmap2D(DTBitmap2D):
                 self.gray = mesh
                 
         else:
-            sys.stderr.write("Unable to decode an image with %d raster bands" % (channel_count))
+            sys.stderr.write("Unable to decode an image with %d raster bands\n" % (channel_count))
             
         del dataset
 
