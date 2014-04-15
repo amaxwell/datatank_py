@@ -150,6 +150,10 @@ def _type_string_from_dtarray_type(var_type):
         data_type = "f8" # DTDataFile_Double
     elif var_type == 2:
         data_type = "f4" # DTDataFile_Single
+    elif var_type == 5:
+        data_type = "u4" # uint64
+    elif var_type == 6:
+        data_type = "i8" # int64
     elif var_type == 8:
         data_type = "i4" # DTDataFile_Signed32Int
     elif var_type == 9:
@@ -195,6 +199,12 @@ def _dtarray_type_and_size_from_object(obj):
         elif array.dtype in (np.float32,):
             dt_array_type = 2 # DTDataFile_Single
             element_size = 4
+        elif array.dtype in (np.uint64,):
+            dt_array_type = 5
+            element_size = 8
+        elif array.dtype in (np.int64,):
+            dt_array_type = 6
+            element_size = 8
         elif array.dtype in (np.int32,):
             dt_array_type = 8 # DTDataFile_Signed32Int
             element_size = 4
@@ -789,6 +799,10 @@ class DTDataFile(object):
         reversed_shape = list(array.shape)
         reversed_shape.reverse()
         array = array.reshape(reversed_shape, order="C")
+        
+        if array.dtype in (np.int64, np.uint64):
+            _log_warning("WARNING: 64-bit integers are unsupported by DataTank. Converting %s to 32-bit." % (name))
+            array = array.view(np.int32)
 
         # map ndarray type to DTArray type and record element size in bytes
         (dt_array_type, element_size) = _dtarray_type_and_size_from_object(array)
