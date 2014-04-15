@@ -151,22 +151,31 @@ class DTBitmap2D(object):
         """Alters the image by equalizing the histogram among any non-alpha bands.
         """
         
-        try:
-            from skimage import exposure, img_as_int, rescale_intensity
-            sys.stderr.write("using scikit-image\n")
-            img_dtype = self.dtype()
-            if self.gray != None:
-                self.gray = rescale_intensity(img_as_int(exposure.equalize_hist(self.gray)), in_range=(0, 2**16 - 1))
-            if self.red != None:
-                self.red = rescale_intensity(img_as_int(exposure.equalize_hist(self.red)), in_range=(0, 2**16 - 1))
-            if self.green != None:
-                self.green = rescale_intensity(img_as_int(exposure.equalize_hist(self.green)), in_range=(0, 2**16 - 1))
-            if self.blue != None:
-                self.blue = rescale_intensity(img_as_int(exposure.equalize_hist(self.blue)), in_range=(0, 2**16 - 1))
-            return None
-        except Exception, e:
-            pass
+        # try:
+        #     from skimage import exposure, img_as_int, img_as_uint
+        #     sys.stderr.write("using scikit-image\n")
+        #     im_type = self.dtype()
+        #     max_value = np.finfo(im_type).max if im_type in (np.float32, np.float64) else np.iinfo(im_type).max
+        #     min_value = np.finfo(im_type).min if im_type in (np.float32, np.float64) else np.iinfo(im_type).min
+        #     scale = (min_value, max_value)
+        #     if self.gray != None:
+        #         self.gray = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.gray)), out_range=(scale))
+        #         print "gray", np.min(self.gray), np.max(self.gray)
+        #     if self.red != None:
+        #         self.red = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.red)), out_range=(scale))
+        #         print "red", np.min(self.red), np.max(self.red)
+        #     if self.green != None:
+        #         self.green = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.green)), out_range=(scale))
+        #         print "green", np.min(self.green), np.max(self.green)
+        #     if self.blue != None:
+        #         self.blue = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.blue)), out_range=(scale))
+        #         print "blue", np.min(self.blue), np.max(self.blue)
+        #     return None
+        # except Exception, e:
+        #     print e
+        #     pass
         
+        sys.stderr.write("using np.histogram stuff\n")
         def _histeq(im):
             
             max_value = np.finfo(im.dtype).max if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).max
@@ -187,12 +196,16 @@ class DTBitmap2D(object):
         
         if self.gray != None:
             self.gray = _histeq(self.gray)
+            print "gray", np.min(self.gray), np.max(self.gray)
         if self.red != None:
             self.red = _histeq(self.red)
+            print "red", np.min(self.red), np.max(self.red)
         if self.green != None:
             self.green = _histeq(self.green)
+            print "green", np.min(self.green), np.max(self.green)
         if self.blue != None:
             self.blue = _histeq(self.blue)
+            print "blue", np.min(self.blue), np.max(self.blue)
         
     def pil_image(self):
         """Attempt to convert a raw image to a :mod:`PIL` Image object.
@@ -372,11 +385,19 @@ class DTBitmap2D(object):
     def __dt_write__(self, datafile, name):
         
         suffix = "16" if self.dtype() in (np.uint16, np.int16) else ""
-        assert self.dtype() not in (np.float64, np.float32), "DataTank does not support floating-point images"
+        assert self.dtype() not in (np.float64, np.float32), "DataTank does not support floating-point images"            
         
         for channel_name in DTBitmap2D.CHANNEL_NAMES:
             values = getattr(self, channel_name)
             if values != None:
+                # DataTank only supports signed images, so we need to preserve scaling
+                # and avoid truncation if we have unsigned 8 or 16 data.
+                if self.dtype() == np.uint16:
+                    values = values.view(np.int16)
+                    values -= 2**16
+                elif self.dtype() == np.uint8:
+                    values = values.view(np.int8)
+                    values -= 2**8               
                 channel_name = channel_name.capitalize() + suffix
                 datafile.write_anonymous(values, "_".join((name, channel_name)))
             
