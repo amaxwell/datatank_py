@@ -149,63 +149,40 @@ class DTBitmap2D(object):
         
     def equalize_histogram(self):
         """Alters the image by equalizing the histogram among any non-alpha bands.
-        """
+        """      
         
-        # try:
-        #     from skimage import exposure, img_as_int, img_as_uint
-        #     sys.stderr.write("using scikit-image\n")
-        #     im_type = self.dtype()
-        #     max_value = np.finfo(im_type).max if im_type in (np.float32, np.float64) else np.iinfo(im_type).max
-        #     min_value = np.finfo(im_type).min if im_type in (np.float32, np.float64) else np.iinfo(im_type).min
-        #     scale = (min_value, max_value)
-        #     if self.gray != None:
-        #         self.gray = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.gray)), out_range=(scale))
-        #         print "gray", np.min(self.gray), np.max(self.gray)
-        #     if self.red != None:
-        #         self.red = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.red)), out_range=(scale))
-        #         print "red", np.min(self.red), np.max(self.red)
-        #     if self.green != None:
-        #         self.green = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.green)), out_range=(scale))
-        #         print "green", np.min(self.green), np.max(self.green)
-        #     if self.blue != None:
-        #         self.blue = exposure.rescale_intensity(img_as_uint(exposure.equalize_hist(self.blue)), out_range=(scale))
-        #         print "blue", np.min(self.blue), np.max(self.blue)
-        #     return None
-        # except Exception, e:
-        #     print e
-        #     pass
-        
-        sys.stderr.write("using np.histogram stuff\n")
-        def _histeq(im):
+        try:
+            from skimage import exposure, img_as_uint, img_as_ubyte
+        except Exception, e:
+            sys.stderr.write("You need to install scikit-image with `sudo pip install scikit-image`")
+            return None
             
-            max_value = np.finfo(im.dtype).max if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).max
-            min_value = np.finfo(im.dtype).min if im.dtype in (np.float32, np.float64) else np.iinfo(im.dtype).min
-            bin_count = max_value - min_value
-            
-            # http://www.janeriksolem.net/2009/06/histogram-equalization-with-python-and.html
-            # compute image histogram
-            imhist, bins = np.histogram(im.flatten(), bins=range(bin_count), range=(min_value, max_value), density=True)
-            cdf = imhist.cumsum() #cumulative distribution function
-            # 
-            cdf = (max_value - min_value) * cdf / cdf[-1] #normalize
-
-            #use linear interpolation of cdf to find new pixel values
-            im2 = np.interp(im.flatten(), bins[:-1], cdf)
-
-            return im2.reshape(im.shape).astype(im.dtype)
+        im_type = self.dtype()
+        max_value = np.finfo(im_type).max if im_type in (np.float32, np.float64, np.float) else np.iinfo(im_type).max
+        min_value = np.finfo(im_type).min if im_type in (np.float32, np.float64, np.float) else np.iinfo(im_type).min
+        scale = (min_value, max_value)
         
-        if self.gray != None:
-            self.gray = _histeq(self.gray)
-            print "gray", np.min(self.gray), np.max(self.gray)
-        if self.red != None:
-            self.red = _histeq(self.red)
-            print "red", np.min(self.red), np.max(self.red)
-        if self.green != None:
-            self.green = _histeq(self.green)
-            print "green", np.min(self.green), np.max(self.green)
-        if self.blue != None:
-            self.blue = _histeq(self.blue)
-            print "blue", np.min(self.blue), np.max(self.blue)
+        # This is a bit hacky; we do allow floating point images, mainly for
+        # conversion to DTMesh2D, but DataTank does not. Treat them as pass-through
+        # even though it's weird to call this on a float image. For int8 and int16,
+        # convert to unsigned, since scikit-image does weird shit with signed types,
+        # and __dt_write__ now converts unsigned to signed when saving.
+        def __convert_type(array):
+            if im_type in (np.int16, np.uint16):
+                return img_as_uint(array)
+            elif im_type in (np.int8, np.uint8):
+                return img_as_ubyte(array)
+            else:
+                return array
+                
+        for channel_name in DTBitmap2D.CHANNEL_NAMES:
+            # don't muck with the alpha channel
+            if channel_name == "alpha":
+                continue
+            values = getattr(self, channel_name)
+            if values != None:
+                values = exposure.rescale_intensity(__convert_type(exposure.equalize_hist(values)), out_range=(scale))
+                setattr(self, channel_name, values)
         
     def pil_image(self):
         """Attempt to convert a raw image to a :mod:`PIL` Image object.
