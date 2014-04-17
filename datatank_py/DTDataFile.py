@@ -93,12 +93,14 @@ def _load_modules():
 try:
     _INT32_MAX = np.iinfo(np.int32).max
     _INT32_MIN = np.iinfo(np.int32).min
+    _INT_IS_64_BIT = (np.iinfo(np.int).dtype == np.int64)
 except AttributeError:
     # These constants don't exist in the ancient version of NumPy included with
     # OS X 10.5.8, so here are the values from NumPy 2.0.0dev8291.
     _log_warning("int32 limits not found in NumPy, likely because version %s is too old" % (np.version.version))
     _INT32_MAX = 2147483647
     _INT32_MIN = -2147483648
+    _INT_IS_64_BIT = False
     
 def _ensure_array(obj):
     """Convert list or tuple to numpy array.
@@ -179,31 +181,32 @@ def _dtarray_type_and_size_from_object(obj):
     Integer type and size (array_type, size_in_bytes).
     (None, None) is returned in case of an error.
     
-    NB: np.float is not supported because I'm not sure of the size yet.
+    NB: np.float appears to be aliased to np.float64, which makes sense.
     Also, np.int actually ends up as np.int64, at least on Snow Leopard,
-    and there's no DTArray type for that.  Maybe truncation is an option
-    for int, but I'd rather raise an exception.
+    but is np.int32 in python2.5 (i386 only).
+    
+    Unfortunately, the 64-bit integer types are enumerated in DTSource,
+    but DataTank doesn't read them correctly. As a convenience, then,
+    all 64-bit int types should just be converted to int32.
     
     """
-
-    # TODO: figure out size of np.float
     
     if isinstance(obj, basestring):
         return (20, 1)
     elif isinstance(obj, np.ndarray):
         array = obj
         dt_array_type = None
-        if array.dtype in (np.float64, np.double):
+        if array.dtype in (np.float64, np.double, np.float):
             dt_array_type = 1 # DTDataFile_Double
             element_size = 8
         elif array.dtype in (np.float32,):
             dt_array_type = 2 # DTDataFile_Single
             element_size = 4
         elif array.dtype in (np.uint64,):
-            dt_array_type = 5
+            dt_array_type = 5 # in DTSource, not in DataTank
             element_size = 8
         elif array.dtype in (np.int64,):
-            dt_array_type = 6
+            dt_array_type = 6 # in DTSource, not in DataTank
             element_size = 8
         elif array.dtype in (np.int32,):
             dt_array_type = 8 # DTDataFile_Signed32Int
@@ -800,7 +803,16 @@ class DTDataFile(object):
         reversed_shape.reverse()
         array = array.reshape(reversed_shape, order="C")
         
+        # Doing this at the primitive level is kind of a big hammer, but I'm
+        # tired of futzing around with this in my code when I get an array of
+        # ints back from some numpy/scipy function and forget to convert it.
         if array.dtype in (np.int64, np.uint64):
+            _log_warning("WARNING: 64-bit integers are unsupported by DataTank. Converting %s to 32-bit." % (name))
+            array = array.view(np.int32)
+        elif array.dtype == np.uint32:
+            _log_warning("WARNING: unsigned 32-bit integers are unsupported by DataTank. Converting %s to signed." % (name))
+            array = array.view(np.int32)
+        elif array.dtype == np.int and _INT_IS_64_BIT:
             _log_warning("WARNING: 64-bit integers are unsupported by DataTank. Converting %s to 32-bit." % (name))
             array = array.view(np.int32)
 
@@ -900,7 +912,7 @@ class DTDataFile(object):
     def write_anonymous(self, obj, name):
         """Write an object that will not be visible in DataTank.
             
-        :param array: a string, numpy array, list, or tuple
+        :param obj: a string, numpy array, list, or tuple
         :param name: name of the variable
         
         This is used for writing additional arrays and strings used by compound types,
