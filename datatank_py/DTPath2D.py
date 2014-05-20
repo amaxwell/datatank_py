@@ -65,13 +65,14 @@ class DTPath2D(object):
         assert xvalues != None and yvalues != None, "DTPath2D: both x and y arrays are required"
         assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths"
         
-        xvalues = np.array(xvalues).astype(np.double)
-        yvalues = np.array(yvalues).astype(np.double)
+        # numpy array is incredibly slow if we call add_loop
+        xvalues = list(xvalues)
+        yvalues = list(yvalues)
         self._bounding_box = _bounding_box(xvalues, yvalues)
         
         if points_only and len(xvalues):
-            xvalues = np.insert(xvalues, 0, 0)
-            yvalues = np.insert(yvalues, 0, len(yvalues))
+            xvalues = [0] + xvalues
+            yvalues = [len(yvalues)] + yvalues
             
         self._xvalues = xvalues
         self._yvalues = yvalues
@@ -88,14 +89,14 @@ class DTPath2D(object):
         
         """
         assert len(xvalues) == len(yvalues), "DTPath2D: inconsistent lengths"
-        xvalues = np.array(xvalues).astype(np.double)
-        yvalues = np.array(yvalues).astype(np.double)
+        xvalues = list(xvalues)
+        yvalues = list(yvalues)
         if len(xvalues) > 0:
             self._bounding_box = _max_bounding_box(self._bounding_box, _bounding_box(xvalues, yvalues))
-            xvalues = np.insert(xvalues, 0, 0)
-            yvalues = np.insert(yvalues, 0, len(yvalues))
-            self._xvalues = np.append(self._xvalues, xvalues)
-            self._yvalues = np.append(self._yvalues, yvalues)
+            xvalues = [0] + xvalues
+            yvalues = [len(yvalues)] + yvalues
+            self._xvalues += xvalues
+            self._yvalues += yvalues
     
     def number_of_loops(self):
         """:returns: number of subpaths (loops) in this path."""
@@ -162,8 +163,8 @@ class DTPath2D(object):
                 # don't close a path that is already closed
                 if not _is_subpath_closed(path):
                     first_x, first_y = path._xvalues[1], path._yvalues[1]
-                    path._xvalues = np.append(path._xvalues, (first_x,))
-                    path._yvalues = np.append(path._yvalues, (first_y,))
+                    path._xvalues.append(first_x)
+                    path._yvalues.append(first_y)
                     # update length metadata for this subpath!
                     path._yvalues[0] += 1
             
@@ -221,7 +222,9 @@ class DTPath2D(object):
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
-        datafile.write_anonymous(np.dstack((self._xvalues, self._yvalues)), name)
+        xvalues = np.array(self._xvalues).astype(np.double)
+        yvalues = np.array(self._yvalues).astype(np.double)
+        datafile.write_anonymous(np.dstack((xvalues, yvalues)), name)
         
     @classmethod
     def from_data_file(self, datafile, name):
