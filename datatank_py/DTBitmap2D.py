@@ -423,8 +423,12 @@ class _DTGDALBitmap2D(DTBitmap2D):
         
         bands = []
         self.nodata = None
-        if rgba_bands is None:
+        if rgba_bands is None or len(rgba_bands) == 0:
             rgba_bands = range(1, dataset.RasterCount + 1)
+        else:
+            rgba_bands = [int(x) for x in rgba_bands]
+            # should truncate here? how to handle default for a module?
+            
         channel_count = len(rgba_bands)
         
         assert channel_count <= dataset.RasterCount, "Requested %d raster bands from an image that has %d bands" % (channel_count, dataset.RasterCount)

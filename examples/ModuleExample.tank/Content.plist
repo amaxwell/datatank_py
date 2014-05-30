@@ -342,6 +342,8 @@
 			<string>2DGraph</string>
 			<key>FigureName</key>
 			<string>Untitled</string>
+			<key>Last Drawing View Size</key>
+			<string>{620, 466}</string>
 			<key>MaxHeight</key>
 			<string></string>
 			<key>MaxWidth</key>
@@ -429,7 +431,7 @@
 			<array>
 				<dict>
 					<key>CommandName</key>
-					<string>2D Bitmap PNG</string>
+					<string>2D Bitmap RGB</string>
 					<key>CommandType</key>
 					<string>Bitmap</string>
 					<key>Computation</key>
@@ -437,7 +439,7 @@
 						<key>Bitmap</key>
 						<dict>
 							<key>Selected</key>
-							<string>2D Bitmap PNG</string>
+							<string>2D Bitmap RGB</string>
 						</dict>
 						<key>ClockWiseCropSwitch</key>
 						<string>Off</string>
@@ -645,7 +647,7 @@
 				</dict>
 			</array>
 			<key>DrawingHeight</key>
-			<real>318</real>
+			<real>326</real>
 			<key>DrawingWindow</key>
 			<dict>
 				<key>ClickMenu</key>
@@ -660,6 +662,8 @@
 			<string>2DGraph</string>
 			<key>FigureName</key>
 			<string>Untitled</string>
+			<key>Last Drawing View Size</key>
+			<string>{574, 326}</string>
 			<key>MaxHeight</key>
 			<string></string>
 			<key>MaxWidth</key>
@@ -694,7 +698,7 @@
 				<real>0.0</real>
 			</array>
 			<key>ViewSizeJoined</key>
-			<string>569,318</string>
+			<string>574,326</string>
 			<key>ViewSizeSeparated</key>
 			<string></string>
 			<key>Visible</key>
@@ -703,10 +707,10 @@
 			<string>2D Bitmap RGB</string>
 			<key>WindowPos</key>
 			<array>
-				<real>527</real>
-				<real>257</real>
-				<real>567</real>
-				<real>621</real>
+				<real>1038</real>
+				<real>544</real>
+				<real>572</real>
+				<real>634</real>
 			</array>
 		</dict>
 	</array>
@@ -819,7 +823,15 @@
 				<key>Application</key>
 				<string>registered_image_as_bitmap2d.py</string>
 				<key>Argument</key>
-				<string></string>
+				<dict>
+					<key>Inline</key>
+					<dict>
+						<key>String</key>
+						<string></string>
+					</dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
 				<key>Communication</key>
 				<integer>1</integer>
 				<key>Input</key>
@@ -904,6 +916,8 @@
 			</dict>
 			<key>Selection</key>
 			<string>Single File</string>
+			<key>ToggleOpen</key>
+			<string>YES</string>
 			<key>VariableName</key>
 			<string>RGB File</string>
 			<key>VariableType</key>
@@ -935,7 +949,15 @@
 				<key>Application</key>
 				<string>registered_image_as_bitmap2d.py</string>
 				<key>Argument</key>
-				<string></string>
+				<dict>
+					<key>Inline</key>
+					<dict>
+						<key>String</key>
+						<string></string>
+					</dict>
+					<key>SelectedNumber</key>
+					<integer>0</integer>
+				</dict>
 				<key>Communication</key>
 				<integer>1</integer>
 				<key>Input</key>
@@ -979,6 +1001,24 @@
 							<string>RGB File</string>
 						</dict>
 					</dict>
+					<dict>
+						<key>Include</key>
+						<string>On</string>
+						<key>Name</key>
+						<string>Bands</string>
+						<key>Type</key>
+						<string>NumberList</string>
+						<key>Var</key>
+						<dict>
+							<key>Inline</key>
+							<dict>
+								<key>Text</key>
+								<string>1,2,3</string>
+							</dict>
+							<key>SelectedNumber</key>
+							<integer>0</integer>
+						</dict>
+					</dict>
 				</array>
 			</dict>
 			<key>Selection</key>
@@ -986,7 +1026,7 @@
 			<key>ToggleOpen</key>
 			<string>YES</string>
 			<key>VariableName</key>
-			<string>2D Bitmap PNG</string>
+			<string>2D Bitmap RGB</string>
 			<key>VariableType</key>
 			<string>Bitmap2D</string>
 		</dict>
@@ -995,7 +1035,7 @@
 	<array>
 		<real>32</real>
 		<real>188</real>
-		<real>965</real>
+		<real>941</real>
 		<real>990</real>
 	</array>
 </dict>

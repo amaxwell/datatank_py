@@ -8,6 +8,7 @@ import numpy as np
 from datatank_py.DTDataFile import DTDataFile
 from datatank_py.DTBitmap2D import DTBitmap2D
 from time import time
+import sys
 
 if __name__ == '__main__':
     
@@ -26,6 +27,11 @@ if __name__ == '__main__':
     #
     
     input_file = DTDataFile("Input.dtbin")
+    
+    rgba_bands = None
+    if "Bands" in input_file:
+        # we read single values as scalars, but need an array here
+        rgba_bands = np.atleast_1d(np.squeeze(input_file["Bands"]).astype(np.int))
 
     # DT creates this hard link in the working directory, if passed a file
     # this is preferred, as it's fewer variables in DataTank, but if you
@@ -47,7 +53,7 @@ if __name__ == '__main__':
     if image_path is None or os.path.exists(image_path) is False:
         errors.append("\"%s\" does not exist" % (image_path))
     
-    img = DTBitmap2D(image_path)
+    img = DTBitmap2D(image_path, rgba_bands=rgba_bands)
     if img is None:
         # set an error and bail out; DataTank doesn't appear to use this, but displays
         # stderr output instead, so print them also
