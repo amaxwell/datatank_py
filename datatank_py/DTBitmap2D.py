@@ -434,7 +434,12 @@ class _DTGDALBitmap2D(DTBitmap2D):
         assert channel_count <= dataset.RasterCount, "Requested %d raster bands from an image that has %d bands" % (channel_count, dataset.RasterCount)
             
         for band_index in rgba_bands:
-            band = dataset.GetRasterBand(band_index)
+            try:
+                band = dataset.GetRasterBand(band_index)
+            except Exception, e:
+                sys.stderr.write("Trying to read band %d (image has %d bands)\n" % (band_index, dataset.RasterCount))
+                sys.stderr.write("%s\n" % (e))
+                raise e
             if self.nodata == None:
                 self.nodata = band.GetNoDataValue()
             if band == None:
@@ -579,12 +584,15 @@ def _array_from_image(image):
         
 class _DTPILBitmap2D(DTBitmap2D):
     """Private subclass that wraps up the PIL logic."""
-    def __init__(self, image_or_path):
+    def __init__(self, image_or_path, rgba_bands=None):
         
         super(_DTPILBitmap2D, self).__init__()
         
         from PIL import Image
         image = Image.open(image_or_path) if isinstance(image_or_path, basestring) else image_or_path
+        
+        if rgba_bands != None:
+            sys.stderr.write("WARNING: ignoring rgba_bands = %s for PIL image\n" % (rgba_bands))
         
         array = _array_from_image(image)
         assert array is not None, "unable to convert the image to a numpy array"
