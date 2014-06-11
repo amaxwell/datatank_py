@@ -32,6 +32,10 @@ if __name__ == '__main__':
     if "Bands" in input_file:
         # we read single values as scalars, but need an array here
         rgba_bands = np.atleast_1d(np.squeeze(input_file["Bands"]).astype(np.int))
+        
+        # trying to come up with a sensible way to pass a default list of numbers…
+        if len(rgba_bands) == 0 or (len(rgba_bands) == 1 and rgba_bands == 0):
+            rgba_bands = None
 
     # DT creates this hard link in the working directory, if passed a file
     # this is preferred, as it's fewer variables in DataTank, but if you

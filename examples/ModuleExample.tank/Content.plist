@@ -964,6 +964,8 @@
 				<string>Input.dtbin</string>
 				<key>LastInput</key>
 				<string>/Volumes/Local/Users/amaxwell/build/datatank_py</string>
+				<key>ModuleName</key>
+				<string>2D Bitmap From Registered Image as File</string>
 				<key>Output</key>
 				<string>Output.dtbin</string>
 				<key>Project</key>
@@ -1013,7 +1015,7 @@
 							<key>Inline</key>
 							<dict>
 								<key>Text</key>
-								<string>1,2,3</string>
+								<string>0</string>
 							</dict>
 							<key>SelectedNumber</key>
 							<integer>0</integer>
