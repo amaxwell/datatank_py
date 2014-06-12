@@ -46,12 +46,14 @@ class DTPointCollection2D(object):
         
         assert xvalues != None and yvalues != None, "both x and y arrays are required"
         assert len(xvalues) == len(yvalues), "inconsistent lengths"
-        self._xvalues = np.array(xvalues).astype(np.double)
-        self._yvalues = np.array(yvalues).astype(np.double)
+        
+        # internal storage as lists, so add_point performance doesn't suck
+        self._xvalues = list(xvalues)
+        self._yvalues = list(yvalues)
             
     def bounding_box(self):
         """:returns: tuple with ``(xmin, xmax, ymin, ymax)``"""
-        if self._xvalues == None or np.size(self._xvalues) == 0:
+        if self._xvalues == None or len(self._xvalues) == 0:
             return (-np.inf, np.inf, -np.inf, np.inf)
         return (np.nanmin(self._xvalues), np.nanmax(self._xvalues), np.nanmin(self._yvalues), np.nanmax(self._yvalues))
         
@@ -61,8 +63,8 @@ class DTPointCollection2D(object):
         :param point: a :class:`datatank_py.DTPoint2D.DTPoint2D` instance
         
         """
-        self._xvalues = np.append(self._xvalues, point.x)
-        self._yvalues = np.append(self._yvalues, point.y)
+        self._xvalues.append(point.x)
+        self._yvalues.append(point.y)
         
     def __len__(self):
         # xvalues is a vector, so len works
@@ -87,7 +89,9 @@ class DTPointCollection2D(object):
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
-        datafile.write_anonymous(np.dstack((self._xvalues, self._yvalues)), name)
+        xvalues = np.array(self._xvalues).astype(np.double)
+        yvalues = np.array(self._yvalues).astype(np.double)
+        datafile.write_anonymous(np.dstack((xvalues, yvalues)), name)
 
     @classmethod
     def from_data_file(self, datafile, name):

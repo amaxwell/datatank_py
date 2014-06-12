@@ -36,6 +36,9 @@ class DTMesh2D(object):
         self._grid = grid if grid != None else (0, 0, 1, 1)
         self._mask = mask
         
+        self._x = None
+        self._y = None
+        
     def grid(self):
         """:returns: tuple with (xmin, ymin, dx, dy)"""
         return self._grid
@@ -44,18 +47,26 @@ class DTMesh2D(object):
         """:returns: numpy array of floating-point values at each grid node"""
         return self._values
         
-    def _position(self, n, m):
-        xmin, ymin, dx, dy = self._grid
-        return (xmin + dx * m, ymin + dy * n)
+    def convert_to_dtype(self, value_type):
+        """for meshes to be used in computation; may not be saved"""
+        self._values = self._values.astype(value_type)
         
     def __iter__(self):
         """:returns: tuple with (x, y, z) where (x, y) is on the spatial grid"""
         vals = self.values()
-        nmax, mmax = np.shape(vals)
-        for m in xrange(0, mmax):
-            for n in xrange(0, nmax):
-                x, y = self._position(n, m)
-                yield((x, y, vals[n, m]))
+        mdim, ndim = np.shape(vals)
+        
+        # create coordinate vectors; may be public at some point
+        if self._x is None:
+            xmin, ymin, dx, dy = self.grid()
+            self._x = np.arange(xmin, ndim * dx + xmin, dx)
+            self._y = np.arange(ymin, mdim * dy + ymin, dy)
+        
+        for m in xrange(0, mdim):
+            for n in xrange(0, ndim):
+                x = self._x[n]
+                y = self._y[m]
+                yield((x, y, vals[m, n]))
         
     def mask(self):
         """:returns: a :class:`datatank_py.DTMask.DTMask` instance or None"""
