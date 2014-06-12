@@ -44,6 +44,19 @@ class DTMesh2D(object):
         """:returns: numpy array of floating-point values at each grid node"""
         return self._values
         
+    def _position(self, n, m):
+        xmin, ymin, dx, dy = self._grid
+        return (xmin + dx * m, ymin + dy * n)
+        
+    def __iter__(self):
+        """:returns: tuple with (x, y, z) where (x, y) is on the spatial grid"""
+        vals = self.values()
+        nmax, mmax = np.shape(vals)
+        for m in xrange(0, mmax):
+            for n in xrange(0, nmax):
+                x, y = self._position(n, m)
+                yield((x, y, vals[n, m]))
+        
     def mask(self):
         """:returns: a :class:`datatank_py.DTMask.DTMask` instance or None"""
         return self._mask
