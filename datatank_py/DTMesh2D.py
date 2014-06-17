@@ -36,8 +36,13 @@ class DTMesh2D(object):
         self._grid = grid if grid != None else (0, 0, 1, 1)
         self._mask = mask
         
-        self._x = None
-        self._y = None
+        # N dimension: spatial X
+        # M dimension: spatial Y
+        
+        mdim, ndim = np.shape(values)
+        xmin, ymin, dx, dy = self._grid
+        self._x = np.arange(xmin, ndim * dx + xmin, dx)
+        self._y = np.arange(ymin, mdim * dy + ymin, dy)
         
     def grid(self):
         """:returns: tuple with (xmin, ymin, dx, dy)"""
@@ -47,20 +52,24 @@ class DTMesh2D(object):
         """:returns: numpy array of floating-point values at each grid node"""
         return self._values
         
-    def convert_to_dtype(self, value_type):
-        """for meshes to be used in computation; may not be saved"""
-        self._values = self._values.astype(value_type)
+    def x_vec(self):
+        return self._x
+        
+    def y_vec(self):
+        return self._y
+        
+    def full_x(self):
+        xvals, yvals = np.meshgrid(self.x_vec(), self.y_vec())
+        return xvals
+        
+    def full_y(self):
+        xvals, yvals = np.meshgrid(self.x_vec(), self.y_vec())
+        return yvals
         
     def __iter__(self):
         """:returns: tuple with (x, y, z) where (x, y) is on the spatial grid"""
         vals = self.values()
         mdim, ndim = np.shape(vals)
-        
-        # create coordinate vectors; may be public at some point
-        if self._x is None:
-            xmin, ymin, dx, dy = self.grid()
-            self._x = np.arange(xmin, ndim * dx + xmin, dx)
-            self._y = np.arange(ymin, mdim * dy + ymin, dy)
         
         for m in xrange(0, mdim):
             for n in xrange(0, ndim):
