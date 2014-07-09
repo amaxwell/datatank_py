@@ -224,7 +224,7 @@ class DTBitmap2D(object):
         data = np.hstack(channels).tostring()
         return Image.fromstring(mode, size, data, "raw", raw_mode, 0, -1)
         
-    def mesh_from_channel(self, channel="gray"):
+    def mesh_from_channel(self, channel="gray", alpha_as_mask=False):
         """Extract a given bitmap plane as a DTMesh2D object.
         
         :param channel: may be one of (`red`, `green`, `blue`, `gray`, `alpha`)
@@ -258,7 +258,14 @@ class DTBitmap2D(object):
         from datatank_py.DTMask import DTMask
         values = getattr(self, channel)
         mask = None
-        if self.nodata != None:
+        if alpha_as_mask:
+            assert self.nodata is None, "Attempting to use alpha as mask but image has NODATA values"
+            assert self.alpha != None, "Image does not have an alpha channel"
+            mask_array = self.alpha.astype(np.int8) 
+            #np.zeros(values.shape, dtype=np.int8)
+            #mask_array[np.where(self.alpha != 0)] = 1
+            mask = DTMask(mask_array)
+        elif self.nodata != None:
             mask_array = np.zeros(values.shape, dtype=np.int8)
             mask_array[np.where(values != self.nodata)] = 1
             mask = DTMask(mask_array)
