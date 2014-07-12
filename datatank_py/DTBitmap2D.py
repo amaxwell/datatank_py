@@ -76,6 +76,7 @@ class DTBitmap2D(object):
         :member blue: required for RGB image only
         :member gray: required for grayscale image only
         :member alpha: optional
+        :member projection: optional WKT string
           
         Each must be a 2D numpy array, and you are responsible for ensuring
         a consistent shape and proper dimension.  This is basically 
@@ -91,8 +92,8 @@ class DTBitmap2D(object):
         If you have an image with more than 4 bands, you can choose which to
         represent as red, green, blue, and alpha by passing :param rgba_bands:.
         For instance, if you have LANDSAT 8 multispectral imagery, you could pass
-        (4, 3, 2) to get a true color image. By default, an image with more than
-        4 bands will give an error.
+        (4, 3, 2) to get a true color image. By default, instantiating an image
+        with more than 4 bands will give an error.
 
         Note that :class:`DTBitmap2D` does not attempt to be lazy at loading data; it
         will read the entire image into memory as soon as you instantiate it.
@@ -101,6 +102,7 @@ class DTBitmap2D(object):
         super(DTBitmap2D, self).__init__()
         self.grid = (0, 0, 1, 1)
         self.nodata = None
+        self.projection = None
         for n in DTBitmap2D.CHANNEL_NAMES:
             setattr(self, n, None)
     
@@ -276,7 +278,7 @@ class DTBitmap2D(object):
         shape = self.gray.shape if self.is_gray() else self.red.shape
         return tuple(reversed(shape))
         
-    def write_geotiff(self, output_path, projection_name):
+    def write_geotiff(self, output_path, projection_name=None):
         """Save a DTBitmap2D as a GeoTIFF file.
         
         :param output_path: a file path; all parent directories must exist
@@ -306,6 +308,14 @@ class DTBitmap2D(object):
                 
         # gdal doesn't like unicode objects...
         output_path = output_path.encode(sys.getfilesystemencoding())
+        
+        # default to whatever the internal projection is, in case this
+        # was originally loaded with GDAL
+        if projection_name is None:
+            projection_name = self.projection
+        elif self.projection is not None:
+            assert self.projection == projection_name, "attempt to assign a different projection to this image"
+            
         projection_name = projection_name.encode("utf-8")
         
         channel_names = DTBitmap2D.CHANNEL_NAMES
@@ -427,6 +437,7 @@ class _DTGDALBitmap2D(DTBitmap2D):
             
         dataset = gdal.Open(image_path, GA_ReadOnly)
         (xmin, dx, rot1, ymax, rot2, dy) = dataset.GetGeoTransform()
+        self.projection = dataset.GetProjectionRef()
         
         bands = []
         self.nodata = None
