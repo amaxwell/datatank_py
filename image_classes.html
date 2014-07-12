@@ -215,6 +215,9 @@ filling in its attributes.  These are:</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Member alpha:</th><td class="field-body">optional</td>
 </tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Member projection:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">optional WKT string</td>
+</tr>
 </tbody>
 </table>
 <p>Each must be a 2D numpy array, and you are responsible for ensuring
@@ -229,8 +232,8 @@ image.  If GDAL fails for any reason, PIL will be used as a fallback.</p>
 <p>If you have an image with more than 4 bands, you can choose which to
 represent as red, green, blue, and alpha by passing :param rgba_bands:.
 For instance, if you have LANDSAT 8 multispectral imagery, you could pass
-(4, 3, 2) to get a true color image. By default, an image with more than
-4 bands will give an error.</p>
+(4, 3, 2) to get a true color image. By default, instantiating an image
+with more than 4 bands will give an error.</p>
 <p>Note that <tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt> does not attempt to be lazy at loading data; it
 will read the entire image into memory as soon as you instantiate it.</p>
 </dd></dl>
@@ -318,7 +321,7 @@ will read the entire image into memory as soon as you instantiate it.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel">
-<tt class="descname">mesh_from_channel</tt><big>(</big><em>channel='gray'</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">mesh_from_channel</tt><big>(</big><em>channel='gray'</em>, <em>alpha_as_mask=False</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract a given bitmap plane as a DTMesh2D object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -391,7 +394,7 @@ turning actual black pixels transparent.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff">
-<tt class="descname">write_geotiff</tt><big>(</big><em>output_path</em>, <em>projection_name</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write_geotiff</tt><big>(</big><em>output_path</em>, <em>projection_name=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a DTBitmap2D as a GeoTIFF file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
