@@ -2,6 +2,9 @@
 WHAT IS THIS?
 =============
 
+**NOTE:** this Python module is for scientific visualization and analysis, 
+and is not related to `The DataTank <http://github.com/tdt/>`_ in any way.
+
 This is a Python module that allows you to read and write DataTank data files using
 Python. `DataTank <http://visualdatatools.com/DataTank/>`_ is a visualization and 
 analysis tool for Mac OS X. Although DataTank itself is proprietary (now free of
