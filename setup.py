@@ -9,7 +9,7 @@ with open("README.rst") as readme:
 
 setup(
     name = "datatank_py",
-    version = "0.7",
+    version = "0.71",
     packages = find_packages(),
     
     install_requires = ['numpy>1.0'],
@@ -20,7 +20,7 @@ setup(
     long_description = long_description,
     license = "BSD New",
     url = "http://github.com/amaxwell/datatank_py",
-    download_url = "http://github.com/amaxwell/datatank_py/tarball/0.7",
+    download_url = "http://github.com/amaxwell/datatank_py/tarball/0.71",
     classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
