@@ -115,18 +115,31 @@ class DTBitmap2D(object):
         return None
         
     def channel_count(self):
-        """:returns: number of channels, including data and alpha"""
-        if self.gray != None:
-            return 2 if self.alpha != None else 1
-        return 4 if self.alpha != None else 3
+        """:returns: number of channels, including data and alpha
+        
+        Compatible with multiband images.
+        """
+        count = 0
+        for nm in DTBitmap2D.CHANNEL_NAMES:
+            if getattr(self, nm) is not None:
+                count += 1
+        return count
         
     def has_alpha(self):
-        """:returns boolean: ``True`` if the image has an alpha channel"""
+        """:returns boolean: ``True`` if the image has an alpha channel
+        
+        Only valid for grayscale or RGB image models, not arbitrary
+        multiband images.
+        """
         nchan = self.channel_count()
         return nchan == 2 or nchan == 4
         
     def is_gray(self):
-        """:returns boolean: ``True`` if the image is grayscale (not RBG or RBGA)"""
+        """:returns boolean: ``True`` if the image is grayscale (not RBG or RBGA)
+        
+        Only valid for grayscale or RGB image models, not arbitrary
+        multiband images.
+        """
         return self.channel_count() < 3
         
     def synthesize_alpha(self):
@@ -275,8 +288,11 @@ class DTBitmap2D(object):
         
     def raster_size(self):
         """:returns: size in pixels, 2-tuple ordered as `(horizontal, vertical)`."""
-        shape = self.gray.shape if self.is_gray() else self.red.shape
-        return tuple(reversed(shape))
+        for nm in DTBitmap2D.CHANNEL_NAMES:
+            values = getattr(self, nm)
+            if values is not None:
+                return tuple(reversed(values.shape))
+        assert False, "No valid channels to compute raster size"
         
     def write_geotiff(self, output_path, projection_name=None):
         """Save a DTBitmap2D as a GeoTIFF file.
@@ -318,7 +334,6 @@ class DTBitmap2D(object):
             
         projection_name = projection_name.encode("utf-8")
         
-        channel_names = DTBitmap2D.CHANNEL_NAMES
         band_count = self.channel_count()
         assert band_count > 0, "No channels to save"
 
@@ -333,8 +348,11 @@ class DTBitmap2D(object):
         ymax = grid[1] + abs(dy) * raster_y
 
         geotiff = gdal.GetDriverByName("GTiff")
+        
+        # only support 8 or 16 bit unsigned images; make the caller scale
         assert self.dtype() in (np.uint8, np.uint16), "Unhandled bit depth %s" % (self.dtype())
         etype = GDT_Byte if self.dtype() == np.uint8 else GDT_UInt16
+        
         dst = geotiff.Create(output_path, raster_x, raster_y, bands=band_count, eType=etype)
         assert dst, "Unable to create destination dataset at %s" % (output_path)
 
@@ -348,28 +366,24 @@ class DTBitmap2D(object):
         # as well as NAD27, NAD83, WGS84, WGS72.
         dst_srs.SetFromUserInput(projection_name)
         dst.SetProjection(dst_srs.ExportToWkt())
-
-        if band_count == 1:
-            name_map = {0:"gray"} 
-        elif band_count == 2:
-            name_map = {0:"gray", 1:"alpha"}
-        elif band_count == 3:
-            name_map = {0:"red", 1:"green", 2:"blue"}
-        else:
-            name_map = {0:"red", 1:"green", 2:"blue", 3:"alpha"}
-
-        for band_index in name_map:
-            band = dst.GetRasterBand(band_index + 1)
-
-            values = getattr(self, name_map[band_index])
             
-            values = np.flipud(values)
-            # reverse transforms applied in DTDataFile
-            shape = list(values.shape)
-            shape.reverse()
-            data = values.reshape(shape, order="C").tostring()
+        band_index = 1
+        for band_name in DTBitmap2D.CHANNEL_NAMES:
             
-            band.WriteRaster(0, 0, dst.RasterXSize, dst.RasterYSize, data, buf_xsize=dst.RasterXSize, buf_ysize=dst.RasterYSize, buf_type=band.DataType)
+            values = getattr(self, band_name)
+            
+            if values is not None:
+                
+                band = dst.GetRasterBand(band_index)
+                band_index += 1
+                    
+                values = np.flipud(values)
+                # reverse transforms applied in DTDataFile
+                shape = list(values.shape)
+                shape.reverse()
+                data = values.reshape(shape, order="C").tostring()
+            
+                band.WriteRaster(0, 0, dst.RasterXSize, dst.RasterYSize, data, buf_xsize=dst.RasterXSize, buf_ysize=dst.RasterYSize, buf_type=band.DataType)
         
         dst = None
         
@@ -454,8 +468,9 @@ class _DTGDALBitmap2D(DTBitmap2D):
         for band_index in rgba_bands:
             try:
                 band = dataset.GetRasterBand(band_index)
+                sys.stderr.write("Read band %d (image has %d bands)\n" % (band_index, dataset.RasterCount))
             except Exception, e:
-                sys.stderr.write("Trying to read band %d (image has %d bands)\n" % (band_index, dataset.RasterCount))
+                sys.stderr.write("Failed reading band %d (image has %d bands)\n" % (band_index, dataset.RasterCount))
                 sys.stderr.write("%s\n" % (e))
                 raise e
             if self.nodata == None:
@@ -467,9 +482,10 @@ class _DTGDALBitmap2D(DTBitmap2D):
         ymin = ymax + dy * dataset.RasterYSize
         self.grid = (xmin, ymin, dx, abs(dy))
                 
-        # RGB or RGBA
+        # Gray + Alpha, RGB, or RGBA
         if channel_count in (2, 3, 4):
 
+            # zero-based
             name_map = {}
             
             if channel_count == 2:
@@ -488,8 +504,10 @@ class _DTGDALBitmap2D(DTBitmap2D):
                 band = bands[idx]
                 channel = band.ReadAsArray()
                 channel = np.flipud(channel)
+                sys.stderr.write("Interpreted band %d as %s\n" % (idx + 1, name_map[idx]))
+                sys.stderr.write("min = %s, max = %s, mean = %s\n" % (np.min(channel), np.max(channel), np.mean(channel)))
                 setattr(self, name_map[idx], channel)
-
+                
         elif channel_count == 1:
             
             # we only have one band anyway on this path, so see if we have an indexed image,
@@ -501,6 +519,8 @@ class _DTGDALBitmap2D(DTBitmap2D):
             
             if ctab != None:
                                 
+                sys.stderr.write("Interpreted image as indexed RGB\n")
+
                 # indexed images have to be expanded to RGB, and this is pretty slow
                 progress = DTProgress()
                 
@@ -530,10 +550,11 @@ class _DTGDALBitmap2D(DTBitmap2D):
             else:
                 # Gray (tested with int16)
                 self.gray = mesh
+                sys.stderr.write("Interpreted image as single-channel grayscale\n")
                 
         else:
             sys.stderr.write("Unable to decode an image with %d raster bands\n" % (channel_count))
-            
+
         del dataset
 
 def _array_from_image(image):
