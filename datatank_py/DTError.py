@@ -7,11 +7,17 @@ __all__ = ["dt_set_log_identifier", "dt_use_syslog", "DTErrorMessage", "DTSaveEr
 
 import sys
 import os
-from syslog import syslog, openlog, LOG_ERR
+
+_SYSLOG_AVAILABLE = True
+_USE_SYSLOG = False
+
+try:
+    from syslog import syslog, openlog, LOG_ERR
+except ImportError, e:
+    _SYSLOG_AVAILABLE = False
 
 _errors = []
 _DEFAULT_CONTEXT = os.path.basename(sys.argv[0])
-_USE_SYSLOG = False
 
 def dt_set_log_identifier(ctxt):
     """Sets the default logging identifier to something useful.
@@ -28,7 +34,8 @@ def dt_set_log_identifier(ctxt):
     
     global _DEFAULT_CONTEXT
     _DEFAULT_CONTEXT = ctxt
-    openlog(ident=ctxt)
+    if _USE_SYSLOG:
+        openlog(ident=ctxt)
     
 def dt_use_syslog(should_use):
     """Allows you to copy all messages to syslog.
@@ -41,7 +48,10 @@ def dt_use_syslog(should_use):
     """
     
     global _USE_SYSLOG
-    _USE_SYSLOG = should_use
+    if _SYSLOG_AVAILABLE:
+        _USE_SYSLOG = should_use
+    else:
+        _USE_SYSLOG = False
 
 def DTErrorMessage(fcn, msg):
     """Accumulate a message and echo to standard error.
