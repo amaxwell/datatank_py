@@ -198,9 +198,15 @@ class DTPath2D(object):
     def __iter__(self):
         """Iterate subpaths in order of addition as DTPath2D objects"""
         
-        for offset in self._offsets():
-            start, length = offset
-            yield (DTPath2D(self._xvalues[start:start + length], self._yvalues[start:start + length]))
+        # special case for no subpaths; just return the main path
+        # this lets clients iterate in the general case, including
+        # DTPath2D.__str__().
+        if self.number_of_loops() == 1:
+            yield self
+        else:   
+            for offset in self._offsets():
+                start, length = offset
+                yield (DTPath2D(self._xvalues[start:start + length], self._yvalues[start:start + length]))
         
     def __str__(self):
         s = super(DTPath2D, self).__str__() + " {\n"
@@ -246,12 +252,7 @@ if __name__ == '__main__':
     
     from datatank_py.DTDataFile import DTDataFile
     
-    with DTDataFile("/tmp/point_path.dtbin", truncate=True) as df:
-        
-        df["Path 1"] = DTPath2D([0], [0])
-        
-    
-    with DTDataFile("path_2d.dtbin", truncate=True) as df:
+    with DTDataFile("../tests/path_2d.dtbin", truncate=True) as df:
         
         xvalues = (1, 2, 2, 1, 1)
         yvalues = (1, 1, 2, 2, 1)
@@ -281,6 +282,6 @@ if __name__ == '__main__':
         print "%d loops" % (path.number_of_loops())
         
         for idx, subpath in enumerate(path):
-            df["Subpath %d" % (idx)] = path
+            df["Subpath %d" % (idx)] = subpath
         
         
