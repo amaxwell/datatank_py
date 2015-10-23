@@ -8,7 +8,7 @@
     
     <title>Getting started &mdash; datatank_py 0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -27,8 +27,8 @@
     <link rel="next" title="Data Files" href="datafile.html" />
     <link rel="prev" title="Welcome to datatank_py’s documentation!" href="index.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -43,14 +43,14 @@
         <li class="right" >
           <a href="index.html" title="Welcome to datatank_py’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="getting-started">
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
@@ -70,8 +70,8 @@ installed &#8211; you can check by doing:</p>
 </div>
 <div class="section" id="example-reading-a-datatank-file">
 <span id="file-read-example"></span><h2>Example: Reading a DataTank file<a class="headerlink" href="#example-reading-a-datatank-file" title="Permalink to this headline">¶</a></h2>
-<p>Create a data file in DataTank called <tt class="docutils literal"><span class="pre">example.dtbin</span></tt>,
-and read the variables using <a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></tt></a>.</p>
+<p>Create a data file in DataTank called <code class="docutils literal"><span class="pre">example.dtbin</span></code>,
+and read the variables using <a class="reference internal" href="datafile.html#datatank_py.DTDataFile.DTDataFile" title="datatank_py.DTDataFile.DTDataFile"><code class="xref py py-class docutils literal"><span class="pre">datatank_py.DTDataFile.DTDataFile</span></code></a>.</p>
 <img alt="_images/datafile_example_ss.png" src="_images/datafile_example_ss.png" />
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datatank_py.DTDataFile</span> <span class="kn">import</span> <span class="n">DTDataFile</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">dtf</span> <span class="o">=</span> <span class="n">DTDataFile</span><span class="p">(</span><span class="s">&quot;example.dtbin&quot;</span><span class="p">)</span>
@@ -105,7 +105,7 @@ and read the variables using <a class="reference internal" href="datafile.html#d
 <li>Variable structure is complicated, but is documented in DataTank&#8217;s manual
 (see the menu &#8220;Help -&gt; Manual -&gt; DataTank Manual (pdf)&#8221; in DataTank)</li>
 <li>Some arrays have one or more empty dimensions, and may need to be flattened</li>
-<li>Strings are <tt class="docutils literal"><span class="pre">unicode</span></tt> objects in Python</li>
+<li>Strings are <code class="docutils literal"><span class="pre">unicode</span></code> objects in Python</li>
 </ol>
 <p>At this point, you can manipulate or modify the variables, and can
 even append to the file. <em>However, you cannot rewrite existing variables
@@ -186,7 +186,7 @@ Python.</p>
 </div>
 <p>If you&#8217;ve ever written a C++ program for DataTank using the Xcode
 skeleton it creates, the preceding code should look familiar.
-However, <tt class="docutils literal"><span class="pre">datatank_py</span></tt> implements and uses Python idioms wherever
+However, <code class="docutils literal"><span class="pre">datatank_py</span></code> implements and uses Python idioms wherever
 possible, as a straight C++ translation is undesirable for most Python
 programmers (as well as downright unreadable).</p>
 </div>
@@ -196,7 +196,7 @@ programmers (as well as downright unreadable).</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -214,12 +214,14 @@ programmers (as well as downright unreadable).</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="datafile.html"
                         title="next chapter">Data Files</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/getting_started.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/getting_started.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -236,7 +238,7 @@ programmers (as well as downright unreadable).</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -251,12 +253,12 @@ programmers (as well as downright unreadable).</p>
         <li class="right" >
           <a href="index.html" title="Welcome to datatank_py’s documentation!"
              >previous</a> |</li>
-        <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Adam R. Maxwell.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Adam R. Maxwell.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>

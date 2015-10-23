@@ -8,7 +8,7 @@
     
     <title>Working with 2D Bitmap Data &mdash; datatank_py 0.1 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,8 +26,8 @@
     <link rel="top" title="datatank_py 0.1 documentation" href="index.html" />
     <link rel="prev" title="0D and 1D Classes" href="classes.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -39,14 +39,14 @@
         <li class="right" >
           <a href="classes.html" title="0D and 1D Classes"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="working-with-2d-bitmap-data">
 <span id="image-example"></span><h1>Working with 2D Bitmap Data<a class="headerlink" href="#working-with-2d-bitmap-data" title="Permalink to this headline">¶</a></h1>
@@ -171,16 +171,16 @@ the words above.</p>
 <span id="image-classes"></span><h2>DTBitmap2D<a class="headerlink" href="#dtbitmap2d" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D">
-<em class="property">class </em><tt class="descclassname">datatank_py.DTBitmap2D.</tt><tt class="descname">DTBitmap2D</tt><big>(</big><em>path_or_image=None</em>, <em>rgba_bands=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">datatank_py.DTBitmap2D.</code><code class="descname">DTBitmap2D</code><span class="sig-paren">(</span><em>path_or_image=None</em>, <em>rgba_bands=None</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base implementation for DTBitmap2D. This is a gray or color (RGB)
 image, with an optional alpha channel. It also has spatial data, so
 it can be displayed in DataTank on a physical grid, rather than the
 logical grid of pixels.</p>
-<p>Provides implementation of <a class="reference internal" href="datafile.html#datatank_py.DTPyWrite.DTPyWrite" title="datatank_py.DTPyWrite.DTPyWrite"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPyWrite.DTPyWrite</span></tt></a> for
+<p>Provides implementation of <a class="reference internal" href="datafile.html#datatank_py.DTPyWrite.DTPyWrite" title="datatank_py.DTPyWrite.DTPyWrite"><code class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPyWrite.DTPyWrite</span></code></a> for
 all subclasses, and can be instantiated directly to use as a container.</p>
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>path_or_image=None</em>, <em>rgba_bands=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>path_or_image=None</em>, <em>rgba_bands=None</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -191,13 +191,13 @@ all subclasses, and can be instantiated directly to use as a container.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An object that implements <a class="reference internal" href="datafile.html#datatank_py.DTPyWrite.DTPyWrite" title="datatank_py.DTPyWrite.DTPyWrite"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPyWrite.DTPyWrite</span></tt></a>. Don&#8217;t rely on the class name for anything.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An object that implements <a class="reference internal" href="datafile.html#datatank_py.DTPyWrite.DTPyWrite" title="datatank_py.DTPyWrite.DTPyWrite"><code class="xref py py-class docutils literal"><span class="pre">datatank_py.DTPyWrite.DTPyWrite</span></code></a>. Don&#8217;t rely on the class name for anything.</p>
 </td>
 </tr>
 </tbody>
 </table>
 <p>If you pass the default argument, you&#8217;ll get back
-an object that implements <tt class="xref py py-meth docutils literal"><span class="pre">dt_write()</span></tt>, and you are responsible for
+an object that implements <code class="xref py py-meth docutils literal"><span class="pre">dt_write()</span></code>, and you are responsible for
 filling in its attributes.  These are:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -222,11 +222,11 @@ filling in its attributes.  These are:</p>
 </table>
 <p>Each must be a 2D numpy array, and you are responsible for ensuring
 a consistent shape and proper dimension.  This is basically 
-equivalent to the way DTSource constructs a C++ <tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt>.  Note that 
+equivalent to the way DTSource constructs a C++ <code class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></code>.  Note that 
 DataTank only supports 8 bit and 16 bit images.</p>
 <p>If a PIL image is provided, it will be used as-is, and the grid
 will be a unit grid with origin at (0, 0).  If a path is provided,
-<tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt> will try to use GDAL to load the image and extract its
+<code class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></code> will try to use GDAL to load the image and extract its
 components, as well as any spatial referencing included with the
 image.  If GDAL fails for any reason, PIL will be used as a fallback.</p>
 <p>If you have an image with more than 4 bands, you can choose which to
@@ -234,13 +234,13 @@ represent as red, green, blue, and alpha by passing :param rgba_bands:.
 For instance, if you have LANDSAT 8 multispectral imagery, you could pass
 (4, 3, 2) to get a true color image. By default, instantiating an image
 with more than 4 bands will give an error.</p>
-<p>Note that <tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt> does not attempt to be lazy at loading data; it
+<p>Note that <code class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></code> does not attempt to be lazy at loading data; it
 will read the entire image into memory as soon as you instantiate it.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.channel_count">
-<tt class="descname">channel_count</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.channel_count" title="Permalink to this definition">¶</a></dt>
+<code class="descname">channel_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.channel_count" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -254,12 +254,12 @@ will read the entire image into memory as soon as you instantiate it.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.dtype">
-<tt class="descname">dtype</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.dtype" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dtype</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.dtype" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a NumPy array datatype <tt class="xref py py-class docutils literal"><span class="pre">numpy.dtype</span></tt></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a NumPy array datatype <code class="xref py py-class docutils literal"><span class="pre">numpy.dtype</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -267,13 +267,13 @@ will read the entire image into memory as soon as you instantiate it.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.equalize_histogram">
-<tt class="descname">equalize_histogram</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.equalize_histogram" title="Permalink to this definition">¶</a></dt>
+<code class="descname">equalize_histogram</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.equalize_histogram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alters the image by equalizing the histogram among any non-alpha bands.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.from_data_file">
-<em class="property">classmethod </em><tt class="descname">from_data_file</tt><big>(</big><em>datafile</em>, <em>name</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.from_data_file" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_data_file</code><span class="sig-paren">(</span><em>datafile</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.from_data_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new instance from a DTDataFile by name.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -294,13 +294,13 @@ will read the entire image into memory as soon as you instantiate it.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.has_alpha">
-<tt class="descname">has_alpha</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.has_alpha" title="Permalink to this definition">¶</a></dt>
+<code class="descname">has_alpha</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.has_alpha" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if the image has an alpha channel</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><code class="docutils literal"><span class="pre">True</span></code> if the image has an alpha channel</td>
 </tr>
 </tbody>
 </table>
@@ -310,13 +310,13 @@ multiband images.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.is_gray">
-<tt class="descname">is_gray</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.is_gray" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_gray</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.is_gray" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><tt class="docutils literal"><span class="pre">True</span></tt> if the image is grayscale (not RBG or RBGA)</td>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><code class="docutils literal"><span class="pre">True</span></code> if the image is grayscale (not RBG or RBGA)</td>
 </tr>
 </tbody>
 </table>
@@ -326,7 +326,7 @@ multiband images.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel">
-<tt class="descname">mesh_from_channel</tt><big>(</big><em>channel='gray'</em>, <em>alpha_as_mask=False</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mesh_from_channel</code><span class="sig-paren">(</span><em>channel='gray'</em>, <em>alpha_as_mask=False</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.mesh_from_channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract a given bitmap plane as a DTMesh2D object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -334,7 +334,7 @@ multiband images.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>channel</strong> &#8211; may be one of (<cite>red</cite>, <cite>green</cite>, <cite>blue</cite>, <cite>gray</cite>, <cite>alpha</cite>)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="classes.html#datatank_py.DTMesh2D.DTMesh2D" title="datatank_py.DTMesh2D.DTMesh2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMesh2D.DTMesh2D</span></tt></a> instance</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="classes.html#datatank_py.DTMesh2D.DTMesh2D" title="datatank_py.DTMesh2D.DTMesh2D"><code class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMesh2D.DTMesh2D</span></code></a> instance</td>
 </tr>
 </tbody>
 </table>
@@ -343,8 +343,8 @@ multiband images.</p>
 e.g., a 32-bit GeoTIFF or other image supported by GDAL, and bring it
 in to DataTank. This is particularly useful for elevation data.</p>
 <p>The returned mesh will use the spatial grid (origin and pixel size) of the image.
-Note that the image&#8217;s <tt class="docutils literal"><span class="pre">nodata</span></tt> attribute will be used to create
-an appropriate <a class="reference internal" href="classes.html#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></tt></a> which will be applied
+Note that the image&#8217;s <code class="docutils literal"><span class="pre">nodata</span></code> attribute will be used to create
+an appropriate <a class="reference internal" href="classes.html#datatank_py.DTMask.DTMask" title="datatank_py.DTMask.DTMask"><code class="xref py py-class docutils literal"><span class="pre">datatank_py.DTMask.DTMask</span></code></a> which will be applied
 to the mesh. The nodata value is obtained from GDAL.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datatank_py.DTBitmap2D</span> <span class="kn">import</span> <span class="n">DTBitmap2D</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">DTBitmap2D</span><span class="p">(</span><span class="s">&quot;int16.tiff&quot;</span><span class="p">)</span>
@@ -360,13 +360,13 @@ to the mesh. The nodata value is obtained from GDAL.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.pil_image">
-<tt class="descname">pil_image</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.pil_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempt to convert a raw image to a <tt class="xref py py-mod docutils literal"><span class="pre">PIL</span></tt> Image object.</p>
+<code class="descname">pil_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.pil_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to convert a raw image to a <code class="xref py py-mod docutils literal"><span class="pre">PIL</span></code> Image object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <tt class="xref py py-mod docutils literal"><span class="pre">PIL</span></tt> Image, or <tt class="docutils literal"><span class="pre">None</span></tt> if <tt class="xref py py-mod docutils literal"><span class="pre">PIL</span></tt> can&#8217;t be loaded or if the conversion failed.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <code class="xref py py-mod docutils literal"><span class="pre">PIL</span></code> Image, or <code class="docutils literal"><span class="pre">None</span></code> if <code class="xref py py-mod docutils literal"><span class="pre">PIL</span></code> can&#8217;t be loaded or if the conversion failed.</td>
 </tr>
 </tbody>
 </table>
@@ -378,7 +378,7 @@ have all been tested.</em></p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.raster_size">
-<tt class="descname">raster_size</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.raster_size" title="Permalink to this definition">¶</a></dt>
+<code class="descname">raster_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.raster_size" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -391,7 +391,7 @@ have all been tested.</em></p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.synthesize_alpha">
-<tt class="descname">synthesize_alpha</tt><big>(</big><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.synthesize_alpha" title="Permalink to this definition">¶</a></dt>
+<code class="descname">synthesize_alpha</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.synthesize_alpha" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds or overwrites an alpha channel corresponding to all zero-valued RGB pixels.
 This is not very smart, as it doesn&#8217;t check for neighboring pixels; you can end up
 turning actual black pixels transparent.</p>
@@ -399,7 +399,7 @@ turning actual black pixels transparent.</p>
 
 <dl class="method">
 <dt id="datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff">
-<tt class="descname">write_geotiff</tt><big>(</big><em>output_path</em>, <em>projection_name=None</em><big>)</big><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_geotiff</code><span class="sig-paren">(</span><em>output_path</em>, <em>projection_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTBitmap2D.DTBitmap2D.write_geotiff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a DTBitmap2D as a GeoTIFF file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -419,7 +419,7 @@ For example, <cite>EPSG:4326</cite> and <cite>WGS84</cite> are both
 valid. See the documentation for OSRSpatialReference::SetFromUserInput
 at <a class="reference external" href="http://www.gdal.org/ogr/classOGRSpatialReference.html">http://www.gdal.org/ogr/classOGRSpatialReference.html</a>
 for more specific details.</p>
-<p>Note that exceptions will be raised if the <tt class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></tt> is not valid
+<p>Note that exceptions will be raised if the <code class="xref py py-class docutils literal"><span class="pre">DTBitmap2D</span></code> is not valid
 (has no data), or if any GDAL functions fail.  This method has only
 been tested with 8-bit images, but gray/rgb/alpha images work as
 expected.</p>
@@ -432,17 +432,17 @@ expected.</p>
 <span id="dtpycoreimage"></span><h2>DTPyCoreImage<a class="headerlink" href="#module-datatank_py.DTPyCoreImage" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="datatank_py.DTPyCoreImage.ci_filter_named">
-<tt class="descclassname">datatank_py.DTPyCoreImage.</tt><tt class="descname">ci_filter_named</tt><big>(</big><em>filter_name</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyCoreImage.ci_filter_named" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">datatank_py.DTPyCoreImage.</code><code class="descname">ci_filter_named</code><span class="sig-paren">(</span><em>filter_name</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTPyCoreImage.ci_filter_named" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <tt class="xref py py-class docutils literal"><span class="pre">Quartz:CIFilter</span></tt> with the given name</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <code class="xref py py-class docutils literal"><span class="pre">Quartz:CIFilter</span></code> with the given name</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Requires Mac OS X and PyObjC</strong></p>
-<p>These filters can be applied to a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> using:</p>
+<p>These filters can be applied to a <code class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></code> using:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">ci_image</span> <span class="o">=</span> <span class="n">ci_image_from_planes</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 <span class="n">filt</span> <span class="o">=</span> <span class="n">ci_filter_named</span><span class="p">(</span><span class="s">&quot;CIExposureAdjust&quot;</span><span class="p">)</span>
 <span class="n">filt</span><span class="o">.</span><span class="n">setValue_forKey_</span><span class="p">(</span><span class="n">ci_image</span><span class="p">,</span> <span class="s">&quot;inputImage&quot;</span><span class="p">)</span>
@@ -450,14 +450,14 @@ expected.</p>
 <span class="n">ci_image</span> <span class="o">=</span> <span class="n">filt</span><span class="o">.</span><span class="n">valueForKey_</span><span class="p">(</span><span class="s">&quot;outputImage&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>From this point, you would apply another filter or use <a class="reference internal" href="#datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image" title="datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image"><tt class="xref py py-func docutils literal"><span class="pre">dt_bitmap2d_from_ci_image()</span></tt></a> 
+<p>From this point, you would apply another filter or use <a class="reference internal" href="#datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image" title="datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image"><code class="xref py py-func docutils literal"><span class="pre">dt_bitmap2d_from_ci_image()</span></code></a> 
 to convert the image to
-a <a class="reference internal" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="datatank_py.DTBitmap2D.DTBitmap2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTBitmap2D.DTBitmap2D</span></tt></a> for DataTank.</p>
+a <a class="reference internal" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="datatank_py.DTBitmap2D.DTBitmap2D"><code class="xref py py-class docutils literal"><span class="pre">datatank_py.DTBitmap2D.DTBitmap2D</span></code></a> for DataTank.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="datatank_py.DTPyCoreImage.ci_image_from_planes">
-<tt class="descclassname">datatank_py.DTPyCoreImage.</tt><tt class="descname">ci_image_from_planes</tt><big>(</big><em>red</em>, <em>green</em>, <em>blue</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyCoreImage.ci_image_from_planes" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">datatank_py.DTPyCoreImage.</code><code class="descname">ci_image_from_planes</code><span class="sig-paren">(</span><em>red</em>, <em>green</em>, <em>blue</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTPyCoreImage.ci_image_from_planes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a Quartz CIImage from bitmap data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -470,39 +470,39 @@ a <a class="reference internal" href="#datatank_py.DTBitmap2D.DTBitmap2D" title=
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> instance</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a <code class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></code> instance</p>
 </td>
 </tr>
 </tbody>
 </table>
 <p><strong>Requires Mac OS X and PyObjC</strong></p>
-<p>The <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> is only useful for applying <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIFilter</span></tt>
+<p>The <code class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></code> is only useful for applying <code class="xref py py-class docutils literal"><span class="pre">Quartz.CIFilter</span></code>
 or other transformations using PyObjC. Only 8-bit RGB images are supported at
 this time, and your image data will be truncated if it is not 8-bit.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image">
-<tt class="descclassname">datatank_py.DTPyCoreImage.</tt><tt class="descname">dt_bitmap2d_from_ci_image</tt><big>(</big><em>ci_image</em>, <em>width</em>, <em>height</em>, <em>grid</em><big>)</big><a class="headerlink" href="#datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">datatank_py.DTPyCoreImage.</code><code class="descname">dt_bitmap2d_from_ci_image</code><span class="sig-paren">(</span><em>ci_image</em>, <em>width</em>, <em>height</em>, <em>grid</em><span class="sig-paren">)</span><a class="headerlink" href="#datatank_py.DTPyCoreImage.dt_bitmap2d_from_ci_image" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ci_image</strong> &#8211; a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> instance from PyObjC</li>
+<li><strong>ci_image</strong> &#8211; a <code class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></code> instance from PyObjC</li>
 <li><strong>width</strong> &#8211; desired width in pixels</li>
 <li><strong>height</strong> &#8211; desired height in pixels</li>
 <li><strong>grid</strong> &#8211; a four-tuple (x0, y0, dx, dy) spatial grid</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a <a class="reference internal" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="datatank_py.DTBitmap2D.DTBitmap2D"><tt class="xref py py-class docutils literal"><span class="pre">datatank_py.DTBitmap2D.DTBitmap2D</span></tt></a> instance</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a <a class="reference internal" href="#datatank_py.DTBitmap2D.DTBitmap2D" title="datatank_py.DTBitmap2D.DTBitmap2D"><code class="xref py py-class docutils literal"><span class="pre">datatank_py.DTBitmap2D.DTBitmap2D</span></code></a> instance</p>
 </td>
 </tr>
 </tbody>
 </table>
 <p><strong>Requires Mac OS X and PyObjC</strong></p>
-<p>This function allows you to turn a <tt class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></tt> into an object
+<p>This function allows you to turn a <code class="xref py py-class docutils literal"><span class="pre">Quartz.CIImage</span></code> into an object
 that DataTank can use. Only 8-bit RGB images are supported at this time.</p>
 </dd></dl>
 
@@ -513,7 +513,7 @@ that DataTank can use. Only 8-bit RGB images are supported at this time.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -533,12 +533,14 @@ that DataTank can use. Only 8-bit RGB images are supported at this time.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="classes.html"
                         title="previous chapter">0D and 1D Classes</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/image_classes.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/image_classes.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -555,7 +557,7 @@ that DataTank can use. Only 8-bit RGB images are supported at this time.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -567,12 +569,12 @@ that DataTank can use. Only 8-bit RGB images are supported at this time.</p>
         <li class="right" >
           <a href="classes.html" title="0D and 1D Classes"
              >previous</a> |</li>
-        <li><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">datatank_py 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Adam R. Maxwell.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Adam R. Maxwell.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>
