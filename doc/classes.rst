@@ -22,6 +22,39 @@ DTDictionary
    :members:
    :special-members: __init__
    
+.. sourcecode:: python
+
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+
+    from datatank_py.DTDataFile import DTDataFile
+    from datatank_py.DTDictionary import DTDictionary
+
+    if __name__ == '__main__':
+    
+        dt_dict = DTDictionary()
+    
+        dt_dict["Test_scalar_float"] = 2.573
+        dt_dict["Test_scalar_int"] = 5
+        dt_dict["Test_string"] = "This is only a test"
+        dt_dict["Test_array"] = (1.1, 2, 5, 7.5, 11.978)
+    
+        with DTDataFile("/tmp/dict_test.dtbin", truncate=True) as dtf:
+            dtf["dictionary test"] = dt_dict
+    
+        # read the dictionary back from the file
+        with DTDataFile("/tmp/dict_test.dtbin") as dtf:
+            dt_dict = DTDictionary.from_data_file(dtf, "dictionary test")
+            
+            # iterate and print each key/value pair
+            for k in dt_dict:
+                print "%s = %s" % (k, dt_dict[k])
+            
+            # normal dictionary print
+            print dt_dict
+
+
+   
 .. _2d_classes:
 
 **********

@@ -169,6 +169,10 @@ if __name__ == '__main__':
         for k in dtf:
             print k, dtf[k]
             
-        print DTDictionary.from_data_file(dtf, "dictionary test")
+        dt_dict = DTDictionary.from_data_file(dtf, "dictionary test")
+        for k in dt_dict:
+            print "%s = %s" % (k, dt_dict[k])
+            
+        print dt_dict
     
     
