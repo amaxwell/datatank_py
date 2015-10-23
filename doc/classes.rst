@@ -16,6 +16,12 @@ DTMask
    :members:
    :special-members: __init__
    
+DTDictionary
+============
+.. autoclass:: datatank_py.DTDictionary.DTDictionary
+   :members:
+   :special-members: __init__
+   
 .. _2d_classes:
 
 **********
