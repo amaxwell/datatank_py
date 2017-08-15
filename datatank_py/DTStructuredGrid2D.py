@@ -8,7 +8,7 @@ from DTMask import DTMask
 import numpy as np
 
 def _squeeze2d(array):
-    assert array != None, "DTStructuredGrid2D: nonexistent array passed to _squeeze2d"
+    assert array is not None, "DTStructuredGrid2D: nonexistent array passed to _squeeze2d"
     array = np.asarray(array)
     shape = np.shape(array)
     if len(shape) == 2:
@@ -47,16 +47,17 @@ class DTStructuredGrid2D(object):
         
         super(DTStructuredGrid2D, self).__init__()
         
-        # DataTank saves these with a singleton dimension in y,
+        # DataTank saves these with a singleton dimension in z,
         # so we have a special case for reading those files in
         # order to end up with the correct logical shape.
         x = _squeeze2d(x)
         y = _squeeze2d(y)
-
+        
         # this predates the singleton saving changes in DTDataFile
         if (len(np.shape(x)) == 1 and len(np.shape(y)) == 2) and np.shape(y)[1] == 1:
             y = np.squeeze(y)
-                   
+        
+        # datatank_py allows a 1D list or vector; DataTank does not
         if (len(np.shape(x)) == 1 and len(np.shape(y)) == 1):
             
             # If we pass in vectors, DataTank expects them to have a 2D shape,
@@ -70,10 +71,20 @@ class DTStructuredGrid2D(object):
             self._y[:,0] = y
             self._logical_shape = (len(y), len(x))
             
+        elif np.shape(x)[0] == 1 and np.shape(y)[1] == 1:
+            
+            # 2D arrays with singleton dimension; this is how DataTank passes
+            # a square 2D structured grid, for instance
+            xlen = np.shape(x)[1]
+            ylen = np.shape(y)[0]
+            self._x = x
+            self._y = y
+            self._logical_shape = (ylen, xlen)
+                
         else:
             assert np.shape(x) == np.shape(y)
             self._x = np.array(x, dtype=np.float32)
-            self._y = np.array(y, dtype=np.float32)
+            self._y = np.array(y, dtype=np.float32)            
             self._logical_shape = np.shape(x)
             
         if mask != None:
@@ -133,8 +144,8 @@ class DTStructuredGrid2D(object):
         gridx = datafile[name + "_X"]
         gridy = datafile[name + "_Y"]
         mask = DTMask.from_data_file(datafile, name + "_dom")
-        assert gridx != None, "DTStructuredGrid2D: no such variable %s in %s" % (name + "_X", datafile.path())
-        assert gridy != None, "DTStructuredGrid2D: no such variable %s in %s" % (name + "_Y", datafile)
+        assert gridx is not None, "DTStructuredGrid2D: no such variable %s in %s" % (name + "_X", datafile.path())
+        assert gridy is not None, "DTStructuredGrid2D: no such variable %s in %s" % (name + "_Y", datafile)
         return DTStructuredGrid2D(gridx, gridy, mask=mask)
 
 if __name__ == '__main__':
