@@ -49,7 +49,7 @@ class DTPlot1D(object):
         
         """
         super(DTPlot1D, self).__init__()
-        assert xvalues != None and yvalues != None, "DTPlot1D: both x and y arrays are required"
+        assert xvalues is not None and yvalues is not None, "DTPlot1D: both x and y arrays are required"
         assert len(xvalues) == len(yvalues), "DTPlot1D: inconsistent lengths"   
         
         xvalues = np.array(xvalues).astype(np.double)
@@ -173,7 +173,8 @@ class DTPlot1D(object):
         
         offsets = []
         # (start, length)
-        offset = (1, self._yvalues[0])
+        # int conversion is necessary to use this as a slice
+        offset = (1, int(self._yvalues[0]))
         offsets.append(offset)
         next = offset[1] + 1
         
