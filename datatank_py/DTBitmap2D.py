@@ -429,15 +429,17 @@ class DTBitmap2D(object, metaclass=_DTBitmap2D):
         :returns: a new DTBitmap2D instance
         
         """
+        from DTStructuredGrid2D import _squeeze2d
         
         bitmap = DTBitmap2D()
-        bitmap.grid = datafile[name]
+        bitmap.grid = np.squeeze(datafile[name])
         for suffix in ("", "16"):
             for channel_name in DTBitmap2D.CHANNEL_NAMES:
                 dt_channel_name = "%s_%s%s" % (name, channel_name.capitalize(), suffix)
                 values = datafile[dt_channel_name]
                 if values is not None:
-                    setattr(bitmap, channel_name, values)
+                    # need our squeeze hack to get rid of the leading singleton dimension
+                    setattr(bitmap, channel_name, _squeeze2d(values))
         return bitmap
 
 class _DTGDALBitmap2D(DTBitmap2D):

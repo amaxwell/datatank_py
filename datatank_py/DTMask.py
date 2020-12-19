@@ -80,7 +80,7 @@ class DTMask(object):
             self._intervals[0,:] = iv0
             self._intervals[1,:] = iv1
         else:
-            self._intervals = np.array([], np.int32)
+            self._intervals = np.zeros((2, 0), dtype=np.int32)
         # row/column mismatch (remember that intervals is always 2 x N)
         self._intervals = self._intervals.swapaxes(0, 1)
         

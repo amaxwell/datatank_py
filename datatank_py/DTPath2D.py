@@ -118,6 +118,14 @@ class DTPath2D(object):
         from DTPoint2D import DTPoint2D
         assert self.number_of_loops() == 1, "Point access is only available for single-loop paths"
         return [DTPoint2D(x, y) for x, y in zip(self._xvalues[1:], self._yvalues[1:])]
+        
+    def __cmp__(self, other):
+        if len(self._offsets()) != len(other._offsets()):
+            return 1
+        if len(self._xvalues) != len(other._xvalues):
+            return 1
+        # no need to use np.all here, since these are lists
+        return 0 if self._xvalues == other._xvalues and self._yvalues == other._yvalues else 1
             
     def sparsified_path(self, step):
         """:returns: a sparsified path (copy) of the receiver.
@@ -182,16 +190,19 @@ class DTPath2D(object):
         
         offsets = []
         # (start, length)
-        offset = (1, self._yvalues[0])
+        if len(self._xvalues) == 0:
+            return offsets
+            
+        offset = (1, int(self._yvalues[0]))
         offsets.append(offset)
-        next = offset[1] + 1
+        next = int(offset[1]) + 1
         
         while (next + 1) < len(self._yvalues):
             # next is index of the length; start is the index after that
             assert self._yvalues[next] > 0, "DTPath2D: negative index in offset computation"
-            offset = (next + 1, self._yvalues[next])
+            offset = (next + 1, int(self._yvalues[next]))
             offsets.append(offset)
-            next += offset[1] + 1
+            next += int(offset[1]) + 1
                             
         return offsets
         
@@ -201,7 +212,9 @@ class DTPath2D(object):
         # special case for no subpaths; just return the main path
         # this lets clients iterate in the general case, including
         # DTPath2D.__str__().
-        if self.number_of_loops() == 1:
+        if self.number_of_loops() == 0:
+            yield DTPath2D([], [])
+        elif self.number_of_loops() == 1:
             yield self
         else:   
             for offset in self._offsets():
@@ -228,6 +241,10 @@ class DTPath2D(object):
         
     def __dt_write__(self, datafile, name):
         datafile.write_anonymous(self.bounding_box(), name + "_bbox2D")
+        # avoid saving empty arrays, since DataTank will bitch about that
+        if self.number_of_loops() == 0:
+            self._xvalues = [0]
+            self._yvalues = [0]
         xvalues = np.array(self._xvalues).astype(np.double)
         yvalues = np.array(self._yvalues).astype(np.double)
         datafile.write_anonymous(np.dstack((xvalues, yvalues)), name)
@@ -258,6 +275,13 @@ if __name__ == '__main__':
         yvalues = (1, 1, 2, 2, 1)
 
         df["Path 1"] = DTPath2D(xvalues, yvalues)
+        
+        p1 = DTPath2D(xvalues, yvalues)
+        p2 = DTPath2D(xvalues, yvalues)
+        p3 = DTPath2D(xvalues, np.array(yvalues) * 2)
+        assert p1 == p2, "paths should be equal"
+        assert p1 != p3, "paths should not be equal"
+        assert p2 != p3, "paths should not be equal"
         
         xvalues = np.array(xvalues) * 2
         yvalues = np.array(yvalues) * 2
