@@ -3,7 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTStructuredGrid3D import DTStructuredGrid3D
+from datatank_py.DTStructuredGrid3D import DTStructuredGrid3D
 import numpy as np
 
 class DTStructuredVectorField3D(object):
@@ -24,17 +24,17 @@ class DTStructuredVectorField3D(object):
         super(DTStructuredVectorField3D, self).__init__()
         
         shape = np.shape(u)
-        assert len(shape) == 3, "values array must be 3D"
-        assert np.shape(u) == np.shape(v), "inconsistent array shapes"
-        assert np.shape(u) == np.shape(w), "inconsistent array shapes"
-        assert np.shape(v) == np.shape(w), "inconsistent array shapes"
+        assert (len(shape) == 3), "values array must be 3D"
+        assert (np.shape(u) == np.shape(v)), "inconsistent array shapes"
+        assert (np.shape(u) == np.shape(w)), "inconsistent array shapes"
+        assert (np.shape(v) == np.shape(w)), "inconsistent array shapes"
 
         if isinstance(grid, basestring) == False:
             
             if grid == None:
                 grid = DTStructuredGrid3D(range(shape[3]), range(shape[1]), range(shape[0]))
             
-            assert shape == grid.shape(), "grid shape %s != value shape %s" % (grid.shape(), shape)
+            assert (shape == grid.shape()), "grid shape %s != value shape %s" % (grid.shape(), shape)
             
         self._grid = grid
         self._u = u
@@ -94,5 +94,5 @@ if __name__ == '__main__':
         mesh = DTStructuredVectorField3D(u, v, w, grid=grid)
         df["3D vector field"] = mesh
     
-        print mesh
+        print (mesh)
 

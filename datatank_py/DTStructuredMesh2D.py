@@ -3,7 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTStructuredGrid2D import DTStructuredGrid2D, _squeeze2d
+from datatank_py.DTStructuredGrid2D import DTStructuredGrid2D, _squeeze2d
 import numpy as np
 
 class DTStructuredMesh2D(object):

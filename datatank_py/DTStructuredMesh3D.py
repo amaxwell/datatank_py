@@ -3,7 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTStructuredGrid3D import DTStructuredGrid3D
+from datatank_py.DTStructuredGrid3D import DTStructuredGrid3D
 import numpy as np
 
 class DTStructuredMesh3D(object):
@@ -117,10 +117,10 @@ if __name__ == '__main__':
         mesh = DTStructuredMesh3D(values, grid=grid)
         df["3D mesh"] = mesh
     
-        print mesh
-        print mesh.slice_xy(0)
+        print (mesh)
+        print (mesh.slice_xy(0))
         
-        print "grid shapes:", np.shape(grid._x), np.shape(grid._y), np.shape(grid._z)
+        print ("grid shapes:", np.shape(grid._x), np.shape(grid._y), np.shape(grid._z))
         
-        print DTStructuredMesh3D.from_data_file(df, "3D mesh")
+        print (DTStructuredMesh3D.from_data_file(df, "3D mesh"))
 

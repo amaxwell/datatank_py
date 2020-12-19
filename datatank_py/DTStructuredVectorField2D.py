@@ -3,7 +3,7 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTStructuredGrid2D import DTStructuredGrid2D
+from datatank_py.DTStructuredGrid2D import DTStructuredGrid2D
 import numpy as np
 
 class DTStructuredVectorField2D(object):
@@ -87,4 +87,4 @@ if __name__ == '__main__':
         mesh = DTStructuredVectorField2D(u, v, grid=grid)
         df["2D vector field"] = mesh
     
-        print mesh
+        print (mesh)

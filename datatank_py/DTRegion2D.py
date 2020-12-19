@@ -59,5 +59,5 @@ if __name__ == '__main__':
         region = DTRegion2D(0, 10, 0, 10)
         df["10 unit region"] = region
     
-        print region
+        print(region)
 

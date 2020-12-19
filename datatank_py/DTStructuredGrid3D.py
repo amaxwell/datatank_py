@@ -3,8 +3,8 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTRegion3D import DTRegion3D
-from DTMask import DTMask
+from datatank_py.DTRegion3D import DTRegion3D
+from datatank_py.DTMask import DTMask
 import numpy as np
 
 class DTStructuredGrid3D(object):
@@ -191,16 +191,16 @@ if __name__ == '__main__':
         grid = DTStructuredGrid3D(range(10), range(20), range(5))
         df["grid"] = grid
     
-        print grid
-        print grid.slice_xy(0)
+        print (grid)
+        print (grid.slice_xy(0))
         df["xy"] = grid.slice_xy(0)
         
         gsyz = grid.slice_yz(0)
-        print gsyz
+        print (gsyz)
         df["yz"] = gsyz
         
-        print "gsyz x (actual y):", gsyz.full_x(), gsyz.full_x().shape
-        print "gsyz y (actual z):", gsyz.full_y(), gsyz.full_y().shape
+        print("gsyz x (actual y):", gsyz.full_x(), gsyz.full_x().shape)
+        print("gsyz y (actual z):", gsyz.full_y(), gsyz.full_y().shape)
         
         df["xz"] = grid.slice_xz(0)
         

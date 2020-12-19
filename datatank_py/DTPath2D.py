@@ -279,7 +279,7 @@ if __name__ == '__main__':
         path.add_loop(xvalues, yvalues)
         df["Path 4"] = path
         
-        print "%d loops" % (path.number_of_loops())
+        print("%d loops" % (path.number_of_loops()))
         
         for idx, subpath in enumerate(path):
             df["Subpath %d" % (idx)] = subpath

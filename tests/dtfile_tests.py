@@ -55,7 +55,7 @@ def write_images(file_path):
         if os.path.exists("/Library/Desktop Pictures/Art/Poppies Blooming.jpg"):
             image_path = "/Library/Desktop Pictures/Art/Poppies Blooming.jpg"
         else:
-            image_path = "/Library/Desktop Pictures/Nature/Earth Horizon.jpg"
+            image_path = "/Library/Desktop Pictures/Sky.jpg"
 
         output_file["Image"] = DTBitmap2D(image_path)
     

@@ -38,7 +38,14 @@ __all__ = ["DTDataFile"]
 import sys, os
 from struct import Struct
 import numpy as np
-from DTPyWrite import dt_writer
+from datatank_py.DTPyWrite import dt_writer
+
+def _is_string(x):
+    try:
+        basestring
+    except NameError:
+        basestring = str
+    return isinstance(x, basestring)
 
 # see doc for _load_modules
 _CLASSES_BY_TYPE = {}
@@ -191,7 +198,7 @@ def _dtarray_type_and_size_from_object(obj):
     
     """
     
-    if isinstance(obj, basestring):
+    if _is_string(obj):
         return (20, 1)
     elif isinstance(obj, np.ndarray):
         array = obj
@@ -515,14 +522,14 @@ class DTDataFile(object):
         underlying_name = self.variable_named(name)
         
         # shortcut for a one step redirect
-        if isinstance(underlying_name, basestring) == False:
+        if _is_string(underlying_name) == False:
             return underlying_name
         
         # deeper redirect, so avoid circular references
         names_seen = set()
         names_seen.add(underlying_name)
         
-        while isinstance(underlying_name, basestring) == False:
+        while _is_string(underlying_name) == False:
             underlying_name = self.variable_named(underlying_name)
             assert underlying_name not in names_seen, "DTDataFile: circular name reference for %s" % (name)
             names_seen.add(underlying_name)
@@ -715,7 +722,7 @@ class DTDataFile(object):
         else:
             # setting up a new file, so choose native byte order
             assert previous_offset == 0, "file is missing dtbinary header"
-            self._file.write(file_header)
+            self._file.write(file_header.encode())
             self._flush()
             self._length = self._file.tell()
             # DTDataFileStructure: long long followed by 5 ints
@@ -748,16 +755,15 @@ class DTDataFile(object):
         self._check_and_write_header()
         block_start = self._file.tell()
 
-        if isinstance(string, unicode):
-            string = string.encode("utf-8")
+        bytedata = string.encode("utf-8")
             
         DTDataFile_String = 20
         # header struct length + (name and null) + (value and null)
-        block_length = self._struct.size + len(name) + 1 + len(string) + 1
-        file_struct = self._struct.pack(block_length, DTDataFile_String, len(string) + 1, 1, 1, len(name) + 1)
+        block_length = self._struct.size + len(name) + 1 + len(bytedata) + 1
+        file_struct = self._struct.pack(block_length, DTDataFile_String, len(bytedata) + 1, 1, 1, len(name) + 1)
         self._file.write(file_struct)
-        self._file.write(name + "\0")
-        self._file.write(string + "\0")
+        self._file.write((name + "\0").encode())
+        self._file.write(bytedata + b"\0")
         
         # update file length and variable map manually
         self._length = self._file.tell()
@@ -842,7 +848,7 @@ class DTDataFile(object):
         # write the header
         self._file.write(file_struct)
         # write the variable name
-        self._file.write(name + "\0")
+        self._file.write((name + "\0").encode())
         # write the variable values as raw binary
         array.tofile(self._file)
         
@@ -923,7 +929,7 @@ class DTDataFile(object):
         # for now, just a simple wrapper around the primitive write methods
         if dt_writer(obj):
             self._dt_write(obj, name, None, anonymous=True)
-        elif isinstance(obj, basestring):
+        elif _is_string(obj):
             self._write_string(obj, name)
         elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type for a float
@@ -934,7 +940,7 @@ class DTDataFile(object):
                 assert obj <= _INT32_MAX and obj >= _INT32_MIN, "integer too large for 32-bit type"
                 array = np.array((obj,), dtype=np.int32)
             self._write_array(array, name)
-        elif isinstance(obj, (tuple, list)) and len(obj) and isinstance(obj[0], basestring):
+        elif isinstance(obj, (tuple, list)) and len(obj) and _is_string(obj[0]):
             # this will be a StringList; note that anonymous StringList variables are
             # used for error lists in DataTank
             offsets = []
@@ -1091,7 +1097,7 @@ class DTDataFile(object):
         
         if dt_writer(obj):
             self._dt_write(obj, name, time)
-        elif isinstance(obj, basestring):
+        elif _is_string(obj):
             self.write_string(obj, name, time=time)
         elif isinstance(obj, (float, int)):
             # convert to an array, but allow numpy to pick the type for a float
@@ -1102,7 +1108,7 @@ class DTDataFile(object):
                 assert obj <= _INT32_MAX and obj >= _INT32_MIN, "integer too large for 32-bit type"
                 array = np.array((obj,), dtype=np.int32)
             self.write_array(array, name, dt_type="Real Number", time=time)
-        elif isinstance(obj, (tuple, list)) and len(obj) and isinstance(obj[0], basestring):
+        elif isinstance(obj, (tuple, list)) and len(obj) and _is_string(obj[0]):
             # this will be a StringList
             offsets = []
             char_list = []

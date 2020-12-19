@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
 
 # This software is under a BSD license.  See LICENSE.txt for details.

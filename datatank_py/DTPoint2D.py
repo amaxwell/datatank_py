@@ -59,4 +59,4 @@ if __name__ == '__main__':
 
     with DTDataFile("point2d.dtbin") as df:
         
-        print df.dt_object_named("Point 1")
+        print(df.dt_object_named("Point 1"))

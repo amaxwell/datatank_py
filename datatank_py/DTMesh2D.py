@@ -4,7 +4,7 @@
 # This software is under a BSD license.  See LICENSE.txt for details.
 
 import numpy as np
-from DTMask import DTMask
+from datatank_py.DTMask import DTMask
 
 class DTMesh2D(object):
     """2D Mesh object.

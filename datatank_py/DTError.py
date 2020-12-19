@@ -13,7 +13,7 @@ _USE_SYSLOG = False
 
 try:
     from syslog import syslog, openlog, LOG_ERR
-except ImportError, e:
+except ImportError as e:
     _SYSLOG_AVAILABLE = False
 
 _errors = []

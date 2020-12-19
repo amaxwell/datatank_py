@@ -108,7 +108,7 @@ if __name__ == '__main__':
         pv = DTPointValueCollection2D(DTPointCollection2D(xvals, yvals), xvals * xvals)
         df["Point value collection 2"] = pv
         
-        print pv
+        print(pv)
         
         for time in xrange(5):
             xvals = np.array((10, 20, 30, 40, 50))
@@ -117,4 +117,4 @@ if __name__ == '__main__':
             df.write(pv, "TVPV_%d" % (time), time=time)
             
         for v in df:
-            print v
+            print(v)

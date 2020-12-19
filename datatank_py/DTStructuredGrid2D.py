@@ -3,8 +3,8 @@
 
 # This software is under a BSD license.  See LICENSE.txt for details.
 
-from DTRegion2D import DTRegion2D
-from DTMask import DTMask
+from datatank_py.DTRegion2D import DTRegion2D
+from datatank_py.DTMask import DTMask
 import numpy as np
 
 def _squeeze2d(array):

@@ -121,4 +121,4 @@ if __name__ == '__main__':
         pc = DTPointCollection2D(xvals, yvals)
         df["Point collection 2"] = pc
         
-        print pc
+        print(pc)

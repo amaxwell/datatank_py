@@ -4,7 +4,7 @@
 # This software is under a BSD license.  See LICENSE.txt for details.
 
 import numpy as np
-from DTPath2D import DTPath2D
+from datatank_py.DTPath2D import DTPath2D
 
 class DTPathValues2D(object):
     """2D Path Values object. This is a 2D path, with a scalar value
@@ -98,6 +98,6 @@ if __name__ == '__main__':
         pv = DTPathValues2D(path, zvalues)
         df["Path Values 1"] = pv
         
-        print pv
+        print(pv)
         
         

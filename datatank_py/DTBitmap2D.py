@@ -6,6 +6,13 @@
 import numpy as np
 import sys
 
+def _is_string(x):
+    try:
+        basestring
+    except NameError:
+        basestring = str
+    return isinstance(x, basestring)
+
 class _DTBitmap2D(type):
     """Metaclass of DTBitmap2D which implements __call__ in order to
     return a private subclass based on input arguments.  First argument 
@@ -22,12 +29,12 @@ class _DTBitmap2D(type):
             obj.__init__(*args, **kwargs)
         else:
             # a string must be a path, so try GDAL first
-            if isinstance(path_or_image, basestring):
+            if _is_string(path_or_image):
                 try:
                     cls = _DTGDALBitmap2D
                     obj = cls.__new__(cls, *args, **kwargs)
                     obj.__init__(*args, **kwargs)
-                except Exception, e:
+                except Exception as e:
                     sys.stderr.write("Failed to create GDAL representation: %s\n" % (e))
                     obj = None
             
@@ -37,14 +44,15 @@ class _DTBitmap2D(type):
                     cls = _DTPILBitmap2D
                     obj = cls.__new__(cls, *args, **kwargs)
                     obj.__init__(*args, **kwargs)
-                except Exception, e:
+                except Exception as e:
                     sys.stderr.write("Failed to create PIL representation: %s\n" % (e))
                     obj = None
 
         return obj
 
-        
-class DTBitmap2D(object):
+# Using metaclass as kw argument is the Python 3 style, as __metaclass__
+# is now ignored. That was a nightmare to find.
+class DTBitmap2D(object, metaclass=_DTBitmap2D):
     """Base implementation for DTBitmap2D. This is a gray or color (RGB)
     image, with an optional alpha channel. It also has spatial data, so
     it can be displayed in DataTank on a physical grid, rather than the
@@ -110,7 +118,7 @@ class DTBitmap2D(object):
         """:returns: a NumPy array datatype :class:`numpy.dtype`"""
         for x in DTBitmap2D.CHANNEL_NAMES:
             v = getattr(self, x)
-            if v != None:
+            if v is not None:
                 return v.dtype
         return None
         
@@ -168,7 +176,7 @@ class DTBitmap2D(object):
         
         try:
             from skimage import exposure, img_as_uint, img_as_ubyte
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write("You need to install scikit-image with `sudo pip install scikit-image`")
             return None
             
@@ -195,7 +203,7 @@ class DTBitmap2D(object):
             if channel_name == "alpha":
                 continue
             values = getattr(self, channel_name)
-            if values != None:
+            if values is not None:
                 values = exposure.rescale_intensity(__convert_type(exposure.equalize_hist(values)), out_range=(scale))
                 setattr(self, channel_name, values)
         
@@ -214,7 +222,7 @@ class DTBitmap2D(object):
         
         try:
             from PIL import Image
-        except Exception, e:
+        except Exception as e:
             return None
             
         if self.is_gray():
@@ -275,12 +283,12 @@ class DTBitmap2D(object):
         mask = None
         if alpha_as_mask:
             assert self.nodata is None, "Attempting to use alpha as mask but image has NODATA values"
-            assert self.alpha != None, "Image does not have an alpha channel"
+            assert self.alpha is not None, "Image does not have an alpha channel"
             mask_array = self.alpha.astype(np.int8) 
             #np.zeros(values.shape, dtype=np.int8)
             #mask_array[np.where(self.alpha != 0)] = 1
             mask = DTMask(mask_array)
-        elif self.nodata != None:
+        elif self.nodata is not None:
             mask_array = np.zeros(values.shape, dtype=np.int8)
             mask_array[np.where(values != self.nodata)] = 1
             mask = DTMask(mask_array)
@@ -397,7 +405,7 @@ class DTBitmap2D(object):
         
         for channel_name in DTBitmap2D.CHANNEL_NAMES:
             values = getattr(self, channel_name)
-            if values != None:
+            if values is not None:
                 # DataTank only supports signed images, so we need to preserve scaling
                 # and avoid truncation if we have unsigned 8 or 16 data.
                 if self.dtype() == np.uint16:
@@ -428,7 +436,7 @@ class DTBitmap2D(object):
             for channel_name in DTBitmap2D.CHANNEL_NAMES:
                 dt_channel_name = "%s_%s%s" % (name, channel_name.capitalize(), suffix)
                 values = datafile[dt_channel_name]
-                if values != None:
+                if values is not None:
                     setattr(bitmap, channel_name, values)
         return bitmap
 
@@ -440,11 +448,11 @@ class _DTGDALBitmap2D(DTBitmap2D):
         
         from osgeo import gdal
         from osgeo.gdalconst import GA_ReadOnly
-        
+                
         # throw instead of printing to stderr
         gdal.UseExceptions()
         
-        from DTProgress import DTProgress
+        from datatank_py.DTProgress import DTProgress
 
         # NB: GDAL craps out if you pass a unicode object as a path
         image_path = image_path.encode(sys.getfilesystemencoding())
@@ -469,7 +477,7 @@ class _DTGDALBitmap2D(DTBitmap2D):
             try:
                 band = dataset.GetRasterBand(band_index)
                 sys.stderr.write("Read band %d (image has %d bands)\n" % (band_index, dataset.RasterCount))
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("Failed reading band %d (image has %d bands)\n" % (band_index, dataset.RasterCount))
                 sys.stderr.write("%s\n" % (e))
                 raise e
@@ -517,7 +525,7 @@ class _DTGDALBitmap2D(DTBitmap2D):
             mesh = np.flipud(mesh)
             ctab = band.GetRasterColorTable()
             
-            if ctab != None:
+            if ctab is not None:
                                 
                 sys.stderr.write("Interpreted image as indexed RGB\n")
 
@@ -537,7 +545,7 @@ class _DTGDALBitmap2D(DTBitmap2D):
                 for raster_index, color_index in enumerate(mesh.flatten()):
                     try:
                         (red[raster_index], green[raster_index], blue[raster_index], ignored) = cmap[int(color_index)]
-                    except Exception, e:
+                    except Exception as e:
                         # if not in table, leave as zero
                         pass
                     progress.update_percentage(raster_index / float(mesh.size))
@@ -612,7 +620,7 @@ def _array_from_image(image):
                 # fails for signed int16 images produced by GDAL, but works with unsigned
                 array = np.fromstring(image.tostring(), dtype=dt)
                 array = array.reshape((image.size[1], image.size[0]))
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write("Warning: DTBitmap2D.py image.tostring() failed for image with mode \"%s\" (PIL error: %s)\n" % (image.mode, str(e)))
         
     else:    
@@ -628,9 +636,9 @@ class _DTPILBitmap2D(DTBitmap2D):
         super(_DTPILBitmap2D, self).__init__()
         
         from PIL import Image
-        image = Image.open(image_or_path) if isinstance(image_or_path, basestring) else image_or_path
+        image = Image.open(image_or_path) if _is_string(image_or_path) else image_or_path
         
-        if rgba_bands != None:
+        if rgba_bands is not None:
             sys.stderr.write("WARNING: ignoring rgba_bands = %s for PIL image\n" % (rgba_bands))
         
         array = _array_from_image(image)
